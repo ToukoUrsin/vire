@@ -19,9 +19,9 @@ A signal for the clinic, not a diagnosis. No patient or clinic has used Vire; th
 
 **Setup, once** ([/#/ears](https://vire.fly.dev/#/ears)): the camera labels 65 seconds of smiles, nods and head shakes while the AirPods feel them, and a Modal Sandbox of your own, network blocked, tries 366 models on all your minutes, each chosen without the minute it is scored on. On the founder's three minutes: 46 seconds; on a whole minute the models never saw, nod 0.97, head shake 0.97, smile 0.64 (1.00 is never wrong, 0.50 is luck). So nods and head shakes are read from the AirPods alone, and the camera keeps smiles.
 
-**The whole clinic** re-learns at once on Modal: 50 simulated patients, one network-blocked Sandbox each, 9,580 models in 30 seconds, and each Sandbox re-learns which practice helps that patient ("Re-train the whole clinic" on the big screen).
+**The whole clinic** re-learns at once on Modal: the 50 simulated patients on the clinic list, one network-blocked Sandbox each, 9,595 models in 27 seconds, and each Sandbox re-learns which practice helps that patient ("Re-train the whole clinic" on the big screen).
 
-The camera visit still works without AirPods: one minute on any phone ([/#/visit](https://vire.fly.dev/#/visit)). The evidence behind the loop, and what it does not show: [pitch/evidence-loop.md](pitch/evidence-loop.md), [pitch/evidence-tms.md](pitch/evidence-tms.md), [pitch/evidence-airpods.md](pitch/evidence-airpods.md).
+Without AirPods: breathe with the sea for a minute with a phone on your chest ([/#/try](https://vire.fly.dev/#/try)), or the camera visit, one minute on any phone ([/#/visit](https://vire.fly.dev/#/visit)). The evidence behind the loop, and what it does not show: [pitch/evidence-loop.md](pitch/evidence-loop.md), [pitch/evidence-tms.md](pitch/evidence-tms.md), [pitch/evidence-airpods.md](pitch/evidence-airpods.md).
 
 Built at Junction 2026 (13 to 15 November, Espoo) for Aalto University's challenge "Beyond the Clinic".
 
@@ -37,6 +37,7 @@ Built at Junction 2026 (13 to 15 November, Espoo) for Aalto University's challen
 | [/#/clinic](https://vire.fly.dev/#/clinic) | the clinic's list (simulated patients): drift the practices didn't answer comes first, booster booking on the patient page |
 | [/#/clinic/live](https://vire.fly.dev/#/clinic/live) | the big screen. `?practice=1` keeps the newest practice from a phone up, `?cohort=1` the whole-clinic re-training, `?board=1` the newest model search |
 | [/#/eeg](https://vire.fly.dev/#/eeg) | a two-minute recording page for the EEG booth: AirPods motion and heart rate logged next to the booth's EEG (AirPods have no EEG) |
+| [/#/try](https://vire.fly.dev/#/try) | the breathing on a phone held on the chest, about a minute: the phone's motion sensor stands in for the AirPods |
 | [/#/visit](https://vire.fly.dev/#/visit) | the 60-second camera visit, no sign-up, no AirPods needed |
 | [/#/clinic/hall](https://vire.fly.dev/#/clinic/hall) | the real people who tried the camera visit at Junction |
 | [/#/wall](https://vire.fly.dev/#/wall) | the hall wall |

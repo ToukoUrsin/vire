@@ -31,8 +31,8 @@ Mics are cut at 3:00 sharp, then 3 minutes of questions. About 399 spoken words 
 **Screen:** the day card, then this morning's run on the big screen (`?practice=1`).
 
 > This is my day while the AirPods were in: how long my head was down, how much it moved, my walks, compared with my usual. When that drifts, Vire offers a practice.
-> This morning I did one. First I sit still for twenty seconds while the AirPods read my head movement and heart rate.
-> Then breathing. A sea in my ears rises as I breathe in and falls as I breathe out. It slows toward six breaths a minute, but only when I keep up. The AirPods feel my head move a little with each breath, and when they can't tell, it says so.
+> This morning I did mine. First a minute of smiles and nods, then twenty seconds still while the AirPods read my head movement and heart rate.
+> Then breathing. A sea in my ears rises as I breathe in and falls as I breathe out. It slows toward six breaths a minute, but only when I keep up. The AirPods feel my head move with each breath, and when they can't, it says so.
 > Then the same check again. Heart rate **[REAL: heart]**. Head movement **[REAL: still]**.
 
 ## 1:45 Then it learns (20 s)
@@ -49,7 +49,7 @@ Mics are cut at 3:00 sharp, then 3 minutes of questions. About 399 spoken words 
 
 **Screen:** `#/clinic/live?cohort=1`. **Do:** press "Re-train the whole clinic" as you open the tab and talk over it. Don't wait for it to finish.
 
-> It runs on Modal's cloud. Each patient's data sits in its own locked box, and Vire re-learns what helps each of the 50 simulated patients in 30 seconds.
+> It runs on Modal's cloud. Each patient's data sits in its own locked box, and Vire re-learns what helps all 50 simulated patients in half a minute.
 
 ## 2:42 Close (10 s)
 
@@ -63,13 +63,13 @@ Mics are cut at 3:00 sharp, then 3 minutes of questions. About 399 spoken words 
 - Skip "If you know Meru Health ... already own" (7 s).
 - Skip "There's also a body scan and a short walk" (3 s).
 - Never cut "no control group", "these patients are simulated", "no patient has used Vire yet" or "it doesn't diagnose anything".
-- If this morning's run didn't happen, say "this is the run with stand-in AirPods from our tests" where the script says "This morning I did one".
+- If this morning's run didn't happen, say "this is the run with stand-in AirPods from our tests" where the script says "This morning I did mine".
 
 ## If something breaks on stage
 
 - **Heart rate didn't come from the AirPods** this morning: drop "and heart rate from the AirPods" and say only the head movement.
 - **The result said "No change today" or "Not calmer today":** say it. "It says what it saw. That's the point."
-- **The re-train run is slow:** "It's still going. Last night it was 50 patients in 30 seconds." Move on.
+- **The re-train run is slow:** "It's still going. Last night it was 50 patients in 27 seconds." Move on.
 - **AirPods drop:** you don't need them live after 0:10. Keep going.
 
 ## What not to say

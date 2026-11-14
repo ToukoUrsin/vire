@@ -2,7 +2,7 @@
 
 For a judge standing at the table. You wear the AirPods, they watch the iPhone and the laptop. If they have time, they put the AirPods in and breathe with the sea for 30 seconds.
 
-**Set up:** iPhone with the Vire app on Today (`/#/today`), AirPods connected to it. Laptop on `#/clinic/live?practice=1` (your newest practice), next tab `#/clinic` (the list), next `#/clinic/live?cohort=1`. Printed QR to https://vire.fly.dev for people without AirPods: "Watch a run" plays a Today run in 40 seconds, and "No AirPods?" is the one-minute camera check.
+**Set up:** iPhone with the Vire app on Today (`/#/today`), AirPods connected to it. Laptop on `#/clinic/live?practice=1` (your newest practice), next tab `#/clinic` (the list), next `#/clinic/live?cohort=1`. Printed QR to https://vire.fly.dev for people without AirPods: "Watch a run" plays a Today run in 40 seconds, and "No AirPods?" is the breathing on their own phone, held on the chest (the one-minute camera check is under it). The 50 people on tab 3 are the same simulated patients as the list on tab 2.
 
 Before the first judge: do one full Today run, so the big screen has a real practice on it. Fill `[REAL: ...]` from its result screen.
 
@@ -16,8 +16,8 @@ Before the first judge: do one full Today run, so the big screen has a real prac
 **0:10** Look at them.
 > It's for people at home after TMS, a clinic treatment for depression. About half lose the benefit within a year, and once you're home the clinic doesn't see you.
 
-**0:20** Tap Start on the iPhone, or show this morning's run.
-> When my day drifts, it offers a breathing practice: a sea in my ears that slows down only when I keep up with it. The AirPods feel my head move a little with each breath.
+**0:20** Tap Start on the iPhone, or show this morning's run on the big screen (tab 1).
+> Every day, and when my day drifts, it offers a breathing practice: a sea in my ears that slows down only when I keep up. When the AirPods can't feel my breath, it goes by how still I sit, and says so.
 
 **0:32** Point at the big screen.
 > It measures me before and after. Heart rate **[REAL: heart]**, head movement **[REAL: still]**. Over days it learns which practice settles me most.
@@ -26,7 +26,7 @@ Before the first judge: do one full Today run, so the big screen has a real prac
 > If my days keep looking different anyway, I go to the top of the clinic's list, with what Vire tried. The clinic can then book me in for more TMS. These patients are simulated, and no patient has used it yet. Want to try the breathing?
 
 **If they stay (20 s):** switch to `?cohort=1` and press "Re-train the whole clinic".
-> Each patient's model trains in its own sandbox on Modal, with no network. All 50 simulated patients re-train in about 30 seconds. The sea sound is made there too, on a GPU.
+> Each patient's model trains in its own sandbox on Modal, with no network. 50 simulated patients, each in its own box. Watch them fill: usually about 30 seconds. The sea sound is made there too, on a GPU.
 
 ---
 

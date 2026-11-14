@@ -19,7 +19,7 @@ Like Meru Health, but your AirPods sense every step. After TMS for depression, V
 - **Start here:** https://vire.fly.dev and tap "Watch a run": a whole Today run in 40 seconds, no AirPods needed.
 - **AirPods in:** https://vire.fly.dev/#/today in our iPhone app (at our table) or on a Mac with the Vire Ears helper. Five minutes, camera off.
 - **The clinic:** https://vire.fly.dev/#/clinic and the big screen https://vire.fly.dev/#/clinic/live
-- **No AirPods?** https://vire.fly.dev/#/visit on any phone, one minute with the camera.
+- **No AirPods?** On a phone: https://vire.fly.dev/#/try (the breathing, phone on your chest) or https://vire.fly.dev/#/visit (one minute with the camera).
 
 ### Problem
 
@@ -52,7 +52,7 @@ A signal for the clinic, not a diagnosis.
 
 ### Not yet
 
-- No patient or clinic has used Vire, and nobody has compared it with a questionnaire.
+- No patient or clinic has used Vire, and nobody has compared it with a questionnaire, or a practice with just sitting still.
 - Nobody knows if drift comes before relapse, or if an earlier booster helps more. The booster evidence is rated low (Wilson 2022).
 - A practice is not a treatment. Breathing with heart-rate feedback, as a programme of weeks, lowered depressive symptoms a little, mostly in people whose main problem was something else.
 - It senses while Vire is open, not in the background.
@@ -79,11 +79,11 @@ The AirPods sense you and answer you: a sea made as you breathe, that stays put 
 
 ### Best use of Modal
 
-Each patient's health data gets its own locked box: a Modal Sandbox with the network blocked tries 366 models on that person's setup minutes, each scored on a minute it never saw. 46 seconds on mine. The whole clinic at once: 50 simulated patients, one Sandbox each, all running together, done in 30 seconds, and each Sandbox also re-learned which practice helps that patient. The sea is MusicGen-small on a T4: thirty 20-second pieces made ahead, and during a practice the phone asks Modal for a new one from the pace and stillness the AirPods just read. We also pretrained one shared head-motion model on a public earbud dataset (EarSet, 30 people) on a T4 and fine-tuned it per person. It didn't clearly win (better at smiles, a little worse at head shakes), so each person keeps their own model.
+Each patient's health data gets its own locked box: a Modal Sandbox with the network blocked tries 366 models on that person's setup minutes, each scored on a minute it never saw. 46 seconds on mine. The whole clinic at once: the 50 simulated patients on the clinic list, one Sandbox each, all running together, done in 27 seconds, and each Sandbox also re-learned which practice helps that patient. The sea is MusicGen-small on a T4: thirty 20-second pieces made ahead, and during a practice the phone asks Modal for a new one from the pace and stillness the AirPods just read. We also pretrained one shared head-motion model on a public earbud dataset (EarSet, 30 people) on a T4 and fine-tuned it per person. It didn't clearly win, so each person keeps their own model.
 
 ## (stop pasting here)
 
-Current count of the paste region: **4,852** characters, markdown included, with the three `[REAL: ...]` slots as written (counted with `python3`: `len()` of the stripped text between the "Description (paste from here)" heading and "(stop pasting here)"). Room left for the slots: 148.
+Current count of the paste region: **4,928** characters, markdown included, with the three `[REAL: ...]` slots as written (counted with `python3`: `len()` of the stripped text between the "Description (paste from here)" heading and "(stop pasting here)"). Room left for the slots: 72.
 
 ## Slots to fill on Sunday morning
 
@@ -93,5 +93,5 @@ Current count of the paste region: **4,852** characters, markdown included, with
 - `[REAL: still]`: the result screen, "your head sat N% stiller" or "moved N% more".
 - The shared model sentence (EarSet, 30 people; smile 0.78 against 0.66, head shake 0.95 against 0.97): `pitch/evidence-shared-model.md`, the 6-epoch run fixed as the result before looking. Filled on Saturday night.
 - 46 seconds, 366 models, 0.97 / 0.97 / 0.64: production job `ej_f4d4185419864d00a87c4f6c32804718` (`GET /api/ear/jobs/latest`). If a newer job is on the screen, use its numbers.
-- 50 patients, 30 seconds (9,580 models, not in the text): production cohort run `cr_5bbd360379654219803714c37c0ceb48` (`GET /api/ear/cohort/latest`), Saturday 21:00. If someone presses "Re-train the whole clinic" again, the latest run changes: recheck.
+- 50 patients, 27 seconds (9,595 models, not in the text): production cohort run `cr_231f14871d724b76875d8f64c010688d` (`GET /api/ear/cohort/latest`), Sunday 00:54. The 50 are the people on the clinic list (`server/cohort.ts`). If someone presses "Re-train the whole clinic" again, the latest run changes: recheck.
 - After filling, recount: it must stay at or under 5,000 characters.
