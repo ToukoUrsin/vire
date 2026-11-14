@@ -25,7 +25,7 @@
 10. **1:50** You, AirPods in. Say: "That's Vire. It's live at vire.fly.dev"
 11. **1:54** The end card `/bulk3/runs/opens/final/vire/end.mp4` (2 s, "Vire, vire.fly.dev"). Don't film it.
 
-Caption "Simulated patients" on shots 8 and 9. After shot 8, click "Cancel booking" off camera.
+Caption "Simulated patients" on shots 8 and 9. On shot 9 also keep this label on screen the whole shot: "Runs on Modal: one locked Sandbox per patient". After shot 8, click "Cancel booking" off camera.
 
 ## Where each shot lives
 

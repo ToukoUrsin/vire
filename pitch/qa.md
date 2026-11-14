@@ -66,7 +66,7 @@ No. No patient and no clinic. The clinic's patients are simulated, and every cli
 ## Modal and the models
 
 **17. What does Modal actually do?**
-Three things ran. Each person's model is searched in their own Sandbox with the network blocked: 366 models, 46 seconds on my minutes. The whole clinic at once: the 50 simulated patients on the clinic list, one Sandbox each, 9,595 models in 27 seconds, and each re-learned which practice helps that patient. And the sound on a T4 GPU. (rows 113, 119 to 121)
+Three things ran. Each person's model is searched in their own Sandbox with the network blocked: 366 models, 46 seconds on my minutes. The whole clinic at once: the 50 simulated patients on the clinic list, one Sandbox each with a shorter search, 9,595 models in all in 27 seconds, and each re-learned which practice helps that patient. And the sound on a T4 GPU. (rows 113, 119 to 121)
 
 **18. 366 models on three minutes. Isn't that overfitting by search?**
 It would be if we scored on the data we picked with. Each model is chosen without the minute it's scored on, so trying many can't flatter the score. On a whole minute it never saw, my nod scored 0.97, head shake 0.97, smile 0.64. (rows 97, 119)
