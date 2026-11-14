@@ -3,256 +3,285 @@
 <head>
 <meta charset="utf-8">
 <title>Vire deck</title>
+<!-- Built by build.mjs: SHOTS/ are WebKit screenshots of the live site, the CAPS words are filled in there. -->
 <style>
 @font-face { font-family: 'Fraunces'; font-style: normal; font-weight: 100 900; src: url('../../web/src/shared/fonts/fraunces-latin.woff2') format('woff2'); }
 @font-face { font-family: 'Fraunces'; font-style: italic; font-weight: 100 900; src: url('../../web/src/shared/fonts/fraunces-italic-latin.woff2') format('woff2'); }
 @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; src: url('../../web/src/shared/fonts/inter-latin.woff2') format('woff2'); }
 @page { size: 1920px 1080px; margin: 0; }
 :root {
+  /* web/src/shared/theme.css */
   --paper: #f6f2ea; --paper-2: #efe9dd; --card: #fffdf8; --ink: #1e1b16; --ink-2: #5b554a; --ink-3: #6e6759;
-  --line: #e2dbcc; --line-2: #cfc6b3; --ember: #e4572e; --ember-ink: #b33f1c;
-  --night: #14110d; --night-2: #1d1914; --night-line: #2f2921; --cream: #f3ecdf; --cream-2: #b9b0a0; --cream-3: #8d8576;
-  --ch-smile: #e9a23b; --ch-voice: #2a9d8f; --ch-heart: #d1495b; --ch-move: #5b6abf;
+  --line: #e2dbcc; --line-2: #cfc6b3; --ember: #e4572e; --ember-soft: #fbe3d9; --ember-ink: #b33f1c;
+  --stage: #14110d; --stage-2: #1f1b15; --stage-ink: #f3ece0; --stage-ink-2: #a79f90; --stage-line: rgba(243, 236, 224, 0.14);
+  --ch-heart: #d1495b; --ch-move: #5b6abf;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { background: #000; }
-body { font-family: 'Inter', sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
-.slide { width: 1920px; height: 1080px; position: relative; overflow: hidden; background: var(--paper); padding: 96px 120px 88px; page-break-after: always; break-after: page; display: flex; flex-direction: column; }
-.slide.night { background: var(--night); color: var(--cream); }
-.foot { position: absolute; left: 120px; right: 120px; bottom: 44px; display: flex; justify-content: space-between; font-size: 18px; color: var(--ink-3); letter-spacing: 0.01em; }
-.night .foot { color: var(--cream-3); }
-.foot b { font-family: 'Fraunces', serif; font-weight: 500; font-size: 22px; color: var(--ink); letter-spacing: 0; }
-.night .foot b { color: var(--cream); }
-h1 { font-family: 'Fraunces', serif; font-weight: 400; font-size: 76px; line-height: 1.06; letter-spacing: -0.02em; font-variation-settings: 'opsz' 144; max-width: 1500px; }
+body { font-family: 'Inter', sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; font-feature-settings: 'ss01', 'cv11'; }
+
+.slide { width: 1920px; height: 1080px; position: relative; overflow: hidden; background: var(--paper); padding: 112px 128px 120px; break-after: page; display: flex; flex-direction: column; }
+.slide.night { background: var(--stage); color: var(--stage-ink); }
+
+.foot { position: absolute; left: 128px; right: 128px; bottom: 48px; display: flex; justify-content: space-between; align-items: baseline; font-size: 20px; color: var(--ink-3); }
+.night .foot { color: var(--stage-ink-2); }
+.foot b { font-family: 'Fraunces', serif; font-weight: 500; font-size: 26px; color: var(--ink); }
+.night .foot b { color: var(--stage-ink); }
+.foot .n { font-variant-numeric: tabular-nums; }
+
+.kicker { font-size: 20px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ember-ink); margin-bottom: 28px; }
+.night .kicker { color: var(--ember); }
+h1 { font-family: 'Fraunces', serif; font-weight: 450; font-size: 84px; line-height: 1.06; letter-spacing: -0.016em; font-variation-settings: 'opsz' 72; text-wrap: balance; }
+.top { display: flex; align-items: flex-end; gap: 96px; }
+.top h1 { flex: 1; }
+.top .lede { width: 520px; flex: none; margin: 0 0 10px; font-size: 28px; }
 h1 em { font-style: italic; }
-.lede { font-size: 32px; line-height: 1.4; color: var(--ink-2); max-width: 1100px; margin-top: 32px; }
-.night .lede { color: var(--cream-2); }
-.src { font-size: 18px; line-height: 1.45; color: var(--ink-3); }
-.night .src { color: var(--cream-3); }
-.row { display: flex; gap: 72px; flex: 1; min-height: 0; }
+.lede { font-size: 32px; line-height: 1.42; color: var(--ink-2); margin-top: 36px; text-wrap: pretty; }
+.night .lede { color: var(--stage-ink-2); }
+.src { font-size: 20px; line-height: 1.5; color: var(--ink-3); text-wrap: pretty; }
+.night .src { color: var(--stage-ink-2); }
+
+.row { display: flex; gap: 96px; flex: 1; min-height: 0; align-items: center; }
 .col { display: flex; flex-direction: column; min-width: 0; }
-.grow { flex: 1; }
-.mid { justify-content: center; }
-.end { justify-content: flex-end; }
 
 /* product frames */
-.phone { width: 304px; aspect-ratio: 780 / 1688; border-radius: 34px; overflow: hidden; border: 1px solid var(--night-line); background: #000; flex: none; }
-.phone img, .wide img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.wide { border-radius: 16px; overflow: hidden; border: 1px solid var(--line-2); background: var(--card); aspect-ratio: 16 / 9; }
-.night .wide { border-color: var(--night-line); }
-.cap { margin-top: 20px; }
-.cap b { display: block; font-family: 'Fraunces', serif; font-weight: 500; font-size: 30px; letter-spacing: -0.01em; }
-.cap span { display: block; font-size: 20px; line-height: 1.4; color: var(--cream-2); margin-top: 6px; }
-.dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 12px; transform: translateY(-3px); }
+.phone { position: relative; border-radius: 52px; padding: 12px; background: #2a251e; box-shadow: 0 0 0 1px rgba(243, 236, 224, 0.08), 0 40px 80px rgba(0, 0, 0, 0.35); flex: none; }
+.phone img { display: block; width: 100%; border-radius: 40px; }
+.screen { border-radius: 14px; overflow: hidden; flex: none; box-shadow: 0 0 0 1px var(--line-2), 0 30px 70px rgba(30, 27, 22, 0.14); background: var(--card); }
+.night .screen { box-shadow: 0 0 0 1px var(--stage-line), 0 40px 90px rgba(0, 0, 0, 0.5); background: var(--stage); }
+.screen img { display: block; width: 100%; }
+.shot { margin-top: auto; padding-top: 48px; display: flex; flex-direction: column; align-items: flex-start; }
+.shot .screen img { width: auto; height: var(--h); max-width: 1664px; }
+.tag { display: inline-flex; align-items: center; gap: 12px; font-size: 20px; line-height: 1.4; color: var(--ink-3); margin-top: 22px; }
+.night .tag { color: var(--stage-ink-2); }
+.tag::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--ember); flex: none; }
 
-/* facts */
-.big { font-family: 'Fraunces', serif; font-weight: 400; font-size: 300px; line-height: 0.86; letter-spacing: -0.04em; font-variation-settings: 'opsz' 144; }
-.facts { border-top: 1px solid var(--line-2); }
-.fact { display: grid; grid-template-columns: 300px 1fr; gap: 40px; padding: 26px 0; border-bottom: 1px solid var(--line-2); align-items: baseline; }
-.fact .n { font-family: 'Fraunces', serif; font-weight: 400; font-size: 60px; line-height: 1; letter-spacing: -0.02em; font-variation-settings: 'opsz' 144; white-space: nowrap; }
-.fact .n small { font-family: 'Inter', sans-serif; font-size: 22px; color: var(--ink-3); letter-spacing: 0; margin-left: 6px; }
-.fact p { font-size: 24px; line-height: 1.4; color: var(--ink-2); }
-.fact p b { color: var(--ink); font-weight: 600; }
-.list { list-style: none; }
-.list li { font-size: 26px; line-height: 1.4; color: var(--ink-2); padding: 20px 0; border-bottom: 1px solid var(--line-2); }
-.list li:first-child { border-top: 1px solid var(--line-2); }
-.list li b { color: var(--ink); font-weight: 600; }
-.night .list li { color: var(--cream-2); border-color: var(--night-line); }
-.night .list li b { color: var(--cream); }
-h2 { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 20px; letter-spacing: 0.01em; color: var(--ink-3); margin-bottom: 18px; }
-.night h2 { color: var(--cream-3); }
-.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--line-2); margin-top: 56px; }
-.step { padding: 28px 32px 0 0; }
-.step + .step { padding-left: 32px; border-left: 1px solid var(--line-2); }
-.step b { display: block; font-family: 'Fraunces', serif; font-weight: 500; font-size: 34px; letter-spacing: -0.01em; }
-.step span { display: block; font-size: 22px; line-height: 1.4; color: var(--ink-2); margin-top: 10px; }
-.qr { width: 300px; height: 300px; background: var(--cream); border-radius: 16px; padding: 22px; }
+/* figures */
+.fig { font-family: 'Inter', sans-serif; }
+.fig [font-family] { font-variation-settings: 'opsz' 72; }
+.qr { width: 420px; height: 420px; background: var(--stage-ink); border-radius: 24px; padding: 36px; }
 .qr svg { display: block; width: 100%; height: 100%; }
-.url { font-size: 26px; color: var(--cream-2); margin-top: 20px; }
-.url b { color: var(--cream); font-weight: 600; }
+.num { font-family: 'Fraunces', serif; font-weight: 400; font-variation-settings: 'opsz' 144; letter-spacing: -0.03em; line-height: 0.9; font-variant-numeric: lining-nums; }
 </style>
 </head>
 <body>
 
-<!-- 1 -->
+<!-- 1 Cover: the one line -->
 <section class="slide night">
-  <div class="row">
-    <div class="col mid" style="width: 640px; flex: none;">
-      <h1 style="font-size: 150px;">Vire</h1>
-      <p class="lede" style="font-size: 36px; color: var(--cream);">One minute a day at home after TMS, a clinic treatment for depression.</p>
-      <p class="lede" style="margin-top: 20px;">Your phone plays a laugh and measures the smile, so your clinic knows when to call.</p>
+  <div class="row" style="gap: 120px;">
+    <div class="col" style="flex: 1;">
+      <div style="font-family: 'Fraunces', serif; font-size: 52px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 64px;">Vire</div>
+      <h1 style="font-size: 104px; line-height: 1.0;">Like Meru Health, but your AirPods sense <em>every step.</em></h1>
+      <p class="lede" style="font-size: 36px; color: var(--stage-ink); max-width: 980px; margin-top: 48px;">For people at home after TMS, a clinic treatment for depression.</p>
+      <p class="src" style="margin-top: 20px; max-width: 980px;">Meru Health puts slow breathing into a programme with a therapist. In a randomised trial the whole programme beat a waiting list; the breathing on its own was not tested.</p>
     </div>
-    <div class="col mid grow"><div class="wide"><img src="FRAMES/stage-laugh.png" alt=""></div></div>
+    <div class="col" style="flex: none;">
+      <div class="phone" style="width: 400px;"><img src="SHOTS/phone-today.jpg" alt=""></div>
+    </div>
   </div>
-  <div class="foot"><span>Junction 2026 · Aalto University, Beyond the Clinic · Table A157</span><span>A measured loop, not a diagnosis</span></div>
+  <div class="foot"><span>Junction 2026 · Aalto University, Beyond the Clinic · Table A157</span><span>A signal for the clinic, not a diagnosis.</span></div>
 </section>
 
-<!-- 2 -->
+<!-- 2 The problem -->
 <section class="slide">
-  <div class="row">
-    <div class="col mid" style="width: 800px; flex: none;">
-      <div class="big">46%</div>
-      <p class="lede" style="color: var(--ink); margin-top: 28px;">still respond a year after TMS worked for them.</p>
-      <p class="src" style="margin-top: 16px;">Senova et al. 2019, Brain Stimulation. Nine studies, 247 patients. 95% CI 33 to 61%.</p>
+  <div class="row" style="gap: 112px; align-items: stretch;">
+    <div class="col" style="width: 780px; flex: none; justify-content: center;">
+      <div class="kicker">The problem</div>
+      <h1>After TMS, the benefit fades at home. The clinic doesn’t see&nbsp;you there.</h1>
+      <p class="lede">A course is 20 to 30 clinic visits over 4 to 6 weeks. Then you go home.</p>
+      <p class="src" style="margin-top: 40px; max-width: 700px;">When people got worse, more TMS brought the benefit back for 32 of 38, in an open study with no control group (Janicak 2010).</p>
     </div>
-    <div class="col mid grow">
-      <ul class="list">
-        <li><b>A course is 20 to 30 clinic visits</b> over 4 to 6 weeks. Then you go home.</li>
-        <li><b>Going back seems to help.</b> 32 of 38 people who got worse regained the benefit with more TMS (Janicak 2010, no control group).</li>
-        <li><b>But once you're home, the clinic doesn't see you slipping.</b> Nothing validated tells it who to call back.</li>
-      </ul>
+    <div class="col" style="flex: 1; justify-content: center;">
+      <svg class="fig" viewBox="0 0 760 620" width="760" height="620" aria-label="Still responding after TMS: 66.5% at 3 months, 52.9% at 6, 46.3% at 12">
+        <!-- y: 0..100% over 520..40, x: months 0..12 over 40..700 -->
+        <g stroke="#cfc6b3" stroke-width="1">
+          <line x1="40" y1="520" x2="720" y2="520"/>
+          <line x1="40" y1="280" x2="720" y2="280" stroke-dasharray="2 6"/>
+        </g>
+        <text x="40" y="270" font-size="20" fill="#6e6759">50%</text>
+        <path d="M205 200.8 L370 266.1 L700 297.8" fill="none" stroke="#1e1b16" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M205 200.8 L370 266.1 L700 297.8 L700 520 L205 520 Z" fill="#1e1b16" opacity="0.05"/>
+        <circle cx="205" cy="200.8" r="8" fill="#1e1b16"/>
+        <circle cx="370" cy="266.1" r="8" fill="#1e1b16"/>
+        <circle cx="700" cy="297.8" r="11" fill="#e4572e"/>
+        <text x="205" y="172" font-size="32" fill="#1e1b16" text-anchor="middle" font-family="Fraunces">66.5%</text>
+        <text x="370" y="238" font-size="32" fill="#1e1b16" text-anchor="middle" font-family="Fraunces">52.9%</text>
+        <text x="700" y="250" font-size="64" fill="#b33f1c" text-anchor="end" font-family="Fraunces" letter-spacing="-1.5">46.3%</text>
+        <text x="205" y="560" font-size="22" fill="#5b554a" text-anchor="middle">3 months</text>
+        <text x="370" y="560" font-size="22" fill="#5b554a" text-anchor="middle">6 months</text>
+        <text x="700" y="560" font-size="22" fill="#5b554a" text-anchor="middle">12 months</text>
+        <text x="40" y="40" font-size="24" fill="#1e1b16" font-weight="600">Of the people TMS helped, still responding</text>
+      </svg>
+      <p class="src" style="margin-top: 28px; max-width: 760px;">Senova et al. 2019, Brain Stimulation. The one-year figure is from 9 of its 19 studies, 247 patients (95% CI 33 to 61%).</p>
     </div>
   </div>
-  <div class="foot"><b>Vire</b><span>The problem</span></div>
+  <div class="foot"><b>Vire</b><span class="n">2</span></div>
 </section>
 
-<!-- 3 -->
+<!-- 3 Two loops -->
 <section class="slide">
-  <div class="row">
-    <div class="col mid" style="width: 760px; flex: none;">
-      <h1 style="font-size: 68px;">A questionnaire asks how you feel. Vire measures <em>how you react.</em></h1>
-      <p class="lede" style="font-size: 28px;">In lab studies, people with depression react less to good things. So once a day, Vire plays a laugh and measures the smile that answers it.</p>
-      <p class="src" style="margin-top: 20px;">Bylsma, Morris and Rottenberg 2008: 19 laboratory studies, d = −0.53 for positive stimuli.</p>
-    </div>
-    <div class="col mid grow">
-      <div class="wide"><img src="FRAMES/stage-laugh.png" alt=""></div>
-      <p class="src" style="margin-top: 16px;">The big screen during a ping: the person's own face as a wireframe, and the smile line as the laughter plays. A recorded face is played into the phone's camera here.</p>
-    </div>
-  </div>
-  <div class="foot"><b>Vire</b><span>The idea</span></div>
+  <div class="kicker">How it works</div>
+  <h1 style="max-width: 1500px;">Two loops: one in your ears, one at your clinic.</h1>
+  <p class="lede" style="margin-top: 24px;">AirPods in, camera off. Vire runs while your AirPods are in.</p>
+  <svg class="fig" viewBox="0 0 1664 520" width="1664" height="520" style="margin-top: 40px;" aria-label="The loop">
+    <defs>
+      <marker id="ah" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" orient="auto"><path d="M1 1 L11 6 L1 11" fill="none" stroke="#1e1b16" stroke-width="1.8"/></marker>
+      <marker id="ae" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" orient="auto"><path d="M1 1 L11 6 L1 11" fill="none" stroke="#b33f1c" stroke-width="1.8"/></marker>
+    </defs>
+    <!-- the inner loop: you -->
+    <rect x="0" y="40" width="1140" height="440" rx="24" fill="#fffdf8" stroke="#e2dbcc"/>
+    <text x="40" y="92" font-size="22" font-weight="600" fill="#6e6759" letter-spacing="2.4">YOU, AT HOME</text>
+    <g font-family="Fraunces" font-size="44" fill="#1e1b16">
+      <text x="40" y="250">Sense</text><text x="320" y="250">Respond</text><text x="600" y="250">Measure</text><text x="880" y="250">Learn</text>
+    </g>
+    <g font-size="23" fill="#5b554a">
+      <text x="40" y="296">your day against</text><text x="40" y="328">your own usual</text>
+      <text x="320" y="296">a short practice</text><text x="320" y="328">in your ears</text>
+      <text x="600" y="296">the same check</text><text x="600" y="328">before and after</text>
+      <text x="880" y="296">which practice</text><text x="880" y="328">helps you</text>
+    </g>
+    <g stroke="#1e1b16" stroke-width="2" fill="none">
+      <line x1="40" y1="170" x2="250" y2="170" marker-end="url(#ah)"/>
+      <line x1="320" y1="170" x2="530" y2="170" marker-end="url(#ah)"/>
+      <line x1="600" y1="170" x2="810" y2="170" marker-end="url(#ah)"/>
+      <line x1="880" y1="170" x2="1090" y2="170"/>
+      <path d="M1090 170 L1090 410 Q1090 430 1070 430 L60 430 Q40 430 40 410 L40 360" marker-end="url(#ah)"/>
+    </g>
+    <g fill="#1e1b16"><circle cx="40" cy="170" r="8"/><circle cx="320" cy="170" r="8"/><circle cx="600" cy="170" r="8"/><circle cx="880" cy="170" r="8"/></g>
+    <text x="565" y="420" font-size="21" fill="#6e6759" text-anchor="middle">and again, the next time your day drifts</text>
+    <!-- the outer loop: the clinic -->
+    <path d="M1140 260 L1236 260" stroke="#b33f1c" stroke-width="2" stroke-dasharray="6 7" fill="none" marker-end="url(#ae)"/>
+    <rect x="1244" y="40" width="420" height="440" rx="24" fill="#fbe3d9"/>
+    <text x="1284" y="92" font-size="22" font-weight="600" fill="#b33f1c" letter-spacing="2.4">YOUR CLINIC</text>
+    <text x="1284" y="250" font-family="Fraunces" font-size="44" fill="#1e1b16">Top of the list</text>
+    <g font-size="23" fill="#5b554a">
+      <text x="1284" y="296">when the practices don’t fix</text><text x="1284" y="328">the drift, with what was tried.</text>
+      <text x="1284" y="376">The clinic can book a</text><text x="1284" y="408">TMS booster then.</text>
+    </g>
+  </svg>
+  <div class="foot"><b>Vire</b><span class="n">3</span></div>
 </section>
 
-<!-- 4 -->
+<!-- 4 Sense -->
+<section class="slide">
+  <div class="kicker">Sense</div>
+  <div class="top">
+    <h1>Your AirPods set each day against your own usual.</h1>
+    <p class="lede">Walks, time with your head down, head movement, and heart rate on AirPods Pro 3.</p>
+  </div>
+  <div style="margin-top: auto;">
+    <div class="screen"><img src="SHOTS/laptop-patient-signals.jpg" alt=""></div>
+    <div class="tag">A simulated patient, as the clinic sees them. The band is their own usual.</div>
+  </div>
+  <div class="foot"><b>Vire</b><span class="n">4</span></div>
+</section>
+
+<!-- 5 Respond -->
 <section class="slide night">
-  <h1 style="font-size: 60px;">Four small things to answer, in 60 seconds.</h1>
-  <div class="row" style="margin-top: 48px; gap: 0; justify-content: space-between;">
-    <div class="col"><div class="phone"><img src="FRAMES/phone-nod.png" alt=""></div><div class="cap"><b><i class="dot" style="background: var(--ch-move)"></i>Nod</b><span>how quick, how far</span></div></div>
-    <div class="col"><div class="phone"><img src="FRAMES/phone-laugh.png" alt=""></div><div class="cap"><b><i class="dot" style="background: var(--ch-smile)"></i>Laugh</b><span>how much you smile back,<br>and how soon</span></div></div>
-    <div class="col"><div class="phone"><img src="FRAMES/phone-speak.png" alt=""></div><div class="cap"><b><i class="dot" style="background: var(--ch-voice)"></i>Speak</b><span>how your pitch moves,<br>how long you pause</span></div></div>
-    <div class="col"><div class="phone"><img src="FRAMES/phone-breathe.png" alt=""></div><div class="cap"><b><i class="dot" style="background: var(--ch-heart)"></i>Breathe</b><span>how far your heart swings<br>over two slow breaths</span></div></div>
-    <div class="col end" style="width: 380px; padding-bottom: 96px;">
-      <ul class="list">
-        <li><b>Camera and microphone</b> on any phone.</li>
-        <li><b>AirPods</b> add head movement and, on the Pro 3, heart rate.</li>
-        <li><b>Only numbers leave the phone.</b> Never video or sound.</li>
-      </ul>
+  <div class="row" style="gap: 128px;">
+    <div class="col" style="flex: 1;">
+      <div class="kicker">Respond</div>
+      <h1>A sea in your ears that slows only when your breath follows.</h1>
+      <p class="lede">It rises as you breathe in and falls as you breathe out, stepping toward six breaths a minute. When the breath can’t be read, it waits for a still head.</p>
+    </div>
+    <div class="col" style="flex: none; align-items: center;">
+      <div class="phone" style="width: 372px;"><img src="SHOTS/phone-breathe.jpg" alt=""></div>
+      <div class="tag" style="max-width: 372px; font-size: 18px;">WATCH_LABEL</div>
     </div>
   </div>
-  <div class="foot"><b>Vire</b><span>The daily ping</span></div>
+  <div class="foot"><b>Vire</b><span class="n">5</span></div>
 </section>
 
-<!-- 5 -->
+<!-- 6 Measure and learn -->
 <section class="slide night">
-  <div class="row">
-    <div class="col mid" style="flex: none;"><div class="phone" style="width: 380px;"><img src="FRAMES/phone-echo.png" alt=""></div></div>
-    <div class="col mid grow">
-      <h1 style="font-size: 68px;">Your echo: four numbers against your own usual. <em>50 is you.</em></h1>
-      <ul class="list" style="margin-top: 44px;">
-        <li><b>Tuned to your face.</b> Five expressions in about 30 seconds train a model of your own muscle ranges, in the browser, in 44 ms.</li>
-        <li><b>Compared with you, not with everyone.</b> Your usual is set from your own pings and stays fixed.</li>
-        <li><b>Honest about gaps.</b> What it can't read today, it leaves out and says so.</li>
-      </ul>
-    </div>
+  <div class="kicker">Measure, then learn</div>
+  <div class="top">
+    <h1>It checks you before and after, and learns what helps you.</h1>
+    <p class="lede">“Calmer after” comes only from heart rate and stillness. “Vire learned” comes only at 80% sure, after 3 scored runs.</p>
   </div>
-  <div class="foot"><b>Vire</b><span>The echo</span></div>
+  <div class="shot" style="--h: 530px;">
+    <div class="screen"><img src="SHOTS/laptop-practice-crop.jpg" alt=""></div>
+    <div class="tag">The clinic’s big screen. PRACTICE_LABEL</div>
+  </div>
+  <div class="foot"><b>Vire</b><span class="n">6</span></div>
 </section>
 
-<!-- 6 -->
+<!-- 7 The clinic and the booster -->
+<section class="slide">
+  <div class="kicker">The clinic</div>
+  <div class="top">
+    <h1>When the practices don’t fix it, your clinic sees you first.</h1>
+    <p class="lede">At the top of the list, with what was tried. The clinic can book a TMS booster then, not on a fixed schedule.</p>
+  </div>
+  <div class="shot" style="--h: 520px;">
+    <div class="screen"><img src="SHOTS/laptop-clinic-top.jpg" alt=""></div>
+    <div class="tag">Simulated patients, on the live clinic list. Whether an earlier booster is better, a pilot has to test.</div>
+  </div>
+  <div class="foot"><b>Vire</b><span class="n">7</span></div>
+</section>
+
+<!-- 8 What ran, on what -->
 <section class="slide night">
-  <h1 style="font-size: 60px;">Sense, respond, learn. Then measure again.</h1>
-  <div class="row" style="margin-top: 48px; gap: 56px;">
-    <div class="col"><div class="phone"><img src="FRAMES/phone-offer.png" alt=""></div><div class="cap"><b>Respond</b><span>Vire picks one small thing<br>and says why</span></div></div>
-    <div class="col"><div class="phone"><img src="FRAMES/phone-dose.png" alt=""></div><div class="cap"><b>Dose</b><span>a forest to look around in,<br>or breathing, a walk, a voice note</span></div></div>
-    <div class="col"><div class="phone"><img src="FRAMES/phone-after.png" alt=""></div><div class="cap"><b>Learn</b><span>a short second ping shows<br>what followed, for you</span></div></div>
-    <div class="col end grow" style="padding-bottom: 96px;">
-      <ul class="list">
-        <li><b>The dose is chosen per person.</b> Each one's lift is counted, measured and as you said you felt, and the next pick follows it.</li>
-        <li><b>The probe adapts too.</b> The laugh your face answers most is used most, and another is tried now and then.</li>
-        <li><b>Small nudges, not treatment.</b> The treatment is TMS. Vire's job is to say when to go back.</li>
-      </ul>
+  <div class="kicker">What ran, on what</div>
+  <h1 style="max-width: 1500px;">Each patient’s data gets its own locked box on Modal.</h1>
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 64px; margin-top: auto; border-top: 1px solid var(--stage-line);">
+    <div style="padding-top: 40px;">
+      <div class="num" style="font-size: 120px;">REAL_N</div>
+      <div style="font-size: 28px; font-weight: 600; margin-top: 28px;">REAL_TITLE</div>
+      <p class="src" style="font-size: 24px; margin-top: 12px;">REAL_TEXT</p>
+    </div>
+    <div style="padding-top: 40px;">
+      <div class="num" style="font-size: 120px;">46<span style="font-size: 64px;"> s</span></div>
+      <div style="font-size: 28px; font-weight: 600; margin-top: 28px;">My own setup minutes</div>
+      <p class="src" style="font-size: 24px; margin-top: 12px;">3 minutes on my AirPods. A network-blocked Modal Sandbox tried 366 models. On a whole minute it never saw: nod 0.97, head shake 0.97, smile 0.64, too weak to count yet.</p>
+    </div>
+    <div style="padding-top: 40px;">
+      <div class="num" style="font-size: 120px; color: var(--ember);">50<span style="font-size: 64px;"> at once</span></div>
+      <div style="font-size: 28px; font-weight: 600; margin-top: 28px;">The whole clinic at once</div>
+      <p class="src" style="font-size: 24px; margin-top: 12px;">50 simulated patients, one Sandbox each, all running together: over 9,000 models in about half a minute, and each re-learned which practice helps that patient.</p>
     </div>
   </div>
-  <div class="foot"><b>Vire</b><span>The loop</span></div>
+  <p class="src" style="margin-top: 36px; font-size: 18px;">Scores: 1.00 is never wrong, 0.50 is luck. A shared model pretrained on a public earbud dataset did not clearly win, so each person keeps their own.</p>
+  <div class="foot"><b>Vire</b><span class="n">8</span></div>
 </section>
 
-<!-- 7 -->
+<!-- 9 Limits and next -->
 <section class="slide">
-  <div class="row" style="gap: 64px;">
-    <div class="col mid" style="width: 560px; flex: none;">
-      <h1 style="font-size: 64px;">The clinic sees who to call.</h1>
-      <ul class="list" style="margin-top: 40px;">
-        <li><b>A well signature</b> is set from pings in the last two weeks of the course.</li>
-        <li><b>Three low days in a row, or silence,</b> moves a name up the list, with the reason in plain words.</li>
-        <li><b>One tap</b> asks the person back for a booster session.</li>
-      </ul>
-      <p class="src" style="margin-top: 24px;">The 50 patients on this dashboard are simulated.</p>
-    </div>
-    <div class="col mid grow" style="gap: 24px;">
-      <div class="wide"><img src="FRAMES/clinic-list.png" alt="" style="object-position: top;"></div>
-      <div class="wide" style="aspect-ratio: 16 / 6.2;"><img src="FRAMES/clinic-patient.png" alt="" style="object-position: 50% 62%;"></div>
-    </div>
+  <div class="kicker">Honest limits</div>
+  <h1 style="max-width: 1500px;">No patient or clinic has used Vire yet. A pilot is next.</h1>
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 64px; margin-top: 64px; border-top: 1px solid var(--line-2);">
+    <p style="padding-top: 32px; font-size: 30px; line-height: 1.4; color: var(--ink-2);"><b style="color: var(--ink); font-weight: 600;">A signal for the clinic, not a diagnosis.</b> A practice is not a treatment.</p>
+    <p style="padding-top: 32px; font-size: 30px; line-height: 1.4; color: var(--ink-2);"><b style="color: var(--ink); font-weight: 600;">Nobody knows yet</b> if drift comes before relapse, or if an earlier booster helps more.</p>
+    <p style="padding-top: 32px; font-size: 30px; line-height: 1.4; color: var(--ink-2);"><b style="color: var(--ink); font-weight: 600;">It senses while Vire is open,</b> not in the background.</p>
   </div>
-  <div class="foot"><b>Vire</b><span>The clinic</span></div>
+  <div style="margin-top: auto;">
+    <div style="font-size: 30px; font-weight: 600; margin-bottom: 36px;">Next, a pilot: one TMS clinic, 20 patients</div>
+    <svg class="fig" viewBox="0 0 1664 130" width="1664" height="130" aria-label="From the last two weeks of the course to 12 weeks after, a questionnaire each week">
+      <text x="0" y="18" font-size="22" fill="#5b554a">course, last 2 weeks</text>
+      <text x="1664" y="18" font-size="22" fill="#5b554a" text-anchor="end">12 weeks at home</text>
+      <rect x="0" y="40" width="236" height="16" rx="8" fill="#1e1b16"/>
+      <rect x="244" y="40" width="1420" height="16" rx="8" fill="#e4572e"/>
+      <g fill="#1e1b16"><circle cx="112" cy="84" r="6"/><circle cx="230" cy="84" r="6"/><circle cx="362" cy="84" r="6"/><circle cx="481" cy="84" r="6"/><circle cx="599" cy="84" r="6"/><circle cx="717" cy="84" r="6"/><circle cx="836" cy="84" r="6"/><circle cx="954" cy="84" r="6"/><circle cx="1072" cy="84" r="6"/><circle cx="1191" cy="84" r="6"/><circle cx="1309" cy="84" r="6"/><circle cx="1427" cy="84" r="6"/><circle cx="1546" cy="84" r="6"/><circle cx="1658" cy="84" r="6"/></g>
+      <text x="0" y="126" font-size="22" fill="#5b554a">each dot: a weekly depression questionnaire</text>
+    </svg>
+  </div>
+  <div class="foot"><b>Vire</b><span class="n">9</span></div>
 </section>
 
-<!-- 8 -->
-<section class="slide">
-  <h1 style="font-size: 60px;">What is real today, and what is not.</h1>
-  <div class="row" style="margin-top: 48px; gap: 96px;">
-    <div class="col" style="width: 980px; flex: none;">
-      <h2>Measured</h2>
-      <div class="facts">
-        <div class="fact"><div class="n">1.2<small>bpm</small></div><p><b>Camera pulse against a finger oximeter,</b> on public recordings of 16 people sitting still. 28% of the time the signal is poor and it shows nothing.</p></div>
-        <div class="fact"><div class="n">97%<small>/ 16%</small></div><p><b>Clear smiles found,</b> and neutral faces wrongly called a smile, on public clips of 62 people.</p></div>
-        <div class="fact"><div class="n">8<small>days</small></div><p><b>Median time for a fading echo to reach the clinic's early list,</b> in Vire's own detector on 4,000 made-up people per setting, at 70% of days pinged. The cost: 1.5 to 4.3 false calls per person a year.</p></div>
-      </div>
-    </div>
-    <div class="col grow">
-      <h2>Not yet</h2>
-      <ul class="list">
-        <li><b>No patient has used it and no clinic has seen it.</b></li>
-        <li><b>Nobody knows whether a fading echo comes before a relapse.</b> The link to depression rests on a few small studies.</li>
-        <li><b>The sensor checks ran on a desktop, not a phone.</b> Voice, head movement and AirPods are unchecked.</li>
-        <li><b>Vire doesn't diagnose and can't see a crisis.</b> The app has one tap to 112 and the MIELI crisis line.</li>
-      </ul>
-    </div>
-  </div>
-  <div class="foot"><b>Vire</b><span>Evidence, and its limits</span></div>
-</section>
-
-<!-- 9 -->
-<section class="slide">
-  <div class="row">
-    <div class="col mid" style="width: 860px; flex: none;">
-      <h1 style="font-size: 68px;">Next: one clinic, twenty patients, one question.</h1>
-      <p class="lede">Does a person's echo move with their own symptoms?</p>
-    </div>
-    <div class="col mid grow">
-      <ul class="list">
-        <li><b>20 patients</b> of a TMS clinic, pinging daily from the last two weeks of the course and for 12 weeks after.</li>
-        <li><b>A weekly PHQ-9</b> as the yardstick. The clinic does not see the echo.</li>
-        <li><b>The shape is TMS-EEG's.</b> A pulse goes in, the brain's response is read, and in Aalto's lab that response steers the next pulse (Tervo 2022, healthy volunteers). Our pulse is a laugh, and a phone reads the answer.</li>
-      </ul>
-      <p class="src" style="margin-top: 24px;">The full protocol is on the evidence page for any group to pick up. Whether a smile and a brain response move together is untested.</p>
-    </div>
-  </div>
-  <div class="foot"><b>Vire</b><span>The pilot</span></div>
-</section>
-
-<!-- 10 -->
+<!-- 10 Try it -->
 <section class="slide night">
-  <div class="row">
-    <div class="col mid grow">
-      <h1 style="font-size: 84px; max-width: 1100px;">The treatment exists. The clinic just doesn't know who to call back.</h1>
-      <p class="lede" style="font-size: 34px;">Vire. One minute a day.</p>
+  <div class="row" style="gap: 140px;">
+    <div class="col" style="flex: 1;">
+      <div class="kicker">Try it</div>
+      <h1 style="font-size: 96px;">Watch a run in 40 seconds. No AirPods needed.</h1>
+      <p class="lede" style="font-size: 34px; color: var(--stage-ink);">vire.fly.dev</p>
+      <p class="lede" style="margin-top: 12px;">Or put the AirPods in at Table A157.</p>
     </div>
-    <div class="col mid" style="flex: none; align-items: flex-start;">
+    <div class="col" style="flex: none;">
       <div class="qr">QRSVG</div>
-      <p class="url"><b>Try it on your phone.</b> One minute.</p>
-      <p class="url" style="font-size: 20px; margin-top: 8px;">vire.fly.dev/#/visit</p>
     </div>
   </div>
-  <div class="foot"><span>Junction 2026 · Aalto University, Beyond the Clinic · Table A157</span><span>A measured loop, not a diagnosis</span></div>
+  <div class="foot"><span>Junction 2026 · Aalto University, Beyond the Clinic · Table A157</span><span>A signal for the clinic, not a diagnosis.</span></div>
 </section>
 
 </body>
