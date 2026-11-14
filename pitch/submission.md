@@ -83,13 +83,13 @@ The AirPods sense you and answer you: a sea made as you breathe, that stays put 
 What ran on Modal:
 
 - **A locked box per patient.** Each person's data gets its own Modal Sandbox with the network blocked. On my three setup minutes it tried 366 models in 46 seconds, each scored on a minute it never saw.
-- **The whole clinic at once.** The 50 simulated patients on the clinic list, one Sandbox each, all running together, a shorter search each: 9,595 models in all, in 27 seconds. Each Sandbox also re-learns which practice helps that patient. Press "Re-train the whole clinic" on https://vire.fly.dev/#/clinic/live?cohort=1
+- **The whole clinic at once.** The 50 simulated patients on the clinic list, one Sandbox each, all running together, a shorter search each: over 9,000 models in about half a minute. Each Sandbox also re-learns which practice helps that patient. Press "Re-train the whole clinic" on https://vire.fly.dev/#/clinic/live?cohort=1 and watch your own run.
 - **The sea, on a GPU.** MusicGen-small on a T4: thirty 20-second pieces made ahead, and during a practice the phone asks Modal for a new one from the pace and stillness the AirPods just read.
 - **A shared model, tried.** Pretrained on a public earbud dataset (EarSet, 30 people) on a T4, fine-tuned per person. It didn't clearly win, so each person keeps their own.
 
 ## (stop pasting here)
 
-Current count of the paste region: **4,892** characters, markdown included (counted with `python3`: `len()` of the stripped text between the "Description (paste from here)" heading and "(stop pasting here)"). Room left: 108. This text is what the Junction draft holds (project 2079, "Vire", Beyond the Clinic, Draft, "Best use of Modal" ticked; saved Sunday 01:28 Helsinki time with `python3 /home/ubuntu/junction/tools/junction_draft.py /bulk3/runs/depression/junction-draft/fields.json --save`, Save Draft only). It has no open slots. Not in the draft yet: the video link and the deck PDF.
+Current count of the paste region: **4,922** characters, markdown included (counted with `python3`: `len()` of the stripped text between the "Description (paste from here)" heading and "(stop pasting here)"). Room left: 78. This text is what the Junction draft holds (project 2079, "Vire", Beyond the Clinic, Draft, "Best use of Modal" ticked; saved Sunday 01:28 Helsinki time with `python3 /home/ubuntu/junction/tools/junction_draft.py /bulk3/runs/depression/junction-draft/fields.json --save`, Save Draft only). It has no open slots. Not in the draft yet: the video link and the deck PDF.
 
 ## Slots to fill on Sunday morning
 
@@ -100,6 +100,6 @@ Current count of the paste region: **4,892** characters, markdown included (coun
 - `[REAL: still]`: the result screen, "your head sat N% stiller" or "moved N% more".
 - The shared model sentence (EarSet, 30 people; smile 0.78 against 0.66, head shake 0.95 against 0.97): `pitch/evidence-shared-model.md`, the 6-epoch run fixed as the result before looking. Filled on Saturday night.
 - 46 seconds, 366 models, 0.97 / 0.97 / 0.64: production job `ej_f4d4185419864d00a87c4f6c32804718` (`GET /api/ear/jobs/latest`). If a newer job is on the screen, use its numbers.
-- 50 patients, 27 seconds (9,595 models, not in the text): production cohort run `cr_231f14871d724b76875d8f64c010688d` (`GET /api/ear/cohort/latest`), Sunday 00:54. The 50 are the people on the clinic list (`server/cohort.ts`). If someone presses "Re-train the whole clinic" again, the latest run changes: recheck.
+- 50 patients, "about half a minute", "over 9,000 models": the screen shows each run's own numbers and anyone can press the button, so the text pins no single run. Runs so far with all 50: 27 s and 9,595 models (`cr_231f14871d724b76875d8f64c010688d`, Sunday 00:54), 34.8 s and 9,886 (`cr_07bb74dc724f4f16851d03adbfb76d27`, Sunday 01:25, a judge's press). The 50 are the people on the clinic list (`server/cohort.ts`). If someone presses "Re-train the whole clinic" again, the latest run changes: recheck.
 - "Four hours later, camera off": `claims.md` row 134.
 - After filling, recount: it must stay at or under 5,000 characters.
