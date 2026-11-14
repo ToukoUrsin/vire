@@ -26,6 +26,10 @@ export interface CohortWorks {
 export interface CohortPatient {
   /** 1-based number of the simulated patient */
   n: number
+  /** the roster name, present only on new fixed-seed runs */
+  name?: string
+  /** the clinic-list id for name, present only on new fixed-seed runs */
+  id?: string
   state: CohortPatientState
   /** models tried for this patient so far */
   tried: number
@@ -33,6 +37,8 @@ export interface CohortPatient {
   seconds: number
   /** the held-out score of the model found (mean over smile, nod, head shake), null until done */
   auc: number | null
+  /** why this patient's sandbox failed, when it did */
+  error?: string
   /** what helps this patient most, once the sandbox has learned it again */
   works?: CohortWorks
 }
@@ -69,8 +75,10 @@ export interface CohortRun {
 export interface CohortClaim {
   id: string
   patients: number
-  /** seeds the simulated minutes, so two runs differ */
+  /** seeds the simulated minutes; older runs may have a different stored seed */
   seed: number
+  /** creation time, used to generate the same roster snapshot as the clinic list */
+  now: number
 }
 
 /** what a worker posts while the run goes, and with done */
@@ -84,4 +92,6 @@ export interface CohortProgress {
 }
 
 export const COHORT_DEFAULT = 50
-export const COHORT_MAX = 60
+export const COHORT_MAX = 50
+/** New runs use one stable seed so every press re-learns the same simulated people. */
+export const COHORT_SEED = 2026

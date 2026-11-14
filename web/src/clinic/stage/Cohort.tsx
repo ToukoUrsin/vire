@@ -46,16 +46,17 @@ function copy(run: CohortRun): { tag: string; h: string; p: string } {
 }
 
 function Tile({ p }: { p: CohortPatient }) {
+  const label = p.name && p.id ? <a className="ch-n" href={`#/clinic/p/${p.id}`}>{p.name}</a> : <span className="ch-n">{String(p.n).padStart(2, '0')}</span>
   return (
     <li className="ch-tile" data-state={p.state} data-n={p.n}>
       {p.state === 'done' && p.auc !== null && p.works ? (
-        // with what works too, the number and the score share a row so the words get the room
+        // with what works too, the name and the score share a row so the words get the room
         <span className="ch-top">
-          <span className="ch-n">{String(p.n).padStart(2, '0')}</span>
+          {label}
           <b className="ch-auc">{p.auc.toFixed(2)}</b>
         </span>
       ) : (
-        <span className="ch-n">{String(p.n).padStart(2, '0')}</span>
+        label
       )}
       {p.state === 'done' && p.auc !== null ? (
         <>
@@ -74,7 +75,7 @@ function Tile({ p }: { p: CohortPatient }) {
           </span>
         </>
       ) : (
-        <span className="ch-word">{p.state === 'failed' ? 'failed' : 'waiting'}</span>
+        <span className="ch-word">{p.state === 'failed' ? (p.error || 'failed') : 'waiting'}</span>
       )}
     </li>
   )
@@ -129,7 +130,7 @@ export function CohortBoard({ seen }: { seen: CohortSeen }) {
             <dd data-sandboxes>{over ? run.peak : run.sandboxes}</dd>
           </div>
           <div>
-            <dt>models tried</dt>
+            <dt>models tried, as many as fit in each search</dt>
             <dd data-tried>{run.tried.toLocaleString('en-US')}</dd>
           </div>
           <div>

@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test'
 import type { Channel, DoseKind } from '../shared/types'
 import { buildDetail, buildRow, echoNow, priorityOf, reasonOf, rowFacts, slope, summaryOf } from './clinic'
-import { generateCohort, synthTraces } from './cohort'
+import { generateCohort, ROSTER, synthTraces } from './cohort'
 import {
   CHANNELS,
   DOSES,
@@ -340,16 +340,23 @@ describe('synthetic cohort', () => {
   })
   const of = (arch: string) => rows.filter((r) => r.p.archetype === arch)
 
-  test('24 fictional people, deterministic, flagged synthetic', () => {
-    expect(people).toHaveLength(24)
-    expect(new Set(people.map((p) => p.id)).size).toBe(24)
+  test('50 fictional people, deterministic, flagged synthetic', () => {
+    expect(people).toHaveLength(50)
+    expect(new Set(people.map((p) => p.id)).size).toBe(50)
     expect(people.every((p) => p.synthetic && /^[A-ZÄÖ][a-zäö]+ [A-Z]\.$/.test(p.name))).toBe(true)
     expect(JSON.stringify(generateCohort(now))).toBe(JSON.stringify(people))
-    expect(of('steady').length).toBe(12)
+    expect(of('steady').length).toBe(38)
     expect(of('drift').length).toBe(5)
     expect(of('drop').length).toBeGreaterThanOrEqual(2)
     expect(of('improving').length).toBeGreaterThanOrEqual(2)
     expect(of('quiet').length).toBeGreaterThanOrEqual(2)
+  })
+
+  test('appending roster names leaves the first 24 people unchanged', () => {
+    const old = generateCohort(now, 2026, ROSTER.slice(0, 24))
+    expect(people.slice(0, 24).map((p) => ({ id: p.id, status: analyze(p.pings, p.course!.end).status, practices: p.practices }))).toEqual(
+      old.map((p) => ({ id: p.id, status: analyze(p.pings, p.course!.end).status, practices: p.practices })),
+    )
   })
 
   test('history is stable as the clock moves: only new pings appear', () => {

@@ -4,7 +4,8 @@
 // two minutes between runs, and at most VIRE_COHORT_MAX_RUNS runs that a worker ever took.
 // The patients are always simulated; nothing here holds anything of a person.
 import { db } from './db'
-import { COHORT_DEFAULT, COHORT_MAX } from '../shared/cohort'
+import { COHORT_DEFAULT, COHORT_MAX, COHORT_SEED } from '../shared/cohort'
+import { ROSTER, synthId } from './cohort'
 import type { CohortClaim, CohortPatient, CohortPatientState, CohortRun, CohortWhere, CohortWorks } from '../shared/cohort'
 import { SESSION_KINDS } from '../shared/earsession'
 import type { SessionKind } from '../shared/earsession'
@@ -37,9 +38,10 @@ const SILENT_MS = 3 * 60_000
 const GAP_MS = 2 * 60_000
 const MAX_TRIED = 5000
 const STATES = new Set<CohortPatientState>(['waiting', 'running', 'done', 'failed'])
+// Forty runs leaves room for judges to press the button; each run costs about $0.20 in sandbox time.
 const maxRuns = () => {
-  const v = Number(process.env.VIRE_COHORT_MAX_RUNS ?? 8)
-  return Number.isFinite(v) && v >= 0 ? Math.floor(v) : 8
+  const v = Number(process.env.VIRE_COHORT_MAX_RUNS ?? 40)
+  return Number.isFinite(v) && v >= 0 ? Math.floor(v) : 40
 }
 
 type Row = {
@@ -69,6 +71,12 @@ const publicRun = (r: Row): CohortRun => {
     patients = JSON.parse(r.patients) as CohortPatient[]
   } catch {
     patients = fresh(r.n)
+  }
+  if (r.seed === COHORT_SEED) {
+    patients = patients.map((p) => {
+      const person = ROSTER[p.n - 1]
+      return person ? { ...p, name: person[0], id: synthId(person[0]) } : p
+    })
   }
   const ended = r.state === 'done' || r.state === 'failed'
   return {
@@ -117,7 +125,7 @@ export function startCohort(patients: unknown, now = Date.now()): Started {
   const max = maxRuns()
   if (used >= max) return { error: `This server has done all ${max} re-training runs it may: each one costs sandbox time.`, status: 429 }
   const id = `cr_${crypto.randomUUID().replace(/-/g, '')}`
-  const seed = (Math.floor(now / 1000) ^ (used * 7919)) >>> 0
+  const seed = COHORT_SEED
   db.query('INSERT INTO cohort_runs (id, state, n, seed, patients, created_at) VALUES (?, ?, ?, ?, ?, ?)').run(id, 'queued', n, seed, JSON.stringify(fresh(n)), now)
   return { run: publicRun(row(id)!) }
 }
@@ -141,7 +149,7 @@ export function claimCohort(now = Date.now()): CohortClaim | null {
   if (!q) return null
   const changed = db.query("UPDATE cohort_runs SET state = 'running', started_at = ?, beat_at = ? WHERE id = ? AND state = 'queued'").run(now, now, q.id)
   if (!changed.changes) return null
-  return { id: q.id, patients: q.n, seed: q.seed }
+  return { id: q.id, patients: q.n, seed: q.seed, now: q.created_at }
 }
 
 const finite = (x: unknown): x is number => typeof x === 'number' && Number.isFinite(x)
@@ -189,8 +197,9 @@ export function checkProgress(x: unknown, n: number): Checked | null {
     const p = item as Record<string, unknown>
     if (p.n !== i + 1 || !STATES.has(p.state as CohortPatientState) || !whole(p.tried, 0, MAX_TRIED) || !finite(p.seconds) || p.seconds < 0 || p.seconds > 900) return null
     if (p.auc !== null && p.auc !== undefined && (!finite(p.auc) || p.auc < 0 || p.auc > 1)) return null
+    if (p.error !== undefined && (typeof p.error !== 'string' || p.error.length > 300)) return null
     const works = checkWorks(p.works)
-    patients.push({ n: i + 1, state: p.state as CohortPatientState, tried: p.tried, seconds: Math.round(p.seconds * 10) / 10, auc: finite(p.auc) ? Math.round(p.auc * 1000) / 1000 : null, ...(works ? { works } : {}) })
+    patients.push({ n: i + 1, state: p.state as CohortPatientState, tried: p.tried, seconds: Math.round(p.seconds * 10) / 10, auc: finite(p.auc) ? Math.round(p.auc * 1000) / 1000 : null, ...(typeof p.error === 'string' && p.error ? { error: p.error } : {}), ...(works ? { works } : {}) })
   }
   if (!finite(b.seconds) || b.seconds < 0 || b.seconds > 900) return null
   if (!whole(b.sandboxes, 0, n) || !whole(b.peak, 0, n)) return null

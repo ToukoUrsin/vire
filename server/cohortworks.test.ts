@@ -1,13 +1,13 @@
 // bun test server/cohortworks.test.ts: the clinic's re-training sandbox learns "what works" with sandbox/works.py, a port
-// of shared/earlearn.ts. The same histories must give the same answer in both, and the simulated histories must be
-// seeded, labelled, between 2 and 30 practices, and show a mix of practices and of how sure the learner is.
+// of shared/earlearn.ts. The same histories must give the same answer in both, including all 50 roster people.
 import { expect, test } from 'bun:test'
 import { mkdtempSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { learn } from '../shared/earlearn'
 import type { Scored } from '../shared/earlearn'
-import { cohortPractices, PRACTICES_MAX, PRACTICES_MIN } from '../sandbox/cohort_practices'
+import { generateCohort } from './cohort'
+import { workingOf } from './outerloop'
 
 const repo = join(import.meta.dir, '..')
 const python = process.env.VIRE_PYTHON ?? 'python3'
@@ -26,11 +26,8 @@ const fixed: Scored[][] = [
   // close calls: nothing stands out
   [{ kind: 'breathe', settle: 10, at: '2026-11-01T08:00:00.000Z' }, { kind: 'scan', settle: 11, at: '2026-11-02T08:00:00.000Z' }, { kind: 'walk', settle: 9.5, at: '2026-11-03T08:00:00.000Z' }, { kind: 'scan', settle: 0.05, at: '2026-11-04T08:00:00.000Z' }, { kind: 'breathe', settle: 1e-7, at: '2026-11-05T08:00:00.000Z' }],
 ]
-// and some of the simulated patients themselves, from the short to the long
-const simulated = [3, 8, 17, 21, 34, 50].map((n) => cohortPractices(1_763_110_000, n).practices)
-
 test('the sandbox (Python) and the app (TypeScript) learn the same thing from the same practices', async () => {
-  const histories = [...fixed, ...simulated]
+  const histories = fixed
   const proc = Bun.spawn([python, join(repo, 'sandbox/works.py'), '--learn'], { stdin: 'pipe', stdout: 'pipe', stderr: 'pipe' })
   proc.stdin.write(JSON.stringify({ histories }))
   proc.stdin.end()
@@ -54,7 +51,7 @@ test('the sandbox (Python) and the app (TypeScript) learn the same thing from th
 })
 
 test('a patient file the sandbox gets says what works in a few fields', async () => {
-  const practices = cohortPractices(7, 5).practices
+  const practices = [{ kind: 'breathe' as const, settle: 20, at: 'a' }, { kind: 'scan' as const, settle: 2, at: 'b' }]
   const dir = mkdtempSync(join(tmpdir(), 'vire-works-'))
   const file = join(dir, 'p1.json')
   await Bun.write(file, JSON.stringify({ simulated: true, minutes: [], practices }))
@@ -67,20 +64,27 @@ test('a patient file the sandbox gets says what works in a few fields', async ()
   expect(Math.abs(w.sure - ts.sure)).toBeLessThanOrEqual(0.02)
 })
 
-test('simulated histories: seeded, 2 to 30 practices, settle scattered, and a mix of what helps and of how sure', () => {
-  expect(cohortPractices(5, 9)).toEqual(cohortPractices(5, 9))
-  expect(cohortPractices(5, 9)).not.toEqual(cohortPractices(6, 9))
-  const all = Array.from({ length: 50 }, (_, i) => cohortPractices(1_763_110_000, i + 1))
-  for (const p of all) {
-    expect(p.practices.length).toBeGreaterThanOrEqual(PRACTICES_MIN)
-    expect(p.practices.length).toBeLessThanOrEqual(PRACTICES_MAX)
-    for (const s of p.practices) expect(['breathe', 'scan', 'walk']).toContain(s.kind)
-  }
-  const learned = all.map((p) => learn(p.practices))
-  const said = new Set(learned.map((l) => l.said))
-  expect(said).toEqual(new Set(['learned', 'leaning', 'early']))
-  const best = new Set(learned.filter((l) => l.said !== 'early').map((l) => l.best))
-  expect(best).toEqual(new Set(['breathe', 'scan', 'walk']))
-  // the patients' hidden usuals differ, so the clinic is not one practice for all
-  expect(new Set(all.map((p) => (Object.entries(p.truth).sort((a, b) => b[1] - a[1])[0]![0]))).size).toBe(3)
+test('all 50 roster histories agree with the clinic list and the Python sandbox learner', async () => {
+  const people = generateCohort(Date.parse('2026-11-14T12:00:00Z'))
+  const histories = people.map((p) => p.practices.filter((x) => x.done && x.settle != null).map((x) => ({ kind: x.kind, settle: x.settle!, at: x.at })))
+  const proc = Bun.spawn([python, join(repo, 'sandbox/works.py'), '--learn'], { stdin: 'pipe', stdout: 'pipe', stderr: 'pipe' })
+  proc.stdin.write(JSON.stringify({ histories }))
+  proc.stdin.end()
+  const [out, err] = await Promise.all([new Response(proc.stdout).text(), new Response(proc.stderr).text()])
+  expect(await proc.exited, err).toBe(0)
+  const py = (JSON.parse(out) as { learned: ReturnType<typeof learn>[] }).learned
+  expect(py).toHaveLength(50)
+  people.forEach((person, i) => {
+    const ts = learn(histories[i]!)
+    const list = workingOf(person.practices)
+    const p = py[i]!
+    expect(p.best, person.name).toBe(ts.best)
+    expect(p.said, person.name).toBe(ts.said)
+    expect(p.next, person.name).toBe(ts.next)
+    expect(p.total, person.name).toBe(ts.total)
+    expect(p.kinds.map((k) => [k.kind, k.n, k.mean]), person.name).toEqual(ts.kinds.map((k) => [k.kind, k.n, k.mean]))
+    expect(list.best, person.name).toBe(ts.best)
+    expect(list.said === 'none' ? 'early' : list.said, person.name).toBe(ts.said)
+    expect(list.total, person.name).toBe(ts.total)
+  })
 })

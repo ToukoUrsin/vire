@@ -298,7 +298,7 @@ describe('wall API as it runs in the hall', () => {
     await post(s.base, 'pings', upload(g1.body.userId as string, vals(1.4)), hall())
     await post(s.base, 'pings', upload(patient.body.userId as string, vals(1.4)), hall())
     const rows = await get<PatientRow[]>(s.base, 'clinic/patients')
-    expect(rows.filter((r) => r.synthetic)).toHaveLength(24)
+    expect(rows.filter((r) => r.synthetic)).toHaveLength(50)
     expect(rows.filter((r) => !r.synthetic).map((r) => r.name)).toEqual(['Real Patient'])
     const w = await get<WallState>(s.base, 'wall')
     expect(w).toMatchObject({ visitors: 1, pings: 1, started: 3, simulated: false })
