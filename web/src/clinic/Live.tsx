@@ -167,11 +167,14 @@ export default function Live() {
           <span className="sg-mark">Vire</span>
           <span className="sg-rule" aria-hidden="true" />
           <span className={`sg-beacon${view.streaming ? ' is-on' : ''}`} aria-hidden="true" />
-          {who && <b>{who}</b>}
-          <small>
-            {note}
-            {name && code && code !== '*' ? `, room ${code}` : ''}
-          </small>
+          {/* idle, the screen names nobody and no room: a phone that is only connected is not this screen's story */}
+          {!idle && who && <b>{who}</b>}
+          {!idle && (
+            <small>
+              {note}
+              {name && code && code !== '*' ? `, room ${code}` : ''}
+            </small>
+          )}
         </div>
         <Sound view={view} />
         {mode !== 'attract' && (
@@ -209,14 +212,16 @@ export default function Live() {
           <section className="sg-right sg-attract sg-idle">
             <h1>AirPods in, camera off.</h1>
             <p className="sg-idle-lede">
-              {holdPractice
+              {holdCohort
+                ? 'No clinic run on this screen yet. Start one and every simulated patient learns again in a sandbox of their own. The tiles fill in as they finish.'
+                : holdPractice
                 ? 'No practice has come in yet. When someone finishes one, it lands here with what Vire tried and what changed.'
                 : 'When someone finishes a practice, it lands here with what Vire tried and what changed.'}
             </p>
             <nav className="sg-idle-links" aria-label="Open">
               <a href="#/watch">Watch a run</a>
               <a href="#/clinic/live?practice=1">The last practice</a>
-              <a href="#/clinic/live?cohort=1">Re-train the whole clinic</a>
+              {holdCohort && !busy ? <CohortButton start={cohort.start} going={cohortGoing} here /> : <a href="#/clinic/live?cohort=1">Re-train the whole clinic</a>}
             </nav>
             <div className="sg-attract-join">
               <Qr text={url} />
@@ -227,7 +232,7 @@ export default function Live() {
             </div>
             {phoneHere && (
               <p className="sg-idle-phone" aria-live="polite">
-                {name ? `${name}’s phone` : 'A phone'} is connected for the camera minute. When it starts there, this screen follows along.
+                A phone is connected for the camera minute. When it starts there, this screen follows along.
               </p>
             )}
           </section>
@@ -260,8 +265,8 @@ export default function Live() {
       </main>
 
       {!idle && !['tune', 'teach', 'search', 'cohort', 'practice'].includes(mode) && <Story stage={stage} view={view} />}
-      {/* idle, the screen links to the clinic view; on ?cohort=1 the button starts the run as before */}
-      {!busy && (!idle || holdCohort) && <CohortButton start={cohort.start} going={cohortGoing} />}
+      {/* idle, the screen links to the clinic view; on ?cohort=1 the button sits with those links and starts the run */}
+      {!busy && !idle && <CohortButton start={cohort.start} going={cohortGoing} />}
       {debug && <Debug stage={stage} view={view} />}
     </div>
   )

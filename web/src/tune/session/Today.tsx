@@ -628,7 +628,7 @@ export default function Today() {
             <ol className="td-steps">
               <li>
                 <b>Check-in</b>
-                <span>one minute of smiles and nods, set against your usual</span>
+                <span>a minute of asked smiles and nods, set against your usual. Then 22 seconds sitting still: head movement and heart rate</span>
               </li>
               <li data-next={next}>
                 <b>{NAME[next]}</b>
@@ -638,7 +638,7 @@ export default function Today() {
               </li>
               <li>
                 <b>Re-check</b>
-                <span>half a minute: did it help today</span>
+                <span>the same 22 seconds sitting still, and two smiles: calmer after than before?</span>
               </li>
             </ol>
             <div className="el-btns">
@@ -667,8 +667,8 @@ export default function Today() {
               )}
             </div>
             <p className="el-fine" data-air={streaming ? hz : 0}>
-              {streaming ? `AirPods: ${hz} samples a second.` : inApp() ? 'Waiting for your AirPods. Put both in.' : info.state === 'connecting' ? 'Looking for your AirPods.' : 'AirPods not connected.'}{' '}
-              {mine && mine.learned.total > 0 ? `${NAME[next]} is today's practice: ${mine.learned.why}.` : 'The first practice is slow breathing.'} Or pick:{' '}
+              {streaming ? `AirPods: ${hz} samples a second.` : inApp() ? 'Waiting for your AirPods. Put both in.' : info.state === 'connecting' ? 'Looking for your AirPods.' : ''}{' '}
+              {pick ? `You picked ${SHORT[next]}.` : mine && mine.learned.total > 0 ? `${NAME[next]} is today's practice: ${mine.learned.why}.` : 'The first practice is slow breathing.'} Or pick:{' '}
               {SESSION_KINDS.filter((k) => k !== next).map((k, i) => (
                 <span key={k}>
                   {i > 0 && ', '}

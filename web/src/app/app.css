@@ -228,6 +228,12 @@
   background: var(--paper-2);
   font-size: var(--text-body-s);
 }
+/* two ways on from a problem: side by side with clear space, or one under the other on a narrow phone */
+.va-note-links {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 24px;
+}
 /* scripted signals are said on the screen as a badge under the top bar, on the content's left edge:
    a statement, not debug output left in */
 .va-demo {

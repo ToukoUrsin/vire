@@ -247,6 +247,22 @@ export const queued = (): number => loadQueue().length
 const idMap = (): Record<string, string> => read<Record<string, string>>(K.ids) ?? {}
 
 /**
+ * The phone timed when the smile began. An echo that does not say so (a hall ping, or one worked out on the phone)
+ * gets the same number in its smile sentence, so the smile card and the trace under it tell one story.
+ */
+function withSmileStart(echo: Echo, u: PingUpload): Echo {
+  const ms = u.features?.smile?.latencyMs
+  if (ms == null || !Number.isFinite(ms)) return echo
+  const said = `, starting ${Math.round(ms / 100) / 10} s after the laugh.`
+  return {
+    ...echo,
+    components: echo.components.map((c) =>
+      c.channel !== 'smile' || !c.value || !c.reading || /starting [\d.]+ s after/.test(c.reading) ? c : { ...c, reading: c.reading.replace(/\.?$/, said) },
+    ),
+  }
+}
+
+/**
  * Sends the ping and returns the echo to show. With the server away, the echo is worked out on the phone and the
  * ping waits in the queue. Either way the channels the phone could not read stay out of what is shown.
  */
@@ -262,7 +278,7 @@ export async function postPing(u: PingUpload & PingUploadExtras, who: Who = 'me'
     q.push({ k: 'ping', who, localId: echo.pingId, u, meta, tries: 0 })
     saveQueue(q)
   }
-  echo = { ...leaveOut(echo, u.unreadable ?? [], meta?.why), stim: echo.stim ?? u.stim }
+  echo = { ...withSmileStart(leaveOut(echo, u.unreadable ?? [], meta?.why), u), stim: echo.stim ?? u.stim }
   if (u.kind === 'full' && !visitor) write(K.today, { day: dayKey(new Date()), echo, meta } satisfies Today)
   return echo
 }

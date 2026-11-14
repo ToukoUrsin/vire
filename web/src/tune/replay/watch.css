@@ -22,10 +22,50 @@
   font-weight: 600;
   line-height: 1.35;
 }
+/* one left edge: the content sits on the header's, the label's and the controls' */
 .wt .td-main {
-  padding-top: 0;
-  padding-bottom: 0;
+  padding: 0;
   gap: 12px;
+}
+/* where the replay is: a plain line, not a shouted label */
+.wt .td-day {
+  letter-spacing: 0;
+  text-transform: none;
+  font-variant-numeric: tabular-nums;
+}
+/* loading: the shape of the first screen, and one line that says so */
+.wt-wait-lines {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+.wt-wait-lines i {
+  display: block;
+  height: 14px;
+}
+.wt-wait-lines i:nth-child(2) {
+  width: 72%;
+}
+.wt-wait-lines i:nth-child(3) {
+  width: 48%;
+}
+.wt-none {
+  margin-top: 24px;
+}
+/* on the stage a quiet button is an outline; cream slabs would outshout the run itself */
+.wt .lab-btn:not(.primary) {
+  border: 1px solid var(--stage-line);
+  background: transparent;
+  color: var(--stage-ink);
+}
+.wt .lab-btn:not(.primary):disabled {
+  opacity: 0.45;
+}
+@media (hover: hover) {
+  .wt .lab-btn:not(.primary):hover:not(:disabled) {
+    border-color: var(--stage-ink-2);
+    background: color-mix(in srgb, var(--stage-ink) 8%, transparent);
+  }
 }
 .wt-say {
   font-size: clamp(var(--text-h1), 9vw, var(--text-d1)) !important;
@@ -94,6 +134,23 @@
   color: var(--stage-ink-2);
   font-size: var(--text-caption);
 }
+/* the pace checks' key uses the marks as they are drawn on the strip */
+.wt-k-ck,
+.wt-k-ck span {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+}
+.wt-k-ck span {
+  gap: 5px;
+}
+.wt-k-ck svg {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  overflow: visible;
+}
 .wt-k-hr::before,
 .wt-k-mv::before {
   content: '';
@@ -121,12 +178,6 @@
 .wt-controls .el-bar {
   margin-top: 0;
 }
-.wt-controls a {
-  color: var(--ink);
-}
-.wt-controls a.primary {
-  color: var(--stage);
-}
 .wt :focus-visible {
   outline: 2px solid var(--stage-ink);
   outline-offset: 3px;
@@ -145,7 +196,6 @@
   padding: 16px 0 0;
   border-top: 1px solid var(--stage-line);
   scroll-margin-top: 12px;
-  font-variant-numeric: tabular-nums;
 }
 .wt-clinic .sg-search {
   margin-top: 10px;
@@ -186,8 +236,10 @@
   .wt-clinic .sg-sr-stats {
     flex-wrap: wrap;
   }
+  /* the practice names are the point of the list: the bar gives way so none is cut */
   .wt-clinic .sg-practice .sg-sr-board li {
-    grid-template-columns: calc(var(--u) * 5) minmax(0, 1fr) calc(var(--u) * 5) calc(var(--u) * 6);
+    grid-template-columns: calc(var(--u) * 5) minmax(0, 1fr) calc(var(--u) * 3.2) calc(var(--u) * 5);
+    gap: calc(var(--u) * 0.9);
   }
 }
 @media (prefers-reduced-motion: reduce) {

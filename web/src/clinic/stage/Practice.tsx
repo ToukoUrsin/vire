@@ -11,7 +11,7 @@ const WHY = { 'not tried yet': 'not tried yet', 'helped most so far': 'it has he
 const times = (n: number) => (n === 1 ? 'once' : `${n} times`)
 const num = (v: number | null, digits = 0) => (v === null ? '–' : v.toFixed(digits))
 
-/** did it help, said to the clinic: only from what was measured */
+/** calmer after than before, said to the clinic: only from what was measured in the two still checks */
 export function practiceVerdict(seen: PracticeSeen): { h: string; p: string } {
   const r = seen.read
   if (!r.happened) return { h: 'The walk was not felt.', p: 'The AirPods felt too few steps, so this practice is not counted towards what helps this person.' }
@@ -23,7 +23,7 @@ export function practiceVerdict(seen: PracticeSeen): { h: string; p: string } {
   if (!parts.length) return { h: 'Done, but not scored.', p: 'The checks before and after had too few AirPods samples to compare.' }
   const good = (heart !== null && heart <= -1 ? 1 : 0) + (still !== null && still >= 5 ? 1 : 0)
   const bad = (heart !== null && heart >= 1 ? 1 : 0) + (still !== null && still <= -5 ? 1 : 0)
-  const h = good && !bad ? 'It helped today.' : bad && !good ? 'It did not help today.' : good && bad ? 'Mixed today.' : 'No change today.'
+  const h = good && !bad ? 'Calmer after.' : bad && !good ? 'Not calmer after.' : good && bad ? 'Mixed today.' : 'No change today.'
   return { h, p: `After the practice ${parts.join(' and ')}, against the same check just before it.` }
 }
 
@@ -50,7 +50,7 @@ export function PracticeBoard({ seen }: { seen: PracticeSeen }) {
         </p>
         <h1>
           {NAME[r.kind]}
-          {r.day ? `, day ${r.day}` : ''}. {v.h}
+          {r.day ? `, day\u00a0${r.day}` : ''}. {v.h}
         </h1>
         <p className="sg-sr-sub">{v.p}</p>
         {demo && <p className="sg-sr-demo">Demo signals: a script made this practice, not a person.</p>}
@@ -135,8 +135,8 @@ export function PracticeBoard({ seen }: { seen: PracticeSeen }) {
           Next: {SHORT[l.next]} ({WHY[l.why]}).
         </p>
         <p className="sg-pr-fine">
-          {seen.practices} {seen.practices === 1 ? 'practice' : 'practices'} from this device, {l.total} scored. Each is scored by how much stiller the head sat in the same still check after it than before it. A signal for the
-          clinic, not a diagnosis.
+          {seen.practices} {seen.practices === 1 ? 'practice' : 'practices'} from this device, {l.total} scored. Each is scored by how much stiller the head sat when asked to sit still, after it against before it. That is restlessness, not the head
+          movement through a day that the clinic list follows. No comparison without a practice yet. A signal for the clinic, not a diagnosis.
         </p>
       </div>
     </section>

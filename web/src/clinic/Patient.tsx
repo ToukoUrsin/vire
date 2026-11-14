@@ -60,14 +60,20 @@ export default function Patient() {
                 <b>The server is not answering.</b> Trying again every few seconds.
               </p>
             )}
-            <div className="cl-skel" aria-busy="true" aria-label="Loading">
+            <div className="cl-skel cl-skel--person" aria-busy="true" aria-label="Loading this person">
               {Array.from({ length: 4 }, (_, i) => (
                 <i key={i} />
               ))}
             </div>
           </>
         ) : (
-          <p className="cl-empty">Nobody in this clinic has that id. Go back to today's list and open the person from there.</p>
+          <section className="cl-none">
+            <h1>Nobody here with that id</h1>
+            <p>This link does not match anyone in the clinic. Open the person from today&apos;s list.</p>
+            <Link to={href('/clinic')} className="cl-btn cl-btn--primary">
+              Back to today&apos;s list
+            </Link>
+          </section>
         )}
       </main>
     )
@@ -132,7 +138,9 @@ export default function Patient() {
       <div className="cl-card-head">
         <div>
           <h2>What we tried</h2>
-          <p>Each practice is scored as the phone scores it: how much stiller the head sat in the short check after it than before. Settled means at least 10% stiller.</p>
+          <p>
+            Each practice is scored as the phone scores it: how much stiller the head sat in the short check after it than before. Settled means at least 10% stiller. That check asks the person to sit still, so it reads restlessness. It is not the head movement above, which is how much they move through a day: there, moving less than their usual is the change to watch.
+          </p>
         </div>
       </div>
       <Practices practices={detail.practices ?? []} working={o?.working ?? null} />
@@ -219,7 +227,7 @@ export default function Patient() {
                 <Check /> Booster booked
               </span>
               <b className="cl-slot-booked">{fmtSlot(upcoming.at)}</b>
-              <small>{upcoming.by === 'simulated' ? 'A simulated booking, part of this simulated person’s story.' : `Booked ${fmtDay(upcoming.bookedAt)}. Their app shows a check-in notice.`}</small>
+              <small>{upcoming.by === 'simulated' ? 'A simulated booking, part of this simulated person’s story.' : `Booked ${fmtDay(upcoming.bookedAt)}. ${detail.synthetic ? 'A real person’s phone would show a check-in notice now; this person is simulated.' : 'Their app shows a check-in notice.'}`}</small>
               <button type="button" className="cl-link" onClick={() => book(false)} disabled={busy}>
                 Cancel booking
               </button>
@@ -248,7 +256,7 @@ export default function Patient() {
               <span>
                 <Check /> Booster session requested
               </span>
-              <small>Their app now shows a check-in notice.</small>
+              <small>{detail.synthetic ? 'A real person’s phone would show a check-in notice now; this person is simulated.' : 'Their app now shows a check-in notice.'}</small>
               <button type="button" className="cl-link" onClick={toggleBooster} disabled={busy}>
                 Withdraw request
               </button>
@@ -277,9 +285,8 @@ export default function Patient() {
 
       <section className="cl-next" aria-labelledby="cl-next-title">
         <div className="cl-next-head">
-          <p className="cl-eyebrow">Suggested next step</p>
           <h2 id="cl-next-title">{action}</h2>
-          <p>Vire does not diagnose. It tells you who to look at.</p>
+          <p>A suggested next step. Vire does not diagnose. It tells you who to look at.</p>
         </div>
         <ul className="cl-next-facts">{actionFacts.slice(0, 3).map((fact) => <li key={fact}>{fact}</li>)}</ul>
         {o?.sentence && (o.state === 'escalated' || o.state === 'booked') ? (
@@ -333,7 +340,7 @@ export default function Patient() {
                   : "Each mark is one one-minute camera check, scored 0 to 100 against this person's own usual: 50 is their usual. The line is the smoothed drift. Click a check to see its traces."}
             </p>
           </div>
-          <EchoLegend calibrating={detail.status === 'calibrating'} air={air} />
+          <EchoLegend calibrating={detail.status === 'calibrating'} air={air} phq2={(detail.phq2?.length ?? 0) > 0} />
         </div>
         {detail.status === 'calibrating' ? (
           <div className="cl-calibrating-readings">
@@ -426,7 +433,7 @@ function outerFacts(o: OuterRow): string[] {
   if (o.state === 'after' && o.after) {
     return [`Booster ${o.after.days} ${o.after.days === 1 ? 'day' : 'days'} ago`, `Now ${signed(o.after.drift)} SD against their usual`, `${t.done} of ${t.offered} practices done before it, ${t.settled} settled`]
   }
-  return [`${o.driftDays} ${o.driftDays === 1 ? 'day' : 'days'} below their usual`, `${t.done} of ${t.offered} practices done, ${t.settled} settled`, o.working.text]
+  return [`${o.driftDays} ${o.driftDays === 1 ? 'day' : 'days'} below their usual`, `In those days: ${t.done} of ${t.offered} offered practices done, ${t.settled} settled`, o.working.text]
 }
 
 const WHY: Record<PracticeRec['why'], string> = { drift: 'after a day below usual', asked: 'opened by them' }

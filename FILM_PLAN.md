@@ -40,7 +40,7 @@ Caption "Simulated patients" on shots 8 and 9. After shot 8, click "Cancel booki
 
 - **The day card offers no practice:** tap Start anyway. The day's plan always has one. Keep the line in shot 4.
 - **Heart rate not from the AirPods** (the screen names another source or none): drop "Heart rate comes from the AirPods" from shot 4 and say only what the result screen says, for example "my head sat N% stiller".
-- **The result says "No change today" or "Not today":** keep it. Say "It says what it saw."
+- **The result says "No change today" or "Not calmer today":** keep it. Say "It says what it saw."
 - **The sound didn't step down:** say "It stays at my pace when my breath doesn't follow."
 - **The result says the sound "went by how still you sat"** (the breath could not be read): keep the line in shot 5. "When I keep up" holds for both.
 - **The practice doesn't land on the big screen:** reload `#/clinic/live?practice=1` and send it again, or skip shot 7.

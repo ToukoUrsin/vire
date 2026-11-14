@@ -300,6 +300,14 @@ describe('wall API as it runs in the hall', () => {
     const rows = await get<PatientRow[]>(s.base, 'clinic/patients')
     expect(rows.filter((r) => r.synthetic)).toHaveLength(24)
     expect(rows.filter((r) => !r.synthetic).map((r) => r.name)).toEqual(['Real Patient'])
+    // the public list is the simulated clinic only: a real phone's name is not listed for everyone, the team's view asks for it
+    const asPublic = async (path: string) => (await (await fetch(`${s.base}/api/${path}`, { headers: hall('203.0.113.99') })).json()) as PatientRow[]
+    expect((await asPublic('clinic/patients')).filter((r) => !r.synthetic)).toEqual([])
+    expect((await asPublic('clinic/patients?phones=1')).filter((r) => !r.synthetic).map((r) => r.name)).toEqual(['Real Patient'])
+    // with no practice from anyone yet, the big screen's "last practice" is the replay's, labelled a script's (never an error)
+    const last = await fetch(`${s.base}/api/ear/sessions/latest`)
+    expect(last.status).toBe(200)
+    expect(await last.json()).toMatchObject({ shell: 'sim', practices: 1 })
     const w = await get<WallState>(s.base, 'wall')
     expect(w).toMatchObject({ visitors: 1, pings: 1, started: 3, simulated: false })
     expect(w.latest[0]).toMatchObject({ label: 'guest 1', nth: 1 })

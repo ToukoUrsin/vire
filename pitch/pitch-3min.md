@@ -68,7 +68,7 @@ Mics are cut at 3:00 sharp, then 3 minutes of questions. About 399 spoken words 
 ## If something breaks on stage
 
 - **Heart rate didn't come from the AirPods** this morning: drop "and heart rate from the AirPods" and say only the head movement.
-- **The result said "No change today" or "Not today":** say it. "It says what it saw. That's the point."
+- **The result said "No change today" or "Not calmer today":** say it. "It says what it saw. That's the point."
 - **The re-train run is slow:** "It's still going. Last night it was 50 patients in 30 seconds." Move on.
 - **AirPods drop:** you don't need them live after 0:10. Keep going.
 

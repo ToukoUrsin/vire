@@ -79,9 +79,13 @@ export default function App() {
   )
 }
 
+/** the pages that open on the dark stage: their loading screen is dark too, so nothing flashes light first */
+const STAGE_ROUTES = /^#\/(watch|today|ears|day|clinic\/live)(\/|\?|$)/
+
 function AppLoading() {
+  const stage = typeof location !== 'undefined' && STAGE_ROUTES.test(location.hash)
   return (
-    <main className="app-loading" role="status" aria-live="polite">
+    <main className={stage ? 'app-loading is-stage' : 'app-loading'} role="status" aria-live="polite">
       <span className="app-loading-mark">Vire</span>
       <span className="app-loading-line" aria-hidden="true" />
       <p>Loading this page…</p>

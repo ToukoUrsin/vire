@@ -48,6 +48,49 @@ function moveOf(s: EarSessionRec, t0: number, t1: number): [number, number][] {
   return out
 }
 
+/**
+ * The head's slow movement between t0 and t1: each angle with its own 12-second average taken away (drift, a turned
+ * head) and half a second of smoothing (quick movement), then the angle that moved most that way. Degrees, four a
+ * second. This only draws what the pace checks read (web/src/tune/session/breath.ts decides whether a breath followed).
+ */
+export function slowOf(head: number[][], t0: number, t1: number): [number, number][] {
+  const rows = head.filter((r) => r.length >= 4 && r[0] >= t0 - 6000 && r[0] <= t1 + 6000 && Number.isFinite(r[1]) && Number.isFinite(r[2]) && Number.isFinite(r[3]))
+  if (rows.length < 100) return []
+  const band = (col: number): number[] => {
+    const v: number[] = []
+    let off = 0
+    for (let i = 0; i < rows.length; i++) {
+      if (i) {
+        const d = rows[i][col] - rows[i - 1][col]
+        if (d > 180) off -= 360
+        else if (d < -180) off += 360
+      }
+      v.push(rows[i][col] + off)
+    }
+    const pre = [0]
+    for (const x of v) pre.push(pre[pre.length - 1] + x)
+    const avg = (halfMs: number): number[] => {
+      const out: number[] = []
+      let a = 0
+      let b = 0
+      for (let i = 0; i < rows.length; i++) {
+        while (rows[a][0] < rows[i][0] - halfMs) a++
+        while (b < rows.length && rows[b][0] <= rows[i][0] + halfMs) b++
+        out.push((pre[b] - pre[a]) / (b - a))
+      }
+      return out
+    }
+    const slow = avg(6000)
+    return avg(250).map((x, i) => x - slow[i])
+  }
+  const power = (x: number[]) => x.reduce((a, b) => a + b * b, 0)
+  const best = [1, 2, 3].map(band).reduce((a, b) => (power(b) > power(a) ? b : a))
+  return thin(
+    rows.map((r, i) => [r[0], Math.round(best[i] * 100) / 100] as [number, number]).filter((r) => r[0] >= t0 && r[0] <= t1),
+    4,
+  )
+}
+
 /** at most `perS` rows a second: the first row of each slot */
 export function thin<T extends number[]>(rows: T[], perS: number): T[] {
   const slot = 1000 / perS
@@ -82,6 +125,7 @@ export function buildReplay(file: { id: string; session: EarSessionRec; owner?: 
   const learned = learn(sessions.map((x) => ({ kind: x.kind, settle: x.happened === false ? null : x.settle, at: x.at })))
   const before = s.phases.find((p) => p.name === 'before')
   const after = s.phases.find((p) => p.name === 'after')
+  const session = s.phases.find((p) => p.name === 'session')
   const t0 = before?.t0 ?? 0
   const t1 = after?.t1 ?? (s.head.length ? s.head[s.head.length - 1][0] : 0)
   const heartRows: number[][] = r.heartFrom === 'airpods' ? s.airHr.filter((x) => x[1] > 0) : r.heartFrom === 'camera' ? s.pulse.filter((x) => x[2] >= 0.5 && x[1] > 0).map((x) => [x[0], x[1]]) : []
@@ -100,6 +144,7 @@ export function buildReplay(file: { id: string; session: EarSessionRec; owner?: 
     checks: (s.adapt ?? []).map((a) => ({ t: a.t, from: a.from, to: a.to, follows: a.follows, by: a.by })),
     heart: { from: r.heartFrom, rows: thin(heartRows, 10).map((x) => [x[0], x[1]] as [number, number]) },
     move: moveOf(s, t0, t1),
+    ...(s.kind === 'breathe' && session ? { slow: slowOf(s.head, session.t0, session.t1) } : {}),
     sound: s.sound,
     read,
     seen: {

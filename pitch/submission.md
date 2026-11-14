@@ -37,7 +37,7 @@ A signal for the clinic, not a diagnosis.
 
 ### How it works
 
-- **Today**, camera off, five minutes: a quick check (asked nods and smiles, then sitting still for head movement and heart rate), the practice, the same check again. "It helped today" comes only from heart rate and stillness.
+- **Today**, camera off, five minutes: a quick check (asked nods and smiles, then sitting still for head movement and heart rate), the practice, the same check again. "Calmer after" comes only from heart rate and stillness.
 - **Breathing:** a sea in your ears rises as you breathe in and falls as you breathe out. It slows from your own pace to 6 a minute, but only when the AirPods read your breath following it (or a still head).
 - **The walk** counts only if the AirPods felt your steps.
 - **Learning**, from your own practices only: which one calmed your head movement most. It says "Vire learned" only when 80% sure which is best, after 3 scored runs of it.

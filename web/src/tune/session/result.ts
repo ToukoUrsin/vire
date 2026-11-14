@@ -4,7 +4,7 @@ import type { SessionRead } from '@shared/earsessionread'
 
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`
 
-/** did it help today: said only from what was measured */
+/** calmer after than before? Said only from what was measured in the two still checks; never that a practice treats anything */
 export function verdict(r: SessionRead): { head: string; line: string } {
   if (!r.happened) return { head: 'The walk was not felt.', line: 'Your AirPods felt too few steps, so this run is not counted towards what helps you.' }
   const still = r.settle
@@ -15,7 +15,7 @@ export function verdict(r: SessionRead): { head: string; line: string } {
   if (!parts.length) return { head: 'Done for today.', line: 'The checks before and after had too few AirPods samples to compare.' }
   const good = (heart !== null && heart <= -1 ? 1 : 0) + (still !== null && still >= 5 ? 1 : 0)
   const bad = (heart !== null && heart >= 1 ? 1 : 0) + (still !== null && still <= -5 ? 1 : 0)
-  const head = good && !bad ? 'It helped today.' : bad && !good ? 'Not today.' : good && bad ? 'Mixed today.' : 'No change today.'
+  const head = good && !bad ? 'Calmer after.' : bad && !good ? 'Not calmer today.' : good && bad ? 'Mixed today.' : 'No change today.'
   const line = parts.join(' and ')
   return { head, line: `After the practice ${line}, against the same check just before it.` }
 }
@@ -32,9 +32,10 @@ export function heartRow(r: SessionRead): { main: string; note: string; change: 
           : ': enough to see it settle, not to see it swing with each breath'
         : ''
   return {
-    main: `${r.before.heartBpm ?? 'not read'} before, ${r.after.heartBpm ?? 'not read'} after`,
+    // whole beats, as the verdict and the clinic's screen say them: a reading a second does not carry tenths
+    main: `${r.before.heartBpm === null ? 'not read' : Math.round(r.before.heartBpm)} before, ${r.after.heartBpm === null ? 'not read' : Math.round(r.after.heartBpm)} after`,
     note: ` (${r.heartSamples} readings from your AirPods${r.heartEveryS ? `, one about every ${r.heartEveryS} s` : ''}${swing})`,
-    change: r.heartChange !== null ? `${r.heartChange > 0 ? '+' : ''}${r.heartChange}` : '',
+    change: r.heartChange !== null ? `${Math.round(r.heartChange) > 0 ? '+' : ''}${Math.round(r.heartChange) || 0}` : '',
   }
 }
 

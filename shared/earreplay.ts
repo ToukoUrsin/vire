@@ -43,6 +43,12 @@ export interface ReplayBundle {
   heart: { from: SessionRead['heartFrom']; rows: [number, number][] }
   /** head movement [t, degrees a second], 5 a second, from the check before to the end of the check after */
   move: [number, number][]
+  /**
+   * the head's slow movement while the breathing played [t, degrees]: the up and down a breath gives the head, as the
+   * pace checks read it (quick movement and slow drift taken away), four a second. Drawn against the sound's rise
+   * and fall. Whatever was there is drawn: when no breath could be read it is not a wave. Absent in older bundles.
+   */
+  slow?: [number, number][]
   /** which sound played when: pieces made on Modal (set, live) and the phone's own tone */
   sound: EarSessionRec['sound']
   read: SessionRead & { id: string }

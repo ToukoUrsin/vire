@@ -5,6 +5,7 @@
 import { useEffect, useState } from 'react'
 import type { CohortPatient, CohortRun, CohortWorks } from '@shared/cohort'
 import type { CohortSeen } from './retrain'
+import { whole } from '../../shared/whole'
 import './cohort.css'
 
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`
@@ -44,6 +45,7 @@ function copy(run: CohortRun): { tag: string; h: string; p: string } {
       }
   }
 }
+
 
 function Tile({ p }: { p: CohortPatient }) {
   return (
@@ -118,7 +120,7 @@ export function CohortBoard({ seen }: { seen: CohortSeen }) {
           <span className="ch-dot" aria-hidden="true" />
           Simulated patients · {c.tag}
         </p>
-        <h1>{c.h}</h1>
+        <h1>{whole(c.h)}</h1>
         <p className="ch-sub">{c.p}</p>
         <p className="ch-demo">Simulated patients: a script made every minute and practice here, not people. Demo signals.</p>
         {run.state === 'failed' && run.error && <p className="ch-err">{run.error}</p>}
@@ -176,7 +178,7 @@ export function CohortBoard({ seen }: { seen: CohortSeen }) {
 }
 
 /** the small corner button that starts a run; the server's refusal is shown in its own words */
-export function CohortButton({ start, going }: { start: () => Promise<string | null>; going: boolean }) {
+export function CohortButton({ start, going, here = false }: { start: () => Promise<string | null>; going: boolean; here?: boolean }) {
   const [say, setSay] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   useEffect(() => {
@@ -185,7 +187,7 @@ export function CohortButton({ start, going }: { start: () => Promise<string | n
     return () => clearTimeout(id)
   }, [say])
   return (
-    <div className="ch-start">
+    <div className={here ? 'ch-start ch-start--here' : 'ch-start'}>
       {say && (
         <p className="ch-start-say" role="status">
           {say}

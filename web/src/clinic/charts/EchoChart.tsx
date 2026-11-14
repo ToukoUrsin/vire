@@ -17,7 +17,7 @@ export function timeDomain(detail: PatientDetail, now = Date.now()): [number, nu
 
 export function dateTicks(t0: number, t1: number, width: number): number[] {
   const days = (t1 - t0) / DAY
-  const want = Math.max(2, Math.floor(width / 110))
+  const want = Math.max(2, Math.floor(width / 64))
   const step = [1, 2, 7, 14, 28, 56].find((s) => days / s <= want) ?? 84
   const out: number[] = []
   const d = new Date(t1)
@@ -95,6 +95,13 @@ export function EchoChart({ detail, domain, hover, onHover, selected = null, onS
   const latestPoint = model.latest ? { x: x(Date.parse(model.latest.at)), y: y(model.latest.strength) } : null
   const endStrength = model.latest ? Math.round(model.latest.strength) : null
   const endWord = detail.status === 'calibrating' ? 'calibrating' : detail.status === 'steady' ? 'in their usual' : detail.status
+  // the end label is two short lines when its word is long, so it never runs past the right margin
+  const endLines = narrow ? [] : `${air ? 'last day' : 'last check'} · ${endWord}`.length > 16 ? [air ? 'last day' : 'last check', endWord] : [`${air ? 'last day' : 'last check'} · ${endWord}`]
+  // the band's own label sits at the band edge away from the end label, and is left out (the legend names the band) when both edges are taken
+  const endBox = latestPoint ? [latestPoint.y - 18, latestPoint.y + 6 + endLines.length * 14] : null
+  const clear = (ty: number) => !endBox || ty < endBox[0] || ty - 10 > endBox[1]
+  const bandEdges = latestPoint && latestPoint.y < y(50) ? [y(BAND_LO) - 4, y(BAND_HI) + 12] : [y(BAND_HI) + 12, y(BAND_LO) - 4]
+  const bandY = bandEdges.find(clear) ?? null
   const course = detail.course
   const cx0 = course ? clamp(x(Date.parse(course.start)), pl, pr) : 0
   const cx1 = course ? clamp(x(Date.parse(course.end)), pl, pr) : 0
@@ -189,19 +196,21 @@ export function EchoChart({ detail, domain, hover, onHover, selected = null, onS
           <g className="cl-phq2" aria-label="Weekly PHQ-2 answers">
             <line x1={pl} x2={pr} y1={y(50)} y2={y(50)} className="cl-phq2-axis" />
             {detail.phq2.map((q) => {
-              const px = x(Date.parse(q.at))
+              // an answer given today stays inside the plot, clear of the labels in the right margin
+              const px = Math.min(x(Date.parse(q.at)), pr - 6)
               const py = y(50 + (q.total - 3) * 10)
               return <circle key={q.id} cx={px} cy={py} r={5} className="cl-phq2-mark" />
             })}
-            <text x={pr - 4} y={y(50) + 4} textAnchor="end" className="cl-ax cl-phq2-label">PHQ-2: 3 or more · cut-off</text>
           </g>
         )}
 
         <rect x={pl} y={y(BAND_HI)} width={pr - pl} height={y(BAND_LO) - y(BAND_HI)} className="cl-band" />
         <line x1={pl} x2={pr} y1={y(50)} y2={y(50)} className="cl-band-mid" />
-        <text x={pr + 10} y={model.end && model.end[1] < y(50) ? y(BAND_LO) - 4 : y(BAND_HI) + 12} className="cl-ax cl-ax--band">
-          {detail.status === 'calibrating' ? (narrow ? 'typical' : 'typical range') : narrow ? 'usual' : 'their usual'}
-        </text>
+        {bandY !== null && (
+          <text x={pr + 10} y={bandY} className="cl-ax cl-ax--band">
+            {detail.status === 'calibrating' ? (narrow ? 'typical' : 'typical range') : narrow ? 'usual' : 'their usual'}
+          </text>
+        )}
 
         {xt.map((t) => (
           <text key={t} x={x(t)} y={pb + 38} textAnchor="middle" className="cl-ax">
@@ -212,12 +221,13 @@ export function EchoChart({ detail, domain, hover, onHover, selected = null, onS
           today
         </text>
         {course && <g className="cl-course-milestones">
-          <line x1={cx1} x2={cx1} y1={pt + 2} y2={pb + 28} className="cl-milestone" />
+          <line x1={cx1} x2={cx1} y1={pt + 22} y2={pb + 28} className="cl-milestone" />
           <text x={cx1} y={pt + 16} textAnchor="middle" className="cl-ax cl-ax--strong">course end</text>
+          {/* only the months that have come: a milestone past today is not drawn, and none sits on its neighbour */}
           {[3, 6, 12].map((months) => {
-            const t = Date.parse(course.end) + months * 30.44 * DAY
-            const mx = clamp(x(t), pl, pr)
-            return <g key={months}><line x1={mx} x2={mx} y1={pt + 2} y2={pb + 24} className="cl-milestone" /><text x={mx} y={pt + 30 + ([3, 6, 12].indexOf(months) * 12)} textAnchor="middle" className="cl-ax">{months} mo</text></g>
+            const mx = x(Date.parse(course.end) + months * 30.44 * DAY)
+            if (mx > pr - 16 || mx < cx1 + 44) return null
+            return <g key={months}><line x1={mx} x2={mx} y1={pt + 2} y2={pb + 24} className="cl-milestone" /><text x={mx} y={pt + 16} textAnchor="middle" className="cl-ax">{months} mo</text></g>
           })}
         </g>}
 
@@ -285,9 +295,11 @@ export function EchoChart({ detail, domain, hover, onHover, selected = null, onS
             <text x={pr + 10} y={latestPoint.y - 1} className="cl-endv">
               {endStrength}
             </text>
-            <text x={pr + 10} y={latestPoint.y + 14} className="cl-ax">
-              {air ? 'last day' : 'last check'} · {endWord}
-            </text>
+            {endLines.map((line, i) => (
+              <text key={line} x={pr + 10} y={latestPoint.y + 14 + i * 14} className="cl-ax">
+                {line}
+              </text>
+            ))}
           </g>
         )}
 
@@ -346,7 +358,7 @@ export function EchoChart({ detail, domain, hover, onHover, selected = null, onS
   )
 }
 
-export function EchoLegend({ calibrating = false, air = false }: { calibrating?: boolean; air?: boolean }) {
+export function EchoLegend({ calibrating = false, air = false, phq2 = false }: { calibrating?: boolean; air?: boolean; phq2?: boolean }) {
   return (
     <div className="cl-legend" aria-hidden="true">
       <span>
@@ -384,6 +396,22 @@ export function EchoLegend({ calibrating = false, air = false }: { calibrating?:
         </svg>
         drift at home, red under their usual
       </span>
+      {phq2 && (
+        <span>
+          <svg width="14" height="14">
+            <circle cx="7" cy="7" r="4.4" className="cl-phq2-mark" />
+          </svg>
+          PHQ-2 answer, self-report
+        </span>
+      )}
+      {phq2 && (
+        <span>
+          <svg width="22" height="14">
+            <line x1="1" x2="21" y1="7" y2="7" className="cl-phq2-axis" />
+          </svg>
+          PHQ-2 cut-off, 3 or more
+        </span>
+      )}
     </div>
   )
 }

@@ -68,6 +68,16 @@ export function OuterChart({ detail, now = Date.now() }: { detail: PatientDetail
   // join the line across the booster so the two halves meet
   const afterLine = after.length && before.length ? [before[before.length - 1]!, ...after] : after
   const shown = practices.filter((p) => Date.parse(p.at) >= t0)
+  // marks that would sit on each other step down a row, so a busy week is a stack and not a blob
+  const markR = narrow ? 3.6 : 5
+  const rowEnd: number[] = []
+  const marks = shown.map((p) => {
+    const mx = x(Date.parse(p.at))
+    let row = rowEnd.findIndex((e) => mx - e >= markR * 2 + 1.5)
+    if (row < 0) row = rowEnd.length < 3 ? rowEnd.length : 2
+    rowEnd[row] = mx
+    return { p, mx, my: laneY + row * (markR * 2 + 2) }
+  })
   const xt = dateTicks(t0, t1, pr - pl)
   const escAt = o?.escalatedAt ? Date.parse(o.escalatedAt) : null
   const last = pts.at(-1)
@@ -132,10 +142,10 @@ export function OuterChart({ detail, now = Date.now() }: { detail: PatientDetail
           {narrow ? '' : 'Practices'}
         </text>
         <line x1={pl} x2={pr} y1={laneY} y2={laneY} className="cl-oc-lane" />
-        {shown.map((p) => (
+        {marks.map(({ p, mx, my }) => (
           <g key={p.at}>
             <title>{`${fmtDay(p.at)}: ${p.kind}, ${p.done ? (p.settle == null ? 'done' : `${Math.round(p.settle)}% stiller after`) : 'offered, not done'}`}</title>
-            <PracticeMark kind={p.kind} state={practiceState(p)} x={x(Date.parse(p.at))} y={laneY} r={5} />
+            <PracticeMark kind={p.kind} state={practiceState(p)} x={mx} y={my} r={markR} />
           </g>
         ))}
 

@@ -38,7 +38,7 @@ export function usePractice(): { seen: PracticeSeen | null; shows: boolean } {
       try {
         got = await api<PracticeSeen>('ear/sessions/latest')
       } catch {
-        got = null // 404: no practice yet, or the server is away for a moment
+        got = null // the server is away for a moment (it answers null, not an error, while there is no practice)
       }
       if (dead) return
       if (got && got.id !== last.current) {

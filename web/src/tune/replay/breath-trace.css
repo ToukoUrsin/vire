@@ -1,0 +1,46 @@
+/* the sound and the head's slow movement, side by side (BreathTrace.tsx); colours are the replay strip's */
+.bt {
+  margin: 10px 0 2px;
+}
+.bt svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+.bt-sea,
+.bt-head {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.bt-sea {
+  stroke: var(--stage-ink-2);
+  stroke-width: 1.4;
+  stroke-dasharray: 3 2;
+}
+.bt-head {
+  stroke: var(--ember, var(--stage-ink));
+  stroke-width: 2;
+}
+.bt figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 6px;
+  color: var(--stage-ink-2);
+  font-size: var(--text-caption);
+}
+.bt-k-sea::before,
+.bt-k-head::before {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  margin-right: 6px;
+  vertical-align: middle;
+  border-top: 2px dashed var(--stage-ink-2);
+}
+.bt-k-head::before {
+  border-top: 2px solid var(--ember, var(--stage-ink));
+}

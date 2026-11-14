@@ -256,6 +256,11 @@ button {
   color: var(--ink-3);
 }
 
+/* ---- a hyphenated word ("re-learned", "PHQ-2") never breaks at its hyphen: shared/whole.tsx wraps it in this ---- */
+.nb {
+  white-space: nowrap;
+}
+
 /* ---- a block that is still loading: a quiet sweep, never a spinner. Opacity only (no animated blur). ---- */
 .skeleton {
   border-radius: var(--radius-s);
@@ -332,6 +337,17 @@ button {
   margin: 0;
   color: var(--ink-2);
   font-size: var(--text-body-s);
+}
+/* a page that opens on the dark stage waits on the dark stage */
+.app-loading.is-stage {
+  max-width: none;
+  padding-left: max(24px, calc(50vw - 17rem));
+  padding-right: max(24px, calc(50vw - 17rem));
+  background: var(--stage);
+  color: var(--stage-ink);
+}
+.app-loading.is-stage p {
+  color: var(--stage-ink-2);
 }
 @keyframes app-loading-line {
   from { transform: scaleX(0.28); opacity: 0.55; }

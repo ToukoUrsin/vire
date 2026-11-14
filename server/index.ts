@@ -492,7 +492,7 @@ async function summaryFor(person: Person, detail: PatientDetail, facts: RowFacts
   return (await polish('summary', a.facts, a.draft, ms)).replaceAll('[NAME]', person.name)
 }
 
-function clinicRows(now = Date.now(), warmDetails = false, showTests = false): PatientRow[] {
+function clinicRows(now = Date.now(), warmDetails = false, showTests = false, phones = false): PatientRow[] {
   const boosters = boosterSet()
   const out: PatientRow[] = []
   const seen = new Set<string>()
@@ -509,7 +509,10 @@ function clinicRows(now = Date.now(), warmDetails = false, showTests = false): P
     out.push(row)
   }
   for (const { person, analysis } of cohort(now).byId.values()) add(person, analysis)
-  // hall guests (visitor = 1) are on the wall, never in the clinic lists
+  // The public list holds the simulated clinic only. A real phone that did the camera check keeps its own page
+  // (#/clinic/p/<id>, linked from that phone) but its name and readings are not listed for everyone; `phones` asks
+  // for them (the team's own view, and the tests). Hall guests (visitor = 1) are on the wall, never in the clinic lists.
+  if (!phones) return out.sort((x, y) => y.priority - x.priority || x.name.localeCompare(y.name))
   for (const u of listPatients()) {
     // people made by an automated test are shown to that test only: the clinic's list holds no test runs
     if (u.via === 'test' && !showTests) continue
@@ -520,7 +523,10 @@ function clinicRows(now = Date.now(), warmDetails = false, showTests = false): P
   return out.sort((x, y) => y.priority - x.priority || x.name.localeCompare(y.name))
 }
 
-app.get('/api/clinic/patients', (c) => c.json(clinicRows(Date.now(), false, asker(c).via === 'test')))
+app.get('/api/clinic/patients', (c) => {
+  const test = asker(c).via === 'test'
+  return c.json(clinicRows(Date.now(), false, test, test || c.req.query('phones') === '1'))
+})
 
 function latestTraces(person: Person): PingTraces | null {
   const pings = [...person.pings].reverse()
@@ -698,10 +704,9 @@ app.post('/api/ear/sessions', async (c) => {
 })
 app.get('/api/ear/sessions', async (c) => (isWorker(c) ? c.json(await listSessions()) : c.json({ error: 'not allowed' }, 401)))
 // the newest practice, for the big screen: what it did and what was learned, never the rows (before /sessions/:id)
-app.get('/api/ear/sessions/latest', async (c) => {
-  const got = await latestSession()
-  return got ? c.json(got) : c.json({ error: 'no practice yet' }, 404)
-})
+// Until a person's practice has come in, the replay's practice stands in, labelled as what it is (a script's signals,
+// or the run the worker picked), so "The last practice" is never an empty screen. Nothing at all: null, not an error.
+app.get('/api/ear/sessions/latest', async (c) => c.json((await latestSession()) ?? (await currentReplay())?.seen ?? null))
 app.get('/api/ear/sessions/:id', async (c) => {
   if (!isWorker(c)) return c.json({ error: 'not allowed' }, 401)
   const text = await readSessionFile(c.req.param('id'))

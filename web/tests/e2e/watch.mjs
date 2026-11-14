@@ -37,12 +37,36 @@ if (process.argv[2] === '--make') {
       window.__vireNative?.({ k: 'hrs', t: Date.now(), bpm, src: 'AirPods (stand-in)', model: 'AirPods', n: 1 })
     }, 1000)
   })
-  for (let i = 0; i < 120; i++) {
-    const st = await page.evaluate(() => [document.querySelector('.td')?.getAttribute('data-stage'), document.querySelector('.el-say')?.textContent, document.querySelector('.el-err')?.textContent ?? ''].join(' | '))
-    console.log(`${i * 5}s ${st}`)
-    if (/^done/.test(st)) break
-    await page.waitForTimeout(5000)
+  // the stand-in head does what the screen asks, as a calm person would: nods when asked, sits still in the checks
+  // (fidgeting a little more before the practice than after), and breathes with the sea (scripts/fake-ears.ts /script)
+  const ctl = helper.replace(/^ws/, 'http').replace(/\/?$/, '/script')
+  let lastMode = ''
+  const t00 = Date.now()
+  for (let i = 0; i < 6000; i++) {
+    const [stage, say, phase, secs, err] = await page.evaluate(() => [
+      document.querySelector('.td')?.getAttribute('data-stage') ?? '',
+      document.querySelector('.el-say')?.textContent ?? '',
+      document.querySelector('.td-orb')?.getAttribute('data-phase') ?? '',
+      parseFloat(document.querySelector('.td-orb')?.style.transitionDuration ?? '') || 4,
+      document.querySelector('.el-err')?.textContent ?? '',
+    ])
+    const mode =
+      stage === 'practice' && (phase === 'in' || phase === 'out') ? phase
+      : stage === 'still' ? 'restless'
+      : stage === 'after' ? (/still/i.test(say) ? 'calm' : 'quiet')
+      : /^nod/i.test(say) ? 'nod'
+      : /shake/i.test(say) ? 'shake'
+      : 'quiet'
+    if (mode !== lastMode) {
+      lastMode = mode
+      await fetch(`${ctl}?mode=${mode}&secs=${secs}`).catch(() => {})
+      if (mode !== 'in' && mode !== 'out') console.log(`${Math.round((Date.now() - t00) / 1000)}s ${stage} | ${say} | ${mode} ${err}`)
+    }
+    if (i % 80 === 0) console.log(`${Math.round((Date.now() - t00) / 1000)}s ${stage} | ${say} | ${mode}`)
+    if (/^done/.test(stage)) break
+    await page.waitForTimeout(125)
   }
+  await fetch(`${ctl}?mode=off`).catch(() => {})
   for (let i = 0; i < 50 && !sent; i++) await page.waitForTimeout(100)
   console.log(`SENT ${sent?.id}`)
   await browser.close()
@@ -144,7 +168,7 @@ for (const [w, h, block] of [[390, 844, true], [1440, 900, false]]) {
   await page.waitForSelector('[data-result]', { timeout: 30000 })
   const res = (await page.locator('[data-result]').innerText()).replace(/\n+/g, ' | ')
   console.log(`${tag} RESULT ${res}`)
-  if (!/(It helped today\.|Not today\.|Mixed today\.|No change today\.|Done for today\.)/.test(res)) fail(`${tag} no verdict in Today's words`)
+  if (!/(Calmer after\.|Not calmer today\.|Mixed today\.|No change today\.|Done for today\.)/.test(res)) fail(`${tag} no verdict in Today's words`)
   if (!/Stillness \| (your head moved [\d.]+° a second before, [\d.]+° after|not read)/.test(res)) fail(`${tag} stillness before and after is not shown`)
   if (!/Heart rate \| [\d.]+ before, [\d.]+ after/.test(res)) fail(`${tag} heart rate before and after is not shown`)
   if (/from your AirPods/.test(res)) fail(`${tag} the scripted run names the AirPods as what measured the heart`)

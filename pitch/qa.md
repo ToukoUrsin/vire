@@ -46,6 +46,9 @@ Nobody has shown it. Learning which session suits a person is how researchers te
 **12. Isn't "stiller after" just regression to the mean?**
 It could be part of it. That's why it's scored against the check just before, by person and by practice, and why the clinic gets the counts, not a verdict. A pilot with a random arm would tell us. (rows 105, 108)
 
+**12b. You call a stiller head good after a practice, and less head movement bad on the clinic list. Which is it?**
+They're two measures. On the list it's how much I move through a whole day: moving less than my own usual is the change the clinic watches. After a practice I'm asked to sit still for 22 seconds, and what's left is fidgeting: less of it means calmer, and that's all "Calmer after" says. Neither is good or bad on its own. Both are compared with my own usual. (rows 105, 122)
+
 ## The clinic and the booster
 
 **13. Does an earlier booster help?**

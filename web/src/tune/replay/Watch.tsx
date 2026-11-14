@@ -9,6 +9,7 @@ import { breathRow, heartRow, stillRow, verdict } from '../session/result'
 import { ReplaySound } from './replaySound'
 import type { SoundState } from './replaySound'
 import { at, breathAt, lastAt, mmss, paceAt, plan, squeeze } from './timeline'
+import BreathTrace from './BreathTrace'
 import type { Part, Plan } from './timeline'
 import '../ears-lab.css'
 import '../session/today.css'
@@ -33,6 +34,7 @@ const PART: Record<Part, string> = { before: 'Check before', practice: '', after
 export default function Watch() {
   const [b, setB] = useState<ReplayBundle | null>(null)
   const [err, setErr] = useState<string | null>(null)
+  const [tries, setTries] = useState(0)
   const [pos, setPos] = useState(0)
   const [paused, setPaused] = useState(false)
   const [sound, setSound] = useState<SoundState>('starting')
@@ -49,7 +51,7 @@ export default function Watch() {
     return () => {
       alive = false
     }
-  }, [])
+  }, [tries])
 
   const p: Plan | null = useMemo(() => (b ? plan(b) : null), [b])
 
@@ -123,7 +125,8 @@ export default function Watch() {
     window.scrollTo({ top: 0, behavior: 'auto' })
   }
 
-  const tag = b ? (b.real ? `${b.label}, ${day(b.at)}` : b.label) : 'Loading the run…'
+  const tag = b ? (b.real ? `${b.label}, ${day(b.at)}` : b.label) : ''
+  const ended = !!p && pos >= p.end
   return (
     <main className="el td wt" data-part={part} data-real={b ? String(b.real) : ''} data-sound={sound} data-paused={paused ? '1' : '0'}>
       <header className="el-top">
@@ -132,15 +135,43 @@ export default function Watch() {
         </a>
         <span className="el-where">Watch a run</span>
       </header>
-      <p className="wt-tag" data-label>
-        {tag}
-      </p>
+      {/* the label that says what kind of run this is appears with the run, never over a loading or failed screen */}
+      {b && (
+        <p className="wt-tag" data-label>
+          {tag}
+        </p>
+      )}
+      {!b && !err && (
+        <section className="td-main wt-wait" role="status">
+          <p className="td-day">Loading the run…</p>
+          <div className="wt-still" aria-hidden="true" />
+          <div className="wt-wait-lines" aria-hidden="true">
+            <i className="skeleton" />
+            <i className="skeleton" />
+            <i className="skeleton" />
+          </div>
+        </section>
+      )}
       {err && (
-        <section className="td-main">
+        <section className="td-main wt-none" role="alert">
           <h1>{err}</h1>
-          <p className="el-lede">
-            <a href="#/">Back to Vire</a>
-          </p>
+          <p className="el-lede">The server did not send one. Nothing is wrong on your side.</p>
+          <div className="el-btns">
+            <button
+              type="button"
+              className="lab-btn primary"
+              onClick={() => {
+                setErr(null)
+                setTries((n) => n + 1)
+              }}
+              data-retry
+            >
+              Try again
+            </button>
+            <a className="lab-btn" href="#/">
+              Back to Vire
+            </a>
+          </div>
         </section>
       )}
       {b && p && now && <Stage b={b} p={p} pos={pos} now={now} />}
@@ -150,7 +181,7 @@ export default function Watch() {
           <p className="td-day">{PART.clinic}</p>
           <PracticeBoard seen={b.seen} />
           <p className="wt-see">
-            <a className="lab-btn" href="#/clinic">
+            <a className="lab-btn primary" href="#/clinic">
               See the clinic
             </a>
           </p>
@@ -167,7 +198,7 @@ export default function Watch() {
                 Tap for sound
               </button>
             )}
-            <button type="button" className="lab-btn" onClick={pause} data-pause aria-pressed={paused} disabled={pos >= p.end}>
+            <button type="button" className="lab-btn" onClick={pause} data-pause aria-pressed={paused} disabled={ended}>
               {paused ? 'Play' : 'Pause'}
             </button>
             <button type="button" className="lab-btn" onClick={replay} data-replay>
@@ -224,10 +255,11 @@ function Stage({ b, p, pos, now }: { b: ReplayBundle; p: Plan; pos: number; now:
   const hr = t !== null ? lastAt(b.heart.rows, t) : null
   const mv = t !== null ? lastAt(b.move, t) : null
   const span = seg ? mmss((seg.t1 - seg.t0) / 1000) : ''
-  const where = seg ? `${practice ? NAME[b.kind] : PART[seg.part]}: ${span} in ${seg.dur} s` : ''
+  const k = seg ? squeeze(seg) : 1
+  // "22 s in 6 s" alone is a riddle: say that the run is played faster than it happened
+  const where = seg ? `${practice ? NAME[b.kind] : PART[seg.part]}: ${span} in ${seg.dur} s${k > 1.05 ? ', played faster' : ''}` : ''
   const heartFrom = b.scripted ? ', a stand-in' : b.heart.from === 'airpods' ? ', from the AirPods' : b.heart.from === 'camera' ? ', from the camera' : ''
   const said = now.part === 'before' || now.part === 'after' ? 'Sit still' : breath ? (breath.phase === 'in' ? 'Breathe in' : 'Breathe out') : practice ? NAME[b.kind] : null
-  const k = seg ? squeeze(seg) : 1
   const phaseSecs = breath ? ((breath.phase === 'in' ? breath.b.tMid - breath.b.t0 : breath.b.t1 - breath.b.tMid) / 1000 / k) * 0.95 : 0.3
   const checkSaid = !check ? null : check.by === 'breath' ? 'breath followed' : check.by === 'stillness' ? 'no breath read, went by stillness' : 'breath did not follow, held'
   if (!seg) return null
@@ -260,6 +292,7 @@ function Stage({ b, p, pos, now }: { b: ReplayBundle; p: Plan; pos: number; now:
           <span>{mv ? `${mv[1].toFixed(1)}° a second` : 'not read'}</span>
         </li>
       </ul>
+      {practice && b.kind === 'breathe' && t !== null && <BreathTrace b={b} t={t} />}
       <Strip b={b} p={p} pos={pos} />
     </section>
   )
@@ -308,7 +341,27 @@ function Strip({ b, p, pos }: { b: ReplayBundle; p: Plan; pos: number }) {
       <figcaption>
         <span className="wt-k-hr">heart rate</span>
         <span className="wt-k-mv">head movement</span>
-        <span className="wt-k-ck">pace checks: ● breath followed, ◐ by stillness, ○ not followed</span>
+        <span className="wt-k-ck">
+          pace checks:
+          <span>
+            <svg viewBox="0 0 10 10" aria-hidden="true">
+              <circle className="wt-ck is-yes" cx={5} cy={5} r={3.2} />
+            </svg>
+            breath followed
+          </span>
+          <span>
+            <svg viewBox="0 0 10 10" aria-hidden="true">
+              <circle className="wt-ck is-still" cx={5} cy={5} r={3.2} />
+            </svg>
+            by stillness
+          </span>
+          <span>
+            <svg viewBox="0 0 10 10" aria-hidden="true">
+              <circle className="wt-ck" cx={5} cy={5} r={3.2} />
+            </svg>
+            not followed
+          </span>
+        </span>
       </figcaption>
     </figure>
   )

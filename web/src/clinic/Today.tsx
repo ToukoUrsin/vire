@@ -5,6 +5,7 @@ import { Spark } from './charts/Spark'
 import { STATUS_LABEL, STATUS_ORDER, fmtDay, fmtSlot, fmtTime, groupOf, isMock, roomCode, signed, silentDays, useCalled, usePatients, viewStatus, words } from './data'
 import type { Group, ViewStatus } from './data'
 import { displayName } from '../shared/name'
+import { whole } from '../shared/whole'
 
 /** keep `?mock=1` on in-app links so a reload stays on the mock */
 export const href = (path: string) => (isMock() ? `${path}?mock=1` : path)
@@ -84,7 +85,6 @@ export default function Today() {
       )}
       <header className="cl-head">
         <h1>Who needs a call today</h1>
-        <p><Link to={href('/clinic/hall')}>Hall visitors: the one-minute camera check →</Link></p>
         {rows && (
           <p className="cl-lede">
             {total === 0 ? (
@@ -183,7 +183,6 @@ export default function Today() {
 
       <section className="cl-care-window cl-care-window--after" aria-labelledby="cl-care-window-title">
         <div className="cl-care-window-copy">
-          <p className="cl-eyebrow">The decision after a course</p>
           <h2 id="cl-care-window-title">Watch the months after TMS. Call when the response fades.</h2>
           <p>Senova 2019 found 66.5% still responding at 3 months, 52.9% at 6, and 46.3% at 12. Each person below is placed by days since their course ended.</p>
           <p className="cl-care-note">If a clinician&apos;s rating is worse for two weeks running, Janicak 2010 found that bringing TMS back restored benefit in 32 of 38 people who worsened. It was open label, with no control.</p>
@@ -283,11 +282,11 @@ function Row({ row, vs, group, calledAt, focus, onCalled }: { row: PatientRow; v
             <b className="cl-outer-note">{o.note}</b>
             {o.state === 'after' && o.after?.simulated && <span className="cl-tag cl-tag--sim">Simulated booster and response</span>}
             {booked && <span className="cl-tag">Booster {fmtSlot(booked.at)}{booked.by === 'simulated' ? ', simulated booking' : ''}</span>}
-            <span className="cl-reason-sub">{row.reason}</span>
+            <span className="cl-reason-sub">{whole(row.reason)}</span>
           </>
         ) : (
           <>
-            {row.reason}
+            <span className="cl-reason-plain">{whole(row.reason)}</span>
             {row.boosterRequested && <span className="cl-tag">Booster requested</span>}
           </>
         )}

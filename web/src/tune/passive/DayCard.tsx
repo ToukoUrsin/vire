@@ -76,16 +76,19 @@ export default function DayCard({ state, onPractice }: { state: PassiveState; on
         </ul>
       )}
 
-      <div className="pd-now" data-live-worn={live.worn}>
-        <span className="pd-dot" data-on={live.worn} aria-hidden="true" />
-        {live.worn ? (
-          <p>
-            Right now: {now.join(', ')}. <span className="pd-hz">{live.hz} samples a second</span>
-          </p>
-        ) : (
-          <p>AirPods not sending right now.</p>
-        )}
-      </div>
+      {/* empty and nothing worn: the line above already asks for the AirPods, so this one stays out */}
+      {(today || live.worn) && (
+        <div className="pd-now" data-live-worn={live.worn}>
+          <span className="pd-dot" data-on={live.worn} aria-hidden="true" />
+          {live.worn ? (
+            <p>
+              Right now: {now.join(', ')}. <span className="pd-hz">{live.hz} samples a second</span>
+            </p>
+          ) : (
+            <p>AirPods not sending right now.</p>
+          )}
+        </div>
+      )}
 
       {offer && (
         <div className="pd-offer" data-offer={offer.kind}>

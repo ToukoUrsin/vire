@@ -26,7 +26,8 @@ const notFound = (e: unknown) => e instanceof Error && /: 404\b/.test(e.message)
 export async function fetchPatients(): Promise<{ rows: PatientRow[]; source: Source } | null> {
   if (!isMock()) {
     try {
-      const rows = await api<PatientRow[]>('clinic/patients')
+      // the public list is the simulated clinic; the team's own view (#/clinic?phones=1) adds the phones that did the camera check
+      const rows = await api<PatientRow[]>(/[?&]phones=1\b/.test(location.hash + location.search) ? 'clinic/patients?phones=1' : 'clinic/patients')
       if (Array.isArray(rows)) {
         apiAnswered = true
         return { rows, source: 'api' }

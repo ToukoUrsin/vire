@@ -108,10 +108,12 @@ function Trouble({ error, onDemo, onRetry }: { error: string; onDemo(): void; on
   return (
     <div className="va-note" role="alert">
       <p>{error}</p>
-      <button type="button" className="va-link" onClick={onDemo}>
-        Try it with demo signals instead
-      </button>
-      {onRetry && <button type="button" className="va-link" onClick={onRetry}>Try again</button>}
+      <div className="va-note-links">
+        <button type="button" className="va-link" onClick={onDemo}>
+          Try it with demo signals instead
+        </button>
+        {onRetry && <button type="button" className="va-link" onClick={onRetry}>Try again</button>}
+      </div>
     </div>
   )
 }
@@ -246,6 +248,7 @@ export function FirstRun({
 
 export function VisitIntro({
   known,
+  back = false,
   busy,
   error,
   onStart,
@@ -254,8 +257,10 @@ export function VisitIntro({
   slow,
   onRetry,
 }: {
-  /** this phone has been here before */
+  /** this phone has a person: the nickname was already asked */
   known: Identity | null
+  /** they came back: this phone had a person before this visit, or already made an echo */
+  back?: boolean
   busy: boolean
   error: string | null
   onStart(name: string): void
@@ -279,7 +284,7 @@ export function VisitIntro({
       </div>
       <div className="va-first-body">
         <CameraNote />
-        <h1 className="va-h1">{known ? 'Welcome back.' : 'One minute. See how you answer.'}</h1>
+        <h1 className="va-h1">{back ? 'Welcome back.' : 'One minute. See how you answer.'}</h1>
         <p className="va-lede">
           Vire plays a few small things and measures how you answer: a nod, a smile, a sentence, two slow breaths.
         </p>
@@ -307,7 +312,7 @@ export function VisitIntro({
 
         <div className="va-first-go">
           <button type="submit" className="va-btn va-btn-primary va-btn-big" disabled={busy}>
-            {busy ? 'Opening camera…' : known ? 'Take a ping' : 'Start'}
+            {busy ? 'Opening camera…' : back ? 'Take a ping' : 'Start'}
           </button>
           {busy && <p className="va-small va-starting" role="status">Camera first, then the face model. If this takes over 8 seconds, it is a one-time download.</p>}
           <p className="va-small">60 seconds. Vire will ask for your camera and microphone. Earbuds help, but are not needed.</p>
@@ -359,8 +364,8 @@ export function VisitEnd({
             {echo.status === 'calibrating' ? <PlainReadings echo={echo} /> : <EchoFigure echo={echo} tone="paper" bare />}
           </div>
         )}
-        <h1 className="va-h1">You are person {echo?.hallGuest ?? '—'} today.</h1>
-        <p className="va-lede">This is what the clinic saw. {echo?.hallCount != null ? `${echo.hallCount} people have tried Vire on their own faces today.` : 'Your four readings are shown below.'}</p>
+        <h1 className="va-h1">{echo?.hallGuest != null ? `You are person ${echo.hallGuest} today.` : 'Thank you for trying Vire today.'}</h1>
+        <p className="va-lede">This is what the clinic saw. {echo?.hallCount != null ? `${echo.hallCount} people have tried Vire on their own faces today.` : echo ? 'Your readings are above.' : ''}</p>
         <p className="va-small">Your heart reading comes from one slow breath. Keep it on this phone to do the full daily minute as yourself.</p>
         {id.local || waiting > 0 ? (
           <p className="va-note">
@@ -777,9 +782,11 @@ export function Home({
 
 // ---------------------------------------------------------------- echo
 
+/** the laugh step waits this long before the laughter plays (PingStage, mockSense) */
+const LAUGH_LEAD_MS = 1000
 const dateLine = (iso: string) =>
   new Date(iso).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })
-function TraceProof({ traces, smileStartS, heartRead }: { traces: PingTraces; /** seconds from the laugh to the smile, as the echo states it */ smileStartS: number | null; /** false when the echo left the heart out: scraps of a pulse are not drawn as a reading */ heartRead: boolean }) {
+function TraceProof({ traces, smileStartS, smileSeen, heartRead }: { traces: PingTraces; /** seconds from the laugh to the smile, as the echo states it */ smileStartS: number | null; /** the echo counted a smile: with no start time, it was already there when the laughter began */ smileSeen: boolean; /** false when the echo left the heart out: scraps of a pulse are not drawn as a reading */ heartRead: boolean }) {
   const n = traces.t.length
   if (!n) return null
   const end = traces.t[n - 1] ?? 60000
@@ -798,10 +805,12 @@ function TraceProof({ traces, smileStartS, heartRead }: { traces: PingTraces; /*
   }
   const phase = (key: string) => traces.phases.find((p) => p.key === key)?.at ?? null
   const laughAt = phase('laugh')
-  const laughEnd = traces.phases.find((p, i) => p.key === 'laugh' ? traces.phases[i + 1]?.at : false)?.at ?? (laughAt == null ? null : laughAt + 12000)
+  const laughIdx = traces.phases.findIndex((p) => p.key === 'laugh')
+  const laughEnd = (laughIdx < 0 ? null : traces.phases[laughIdx + 1]?.at) ?? (laughAt == null ? null : laughAt + 12000)
   const breathAt = phase('breathe')
   const breathEnd = breathAt == null ? null : end
-  const mark = laughAt == null || smileStartS == null ? null : laughAt + smileStartS * 1000
+  // the smile is timed from the laughter itself, which starts one second into the step
+  const mark = laughAt == null || smileStartS == null ? null : laughAt + LAUGH_LEAD_MS + smileStartS * 1000
   const markRight = mark != null && x(mark) > 200
   const smileHi = Math.max(0.6, ...traces.smile, ...traces.cheek)
   const bpm = traces.bpm.filter((v): v is number => v != null)
@@ -822,7 +831,7 @@ function TraceProof({ traces, smileStartS, heartRead }: { traces: PingTraces; /*
         <text x="18" y="106" className="va-trace-label">heart</text>
         {mark != null && <line x1={x(mark)} x2={x(mark)} y1="10" y2="84" className="va-trace-mark" />}
         {mark != null && smileStartS != null && <text x={markRight ? x(mark) - 4 : x(mark) + 4} y="91" textAnchor={markRight ? 'end' : 'start'} className="va-trace-note">smile began {smileStartS.toFixed(1)} s after the laugh</text>}
-        {mark == null && laughAt != null && <text x="342" y="91" textAnchor="end" className="va-trace-note">no clear start to a smile this time</text>}
+        {mark == null && laughAt != null && <text x="342" y="91" textAnchor="end" className="va-trace-note">{smileSeen ? 'already smiling when the laughter began' : 'no clear start to a smile this time'}</text>}
         {(!heartRead || traces.bpm.every((v) => v == null)) && <text x="180" y="128" textAnchor="middle" className="va-trace-note">heart left out this time</text>}
         <text x="18" y="174" className="va-trace-time">0 s</text>
         <text x="342" y="174" textAnchor="end" className="va-trace-time">{(end / 1000).toFixed(0)} s</text>
@@ -883,11 +892,11 @@ export function EchoView({
       </div>
       {meta?.demo && <p className="va-small va-demo-label">Demo signals (scripted)</p>}
       {!calibrating && <p className="va-echo-overall"><b>Overall echo {Math.round(echo.strength)} / 100</b> · 50 is your usual</p>}
-      {meta?.traces && <TraceProof traces={meta.traces} smileStartS={smileStartS} heartRead={by.get('heart')?.value != null} />}
 
       <h1 className={`va-h1 va-echo-msg${long(headline)}`}>{headline}</h1>
       {echo.stim && <p className="va-small va-probe-name">{stimLine(echo.stim)}</p>}
       {unread && !calibrating && <p className="va-echo-unread">{unread}</p>}
+      {meta?.traces && <TraceProof traces={meta.traces} smileStartS={smileStartS} smileSeen={!!by.get('smile')?.value} heartRead={by.get('heart')?.value != null} />}
 
       {checkIsDue && !visitor && (
         <section className="va-check-offer">

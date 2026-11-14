@@ -97,7 +97,7 @@
 /* ---- the other ways in: rows on hairlines ---- */
 .hm-ways {
   display: grid;
-  border-top: 1px solid var(--line-2);
+  border-top: 1px solid var(--line);
 }
 .hm-way,
 .hm-way-main {
@@ -105,12 +105,12 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   column-gap: 12px;
-  padding: 14px 2px;
+  padding: 14px 0;
   color: var(--ink);
   text-decoration: none;
 }
 .hm-way {
-  border-bottom: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--line);
 }
 .hm-way b,
 .hm-way-main b {
@@ -143,7 +143,7 @@
 }
 .hm-way-small {
   justify-self: start;
-  margin: -4px 0 16px 2px;
+  margin: -4px 0 16px;
   font-size: var(--text-label);
   font-weight: 500;
   color: var(--ink);

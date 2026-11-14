@@ -106,11 +106,11 @@ function friendly(e: unknown): string {
         : /Android/.test(ua)
           ? 'Tap the icon at the left of the address bar, then Permissions, and allow Camera and Microphone.'
           : 'Allow the camera and microphone for this page in your browser’s site settings.'
-    return `Vire needs the camera to see how you answer. ${how} Then tap Start again.`
+    return `Vire needs the camera to see how you answer. ${how} Then tap Try again.`
   }
   if (name === 'NotFoundError' || name === 'OverconstrainedError') return 'Vire couldn’t find a camera on this device. Try it on a phone.'
-  if (name === 'NotReadableError') return 'Another app is using the camera. Close it, then tap Start again.'
-  return 'Vire couldn’t start the camera just now. Wait a moment, then tap Start again.'
+  if (name === 'NotReadableError') return 'Another app is using the camera. Close it, then tap Try again.'
+  return 'Vire couldn’t start the camera just now. Wait a moment, then tap Try again.'
 }
 
 const DOSE_VIEW: Record<DoseKind, typeof Breathe> = { breathe: Breathe, smile: Smile, forest: Forest, walk: Walk, reach: Reach, wait: Wait }
@@ -155,6 +155,8 @@ function Vire({ visitor }: { visitor: boolean }) {
   const [sync, setSync] = useState(0)
   const run = useRef<DoseRun | null>(null)
   const seenEcho = useRef(false)
+  /** this phone had a person before this visit began: only then is the visitor greeted as coming back */
+  const cameBack = useRef(id != null)
   const stim = useRef('laugh-1')
   /** a hall guest's latest echo, for their last screen */
   const [guestEcho, setGuestEcho] = useState<Echo | null>(null)
@@ -506,6 +508,7 @@ function Vire({ visitor }: { visitor: boolean }) {
     setBusy(false)
     setWaiting(0)
     seenEcho.current = false
+    cameBack.current = false
     setView(visitor ? { v: 'visit' } : { v: 'first' })
   }
   const ask = () => setAsking(true)
@@ -525,7 +528,7 @@ function Vire({ visitor }: { visitor: boolean }) {
       break
     case 'visit':
       screen = (
-        <VisitIntro known={id} busy={busy} error={error} slow={slow} onRetry={() => void firstStart('', '')} onStart={(n) => void firstStart(n, '')} onDemo={(n) => void firstStart(n, '', true)} onHold={ask} />
+        <VisitIntro known={id} back={cameBack.current || seenEcho.current} busy={busy} error={error} slow={slow} onRetry={() => void firstStart('', '')} onStart={(n) => void firstStart(n, '')} onDemo={(n) => void firstStart(n, '', true)} onHold={ask} />
       )
       break
     case 'tune':
@@ -595,6 +598,7 @@ function Vire({ visitor }: { visitor: boolean }) {
           onKeep={() => { window.location.hash = '#/minute' }}
           onDemo={() => void beginPing(true)}
           onHold={ask}
+          onRetry={() => void beginPing()}
         />
       ) : null
       break

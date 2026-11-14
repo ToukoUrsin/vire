@@ -11,7 +11,8 @@ interface Props {
   onHover: (i: number | null) => void
 }
 
-const fmt = (v: number, span: number) => (span >= 40 ? v.toFixed(0) : span >= 4 ? v.toFixed(1) : v.toFixed(2))
+// a real minus sign, as the big chart and the list write it
+const fmt = (v: number, span: number) => (span >= 40 ? v.toFixed(0) : span >= 4 ? v.toFixed(1) : v.toFixed(2)).replace('-', '−')
 
 /**
  * Four small multiples on the main chart's time axis. A real phone's camera check: raw values against their usual band.
