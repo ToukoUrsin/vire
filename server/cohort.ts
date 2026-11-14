@@ -1,6 +1,7 @@
-// Synthetic cohort: 24 fictional patients, generated deterministically from a seed with dates relative to "now".
+// Synthetic cohort: 50 fictional patients, generated deterministically from a seed with dates relative to "now".
 // Everything here is flagged synthetic: true in the API. No real person is represented.
 import type { BoosterBooking, Channel, DoseKind, PhaseKey, PingKind, PingTraces, PHQ2Check, PracticeKind, PracticeRec } from '../shared/types'
+import { COHORT_SEED } from '../shared/cohort'
 import { learn } from '../shared/earlearn'
 import {
   CHANNELS,
@@ -38,7 +39,7 @@ const DAY = 86400_000
 const HOUR = 3600_000
 
 // name, archetype, best dose (null = drawn from the seed)
-const ROSTER: [string, Archetype, DoseKind | null][] = [
+export const ROSTER: [string, Archetype, DoseKind | null][] = [
   ['Aino K.', 'drift', 'forest'],
   ['Mikko L.', 'steady', 'walk'],
   ['Eino P.', 'steady', 'breathe'],
@@ -63,6 +64,32 @@ const ROSTER: [string, Archetype, DoseKind | null][] = [
   ['Saimi N.', 'improving', 'forest'],
   ['Antti J.', 'drift', null],
   ['Hilla O.', 'steady', 'reach'],
+  ['Aleksi R.', 'steady', null],
+  ['Sanna E.', 'steady', null],
+  ['Jere K.', 'steady', null],
+  ['Noora P.', 'steady', null],
+  ['Rasmus L.', 'steady', null],
+  ['Iida V.', 'steady', null],
+  ['Matias H.', 'steady', null],
+  ['Saara M.', 'steady', null],
+  ['Niklas T.', 'steady', null],
+  ['Johanna A.', 'steady', null],
+  ['Kasperi N.', 'steady', null],
+  ['Emilia O.', 'steady', null],
+  ['Ville S.', 'steady', null],
+  ['Ronja J.', 'steady', null],
+  ['Markus U.', 'steady', null],
+  ['Anni K.', 'steady', null],
+  ['Roope D.', 'steady', null],
+  ['Linnea F.', 'steady', null],
+  ['Tuomas G.', 'steady', null],
+  ['Nea I.', 'steady', null],
+  ['Joonas C.', 'steady', null],
+  ['Vilma B.', 'steady', null],
+  ['Elias W.', 'steady', null],
+  ['Pinja Y.', 'steady', null],
+  ['Arttu Z.', 'steady', null],
+  ['Oona Q.', 'steady', null],
 ]
 // where each slow drifter ends up today, in SD of their own signature: a mix of dipping and low
 const DRIFT_TARGETS = [-2.4, -1.5, -1.9, -1.7, -2.5]
@@ -304,10 +331,10 @@ function makePerson(name: string, archetype: Archetype, bestIn: DoseKind | null,
 // one person goes quiet while steady, the next after slipping for a week
 const QUIET_BEFORE = [-0.2, -1.7]
 
-export function generateCohort(now: number, seed = 2026): SynthPerson[] {
+export function generateCohort(now: number, seed = COHORT_SEED, roster: readonly [string, Archetype, DoseKind | null][] = ROSTER): SynthPerson[] {
   let drifter = 0
   let quiet = 0
-  return ROSTER.map(([name, archetype, best]) => {
+  return roster.map(([name, archetype, best]) => {
     const target = archetype === 'drift' ? DRIFT_TARGETS[drifter++ % DRIFT_TARGETS.length]! : archetype === 'quiet' ? QUIET_BEFORE[quiet++ % QUIET_BEFORE.length]! : 0
     return makePerson(name, archetype, best, target, now, seed)
   })

@@ -298,7 +298,7 @@ describe('wall API as it runs in the hall', () => {
     await post(s.base, 'pings', upload(g1.body.userId as string, vals(1.4)), hall())
     await post(s.base, 'pings', upload(patient.body.userId as string, vals(1.4)), hall())
     const rows = await get<PatientRow[]>(s.base, 'clinic/patients')
-    expect(rows.filter((r) => r.synthetic)).toHaveLength(24)
+    expect(rows.filter((r) => r.synthetic)).toHaveLength(50)
     expect(rows.filter((r) => !r.synthetic).map((r) => r.name)).toEqual(['Real Patient'])
     // the public list is the simulated clinic only: a real phone's name is not listed for everyone, the team's view asks for it
     const asPublic = async (path: string) => (await (await fetch(`${s.base}/api/${path}`, { headers: hall('203.0.113.99') })).json()) as PatientRow[]

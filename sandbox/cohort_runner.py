@@ -12,11 +12,13 @@ refused, if anything. "sandboxes" counts sandboxes that have started running (th
 ended; "peak" is the most of those at one moment. A sandbox Modal has accepted but not yet started is not counted.
 
 VIRE_MODAL_LOCAL=1 runs the same searches on this machine instead, at most three at a time.
+Each patient has VIRE_COHORT_DEADLINE seconds (default 60) from the sandbox request; a timeout is a failed patient.
 """
 from __future__ import annotations
 
 import json
 import os
+import queue
 import subprocess
 import sys
 import tempfile
@@ -31,6 +33,10 @@ MEMORY = int(os.environ.get("VIRE_COHORT_MEMORY", "6144"))
 BUDGET = os.environ.get("VIRE_COHORT_BUDGET", "12")
 LOCAL_AT_ONCE = 3
 LOCAL_JOBS = os.environ.get("VIRE_COHORT_LOCAL_JOBS", "4")
+try:
+    DEADLINE = max(1.0, float(os.environ.get("VIRE_COHORT_DEADLINE", "60")))
+except ValueError:
+    DEADLINE = 60.0
 TAUGHT = ("smile", "nod", "shake")
 OUT = threading.Lock()
 
@@ -40,6 +46,11 @@ def emit(value: object) -> None:
         print(json.dumps(value, separators=(",", ":")), flush=True)
 
 
+def deadline_error() -> str:
+    shown = int(DEADLINE) if DEADLINE.is_integer() else DEADLINE
+    return f"took longer than {shown} seconds"
+
+
 class Board:
     """What every patient's sandbox has said so far. One lock; the ticker reads it once a second."""
 
@@ -47,7 +58,7 @@ class Board:
         self.lock = threading.Lock()
         self.where = where
         self.started = time.time()
-        self.p = [{"n": i + 1, "state": "waiting", "tried": 0, "seconds": 0.0, "auc": None, "works": None, "t0": None, "t1": None} for i in range(n)]
+        self.p = [{"n": i + 1, "state": "waiting", "tried": 0, "seconds": 0.0, "auc": None, "error": None, "works": None, "t0": None, "t1": None} for i in range(n)]
         self.peak = 0
         self.refused = 0
         self.errors: list[str] = []
@@ -77,6 +88,7 @@ class Board:
             p["t1"] = time.time()
             p["state"] = "done" if auc is not None and not error else "failed"
             p["auc"] = round(auc, 4) if auc is not None and not error else None
+            p["error"] = error
             if tried is not None:
                 p["tried"] = max(p["tried"], tried)
             if error:
@@ -98,6 +110,8 @@ class Board:
                 one = {"n": p["n"], "state": p["state"], "tried": p["tried"], "seconds": round(secs, 1), "auc": p["auc"]}
                 if p["works"] is not None:
                     one["works"] = p["works"]
+                if p["error"]:
+                    one["error"] = p["error"]
                 out.append(one)
             return {"patients": out, "seconds": round(now - self.started, 1), "sandboxes": self.running(), "peak": self.peak, "where": self.where, "refused": self.refused}
 
@@ -148,14 +162,29 @@ def run_local(board: Board, folder: Path, repo: Path) -> None:
         with gate:
             with tempfile.TemporaryDirectory(prefix="vire-cohort-") as td:
                 cmd = [sys.executable, str(repo / "sandbox/search.py"), str(folder / f"p{i + 1}.json"), str(Path(td) / "out.json"), "--budget", BUDGET, "--jobs", LOCAL_JOBS, "--repo", str(repo)]
+                started = time.monotonic()
                 proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
                 board.begin(i)
-                assert proc.stdout is not None
+                try:
+                    stdout, _ = proc.communicate(timeout=max(0.01, DEADLINE - (time.monotonic() - started)))
+                except subprocess.TimeoutExpired:
+                    proc.kill()
+                    proc.communicate()
+                    board.end(i, None, None, deadline_error())
+                    return
                 end = None
-                for line in proc.stdout:
+                for line in stdout.splitlines():
                     end = take(board, i, line) or end
-                code = proc.wait()
-                learned = subprocess.run([sys.executable, str(repo / "sandbox/works.py"), str(folder / f"p{i + 1}.json")], capture_output=True, text=True, timeout=60)
+                code = proc.returncode
+                remaining = DEADLINE - (time.monotonic() - started)
+                if remaining <= 0:
+                    board.end(i, None, None, deadline_error())
+                    return
+                try:
+                    learned = subprocess.run([sys.executable, str(repo / "sandbox/works.py"), str(folder / f"p{i + 1}.json")], capture_output=True, text=True, timeout=remaining)
+                except subprocess.TimeoutExpired:
+                    board.end(i, None, None, deadline_error())
+                    return
                 for line in learned.stdout.splitlines():
                     take(board, i, line)
                 finish(board, i, end, f"the search ended without a model (exit {code})")
@@ -200,8 +229,9 @@ def run_modal(board: Board, folder: Path, repo: Path) -> None:
         sandbox = None
         tries = 0
         while sandbox is None:
+            asked = time.monotonic()
             try:
-                sandbox = modal.Sandbox.create("bash", "-lc", command, image=image, app=app, timeout=180, cpu=CPU, memory=MEMORY, block_network=True)
+                sandbox = modal.Sandbox.create("bash", "-lc", command, image=image, app=app, timeout=max(1, int(DEADLINE)), cpu=CPU, memory=MEMORY, block_network=True)
             except Exception as exc:  # Modal said no (a limit, a rate): try again a little later
                 tries += 1
                 board.refuse(f"{type(exc).__name__}: {str(exc)[:240]}")
@@ -215,17 +245,41 @@ def run_modal(board: Board, folder: Path, repo: Path) -> None:
             sandbox.stdin.drain()
             end = None
             pending = ""
-            for chunk in sandbox.stdout:
+            chunks: queue.Queue[object] = queue.Queue()
+            def read_stdout() -> None:
+                try:
+                    for chunk in sandbox.stdout:
+                        chunks.put(chunk)
+                except Exception as exc:
+                    chunks.put(exc)
+                finally:
+                    chunks.put(None)
+            threading.Thread(target=read_stdout, daemon=True).start()
+            board.begin(i)
+            finished = False
+            while time.monotonic() - asked < DEADLINE:
+                try:
+                    chunk = chunks.get(timeout=max(0.01, DEADLINE - (time.monotonic() - asked)))
+                except queue.Empty:
+                    break
+                if chunk is None:
+                    finished = True
+                    break
+                if isinstance(chunk, Exception):
+                    raise chunk
                 if isinstance(chunk, bytes):
                     chunk = chunk.decode("utf-8", "replace")
-                pending += chunk
+                pending += str(chunk)
                 *lines, pending = pending.split("\n")
                 for line in lines:
                     end = take(board, i, line) or end
             if pending.strip():
                 end = take(board, i, pending) or end
-            sandbox.wait()
-            finish(board, i, end, f"the sandbox ended without a model (exit {sandbox.returncode})")
+            if not finished or time.monotonic() - asked >= DEADLINE:
+                board.end(i, None, None, deadline_error())
+            else:
+                sandbox.wait()
+                finish(board, i, end, f"the sandbox ended without a model (exit {sandbox.returncode})")
         except Exception as exc:
             board.end(i, None, None, f"{type(exc).__name__}: {str(exc)[:200]}")
         finally:

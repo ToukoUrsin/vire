@@ -15,8 +15,8 @@ const concurrency = Math.max(1, Math.min(4, Number(process.env.VIRE_EAR_CONCURRE
 /** a lid on what this worker may spend: each search is a sandbox for under a minute */
 const maxRuns = Math.max(1, Number(process.env.VIRE_EAR_MAX_RUNS ?? 60))
 const python = process.env.VIRE_PYTHON ?? 'python3'
-/** the whole clinic re-trained at once: a lid of its own, next to the server's */
-const maxCohorts = Math.max(0, Number(process.env.VIRE_COHORT_MAX_RUNS ?? 8))
+/** the whole clinic re-trained at once: 40 affordable runs per worker, next to the server's cap */
+const maxCohorts = Math.max(0, Number(process.env.VIRE_COHORT_MAX_RUNS ?? 40))
 const local = process.env.VIRE_MODAL_LOCAL === '1'
 if (import.meta.main && (!base || !token)) throw new Error('VIRE_SERVER and VIRE_WORKER_TOKEN are required')
 
@@ -132,7 +132,7 @@ async function cohortRun(claim: CohortClaim): Promise<void> {
   let end = {} as { done?: CohortProgress; error?: string }
   try {
     // two simulated minutes and a simulated practice history per patient, each patient a different script (sandbox/cohort_minutes.ts)
-    const made = Bun.spawn(['bun', 'sandbox/cohort_minutes.ts', dir, String(claim.patients), String(claim.seed)], { cwd: process.env.VIRE_REPO ?? process.cwd(), stdout: 'ignore', stderr: 'pipe' })
+    const made = Bun.spawn(['bun', 'sandbox/cohort_minutes.ts', dir, String(claim.patients), String(claim.seed), String(claim.now)], { cwd: process.env.VIRE_REPO ?? process.cwd(), stdout: 'ignore', stderr: 'pipe' })
     if ((await made.exited) !== 0) throw new Error(`could not make the simulated minutes: ${(await new Response(made.stderr).text()).slice(0, 200)}`)
     console.log(`[ear-worker] cohort ${claim.id}: ${claim.patients} simulated patients, ${where}, minutes made in ${Date.now() - started} ms`)
     const proc = Bun.spawn([python, 'sandbox/cohort_runner.py'], {

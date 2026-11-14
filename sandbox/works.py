@@ -5,7 +5,7 @@
                                                  prints {"learned": [...]}: the full answer per history (the TS test)
 
 <patient.json> is what the sandbox gets: {"minutes": [...], "practices": [{kind, settle, at}, ...]}. The practices are
-simulated (sandbox/cohort_practices.ts). Same prior, same update, same random numbers (mulberry32 seeded by the same
+simulated roster histories. Same prior, same update, same random numbers (mulberry32 seeded by the same
 hash of the same text) and the same rules for best, sure, said and next as the phone and the server.
 """
 from __future__ import annotations
