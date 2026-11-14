@@ -1,0 +1,1571 @@
+/* Vire clinic. Everything is scoped under .cl (dashboard, paper). Tokens come from shared/theme.css. */
+
+.cl {
+  --cl-ok-wash: color-mix(in srgb, var(--ok) 13%, transparent);
+  min-height: 100%;
+  color: var(--ink);
+  font-size: var(--text-label);
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+}
+.cl ::selection {
+  background: var(--ember-soft);
+  color: var(--ink);
+}
+.cl :focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+.cl a {
+  color: inherit;
+  text-decoration: none;
+}
+.cl h2 {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* ---- top bar ---- */
+.cl-bar {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  height: 56px;
+  padding: 0 40px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.cl-brand {
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.cl-brand span {
+  font-family: var(--font-ui);
+  font-size: var(--text-small);
+  color: var(--ink-3);
+  margin-left: 4px;
+  letter-spacing: 0;
+}
+.cl-nav {
+  display: flex;
+  gap: 4px;
+}
+.cl-nav a {
+  white-space: nowrap;
+  padding: 6px 12px;
+  border-radius: var(--radius-s);
+  color: var(--ink-2);
+  font-weight: 500;
+  transition: background-color var(--dur-fast), color var(--dur-fast);
+}
+.cl-nav a:hover {
+  background: var(--paper-2);
+  color: var(--ink);
+}
+.cl-nav a.active {
+  background: var(--paper-2);
+  color: var(--ink);
+}
+.cl-bar-right {
+  margin-left: auto;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  color: var(--ink-3);
+  font-size: var(--text-small);
+}
+.cl-simflag {
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  background: var(--ember-soft);
+  color: var(--ink);
+  font-weight: 500;
+}
+/* phones: the bar has no room for the flag, so it sits under it */
+.cl-simnote {
+  display: none;
+}
+.cl-mockflag {
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  background: var(--paper-2);
+  color: var(--ink-2);
+}
+
+/* ---- page ---- */
+.cl-page {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 32px 40px 56px;
+}
+.cl-head h1,
+.cl-phead h1 {
+  font-size: var(--text-h1);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.cl-lede {
+  margin: 10px 0 0;
+  font-size: var(--text-body-l);
+  color: var(--ink-2);
+  max-width: 70ch;
+}
+.cl-lede b {
+  color: var(--ink);
+  font-weight: 600;
+}
+.cl-lede-done {
+  color: var(--ink-3);
+}
+.cl-eyebrow {
+  margin: 0 0 4px;
+  color: var(--ink-3);
+  font-size: var(--text-caption);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.cl-care-window {
+  display: grid;
+  grid-template-columns: minmax(260px, .8fr) minmax(360px, 1.2fr);
+  gap: 28px;
+  align-items: center;
+  margin-top: 24px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-2);
+  max-width: 1080px;
+}
+.cl-care-window h2 { margin: 0; font-size: var(--text-h3); line-height: 1.15; }
+.cl-care-window p { margin: 8px 0 0; color: var(--ink-2); }
+.cl-care-note { font-size: var(--text-small); }
+.cl-care-curve { min-width: 0; }
+.cl-care-curve svg { display: block; width: 100%; height: auto; overflow: visible; }
+.cl-care-curve small { display: block; margin-top: 2px; color: var(--ink-3); font-size: var(--text-caption); }
+.cl-care-line { fill: none; stroke: var(--ember); stroke-width: 2.5; }
+.cl-care-axis { stroke: var(--line-2); stroke-width: 1; }
+.cl-care-dot { fill: var(--ember); stroke: var(--paper-2); stroke-width: 2; }
+.cl-person-dot { fill: var(--ink-2); opacity: .6; }
+.cl-care-number { fill: var(--ink); font-size: 12px; font-weight: 600; }
+.cl-care-label { fill: var(--ink-3); font-size: 11px; }
+
+/* the list on screen is not the clinic's own: say it above the heading, not in the footer */
+.cl-offline {
+  margin: 0 0 24px;
+  padding: 10px 14px;
+  border-radius: var(--radius-s);
+  background: var(--ember-soft);
+  color: var(--ink);
+  font-size: var(--text-label);
+  max-width: 760px;
+}
+.cl-offline b {
+  font-weight: 600;
+}
+
+/* ---- status strip ---- */
+.cl-strip {
+  margin-top: 24px;
+  max-width: 760px;
+}
+.cl-seg {
+  display: flex;
+  gap: 2px;
+  height: 8px;
+}
+.cl-seg-part {
+  border-radius: var(--radius-xs);
+  min-width: 6px;
+  flex-basis: 0;
+  transition: opacity var(--dur-fast);
+}
+.cl-seg-part.is-dim {
+  opacity: 0.3;
+}
+.cl-seg-part--low {
+  background: var(--bad);
+}
+.cl-seg-part--dipping {
+  background: var(--warn);
+}
+.cl-seg-part--quiet {
+  background: var(--ink-2);
+}
+.cl-seg-part--steady {
+  background: var(--line-2);
+}
+.cl-seg-part--calibrating {
+  background: var(--line);
+}
+.cl-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  margin-top: 10px;
+  margin-left: -8px;
+}
+.cl-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: var(--radius-s);
+  background: none;
+  cursor: pointer;
+  color: var(--ink-2);
+  transition: background-color var(--dur-fast);
+}
+.cl-count b {
+  color: var(--ink);
+  font-weight: 600;
+}
+.cl-count:hover:not(:disabled) {
+  background: var(--paper-2);
+}
+.cl-count[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--paper);
+}
+.cl-count[aria-pressed='true'] b {
+  color: var(--paper);
+}
+.cl-count[aria-pressed='true'] .cl-mark {
+  fill: var(--paper);
+  stroke: var(--paper);
+}
+.cl-count:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+.cl-count--reset {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* status glyph */
+.cl-mark {
+  flex: none;
+  fill: var(--ink-3);
+  stroke: none;
+}
+.cl-mark--low {
+  fill: var(--bad);
+}
+.cl-mark--dipping {
+  fill: var(--warn);
+}
+.cl-mark--quiet {
+  stroke: var(--ink);
+}
+.cl-mark--calibrating {
+  stroke: var(--ink-3);
+}
+.cl-mark--steady {
+  fill: var(--line-2);
+}
+
+/* ---- the list ---- */
+.cl-table {
+  margin-top: 28px;
+  --cols: minmax(130px, 1fr) 62px 190px 140px 160px minmax(220px, 2.6fr) 200px;
+}
+.cl-cols,
+.cl-row {
+  display: grid;
+  grid-template-columns: var(--cols);
+  column-gap: 16px;
+  align-items: center;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+.cl-cols {
+  font-size: var(--text-caption);
+  color: var(--ink-3);
+  padding-bottom: 6px;
+}
+.cl-group {
+  margin-top: 20px;
+}
+.cl-group:first-of-type {
+  margin-top: 8px;
+}
+.cl-group h2 {
+  font-size: var(--text-label);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 0 16px 8px;
+  color: var(--ink);
+}
+.cl-group h2 span {
+  font-weight: 400;
+  color: var(--ink-3);
+}
+.cl-group-note { margin: -3px 16px 8px; color: var(--ink-3); font-size: var(--text-caption); }
+.cl-group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.cl-group--call ul {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.cl-row {
+  position: relative;
+  min-height: 52px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  border-top: 1px solid var(--line);
+  transition: background-color var(--dur-fast);
+}
+.cl-row:hover {
+  background: color-mix(in srgb, var(--paper-2) 60%, transparent);
+}
+.cl-group--call .cl-row {
+  min-height: 76px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.cl-group--call .cl-row:first-child {
+  border-top: 0;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.cl-group--call .cl-row:last-child {
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+.cl-group--call .cl-row:hover {
+  background: color-mix(in srgb, var(--paper) 55%, var(--card));
+}
+.cl-group--calm .cl-row {
+  min-height: 46px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+.cl-name {
+  font-weight: 600;
+  font-size: var(--text-body-s);
+}
+.cl-name::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+.cl-group--call .cl-name {
+  font-size: var(--text-body-l);
+}
+.cl-group--calm .cl-name {
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.cl-c-name {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.cl-joined { display: block; margin-top: 3px; color: var(--ink-3); font-size: 11px; }
+.cl-phq2-axis { stroke: var(--ember); stroke-width: 1.2; stroke-dasharray: 4 4; opacity: .65; }
+.cl-phq2-mark { fill: var(--ember); stroke: var(--paper); stroke-width: 2; }
+.cl-phq2-label { fill: var(--ember); font-size: 11px; }
+.cl-origin {
+  font-size: var(--text-caption);
+  color: var(--ink-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.cl-livedot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ok);
+  display: inline-block;
+  flex: none;
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 50%, transparent);
+  animation: cl-live 2s var(--ease) infinite;
+}
+@keyframes cl-live {
+  to {
+    box-shadow: 0 0 0 7px color-mix(in srgb, var(--ok) 0%, transparent);
+  }
+}
+.cl-c-since {
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.cl-c-since b {
+  color: var(--ink-2);
+  font-weight: 500;
+}
+.cl-c-spark {
+  line-height: 0;
+}
+.cl-spark {
+  display: block;
+  max-width: 100%;
+}
+.cl-spark-band {
+  fill: color-mix(in srgb, var(--ink) 5%, transparent);
+}
+.cl-spark-usual {
+  stroke: var(--line-2);
+  stroke-width: 1;
+}
+.cl-spark-miss {
+  fill: none;
+  stroke: var(--line-2);
+  stroke-width: 1;
+}
+.cl-spark-miss--tail {
+  stroke: var(--ink-2);
+  stroke-width: 1.2;
+}
+.cl-spark-end {
+  stroke: var(--paper);
+  stroke-width: 1.5;
+}
+.cl-group--call .cl-spark-end {
+  stroke: var(--card);
+}
+.cl-spark-stop {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+.cl-c-status {
+  display: grid;
+  grid-template-columns: 12px auto;
+  column-gap: 8px;
+  align-items: center;
+  white-space: nowrap;
+}
+.cl-c-status b {
+  font-weight: 600;
+}
+.cl-c-status span {
+  grid-column: 2;
+  font-size: var(--text-caption);
+  color: var(--ink-3);
+}
+.is-steady .cl-c-status b,
+.is-calibrating .cl-c-status b {
+  font-weight: 400;
+  color: var(--ink-3);
+}
+.cl-c-pings {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-3);
+}
+.cl-c-pings b {
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.cl-pips {
+  display: inline-flex;
+  gap: 2px;
+}
+.cl-pips i {
+  width: 6px;
+  height: 14px;
+  border-radius: var(--radius-xs);
+  background: var(--line);
+}
+.cl-pips i.is-on {
+  background: var(--ink-3);
+}
+.cl-row--call .cl-pips i.is-on,
+.cl-row--watch .cl-pips i.is-on {
+  background: var(--ink-2);
+}
+.cl-c-reason {
+  color: var(--ink-2);
+  text-wrap: pretty;
+  min-width: 0;
+}
+.cl-group--call .cl-c-reason {
+  -webkit-line-clamp: 3;
+}
+.cl-group--call .cl-c-reason {
+  color: var(--ink);
+  font-size: var(--text-body-s);
+}
+.cl-group--calm .cl-c-reason {
+  color: var(--ink-3);
+}
+.cl-tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 8px;
+  border-radius: var(--radius-xs);
+  background: var(--ember-soft);
+  color: var(--ink);
+  font-size: var(--text-caption);
+  white-space: nowrap;
+}
+.cl-c-act {
+  position: relative;
+  z-index: 1;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+}
+.cl-action-state { display: block; margin-right: 8px; color: var(--ink-3); font-size: var(--text-caption); white-space: nowrap; }
+.cl-sources { flex-basis: 100%; margin-top: 8px; color: var(--ink-3); font-size: var(--text-caption); }
+.cl-sources summary { cursor: pointer; color: var(--ink-2); }
+.cl-sources p { margin: 4px 0 0; }
+.cl-next {
+  display: grid;
+  grid-template-columns: minmax(190px, .7fr) minmax(220px, .9fr) minmax(280px, 1.4fr);
+  gap: 20px;
+  align-items: start;
+  margin: 24px 0 4px;
+  padding: 18px 20px;
+  border-left: 4px solid var(--ember);
+  border-radius: var(--radius);
+  background: var(--paper-2);
+}
+.cl-next h2 { margin: 0; font-size: var(--text-h3); line-height: 1.15; }
+.cl-next-head > p:last-child { margin: 8px 0 0; color: var(--ink-3); font-size: var(--text-small); }
+.cl-next-facts { margin: 24px 0 0; padding-left: 18px; color: var(--ink-2); }
+.cl-next-facts li + li { margin-top: 4px; }
+.cl-next-path { margin: 24px 0 0; color: var(--ink-2); font-size: var(--text-small); }
+.cl-next-path span { display: block; margin-top: 8px; color: var(--ink-3); }
+.cl-milestone { stroke: var(--line-2); stroke-width: 1; stroke-dasharray: 2 3; }
+.cl-chev {
+  color: var(--line-2);
+  pointer-events: none;
+  transition: color var(--dur-fast), transform var(--dur-fast);
+}
+.cl-row:hover .cl-chev {
+  color: var(--ink-2);
+  transform: translateX(2px);
+}
+.is-called .cl-c-reason,
+.is-called .cl-name {
+  color: var(--ink-3);
+}
+.cl-row.is-focus { animation: cl-focus 4.5s ease-out both; }
+@keyframes cl-focus { 0%, 65% { box-shadow: inset 4px 0 0 var(--ember), 0 0 0 3px color-mix(in oklab, var(--ember) 22%, transparent); } 100% { box-shadow: inset 0 0 0 transparent; } }
+
+/* ---- buttons ---- */
+/* the button is the shared one (shared/theme.css): quiet fill at rest, ember with ink for the one action */
+.cl-btn {
+  white-space: nowrap;
+}
+.cl-btn:disabled {
+  cursor: progress;
+}
+.cl-btn--small {
+  min-height: var(--control-s);
+  padding: 0 12px;
+  font-size: var(--text-small);
+}
+.cl-btn.is-done,
+.cl-btn.is-done:hover:not(:disabled) {
+  background: none;
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--ink-2);
+}
+.cl-link {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  font-size: var(--text-small);
+}
+.cl-link:hover {
+  color: var(--ink);
+}
+
+/* ---- states ---- */
+.cl-empty {
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 16px 0;
+}
+.cl-empty--inline {
+  margin: 0;
+  padding: 4px 16px 8px;
+  color: var(--ink-3);
+}
+.cl-skel {
+  margin-top: 32px;
+  display: grid;
+  gap: 10px;
+}
+.cl-skel i {
+  height: 52px;
+  border-radius: var(--radius-s);
+  background: var(--paper-2);
+  animation: skeleton-breathe 1.6s var(--ease-loop) infinite alternate;
+}
+.cl-error {
+  color: var(--bad-ink);
+  font-size: var(--text-small);
+  margin: 0;
+  max-width: 30ch;
+}
+.cl-foot {
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 24px;
+  font-size: var(--text-caption);
+  color: var(--ink-3);
+}
+
+/* ---- patient page ---- */
+.cl-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ink-2);
+  font-weight: 500;
+  margin: -8px 0 16px -6px;
+  padding: 4px 8px 4px 4px;
+  border-radius: var(--radius-s);
+}
+.cl-back:hover {
+  background: var(--paper-2);
+  color: var(--ink);
+}
+.cl-phead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 40px;
+  align-items: start;
+}
+.cl-phead-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+.cl-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--paper-2);
+  font-size: var(--text-label);
+}
+.cl-status b {
+  font-weight: 600;
+}
+.cl-status span {
+  color: var(--ink-2);
+}
+.cl-status.is-low {
+  background: color-mix(in srgb, var(--bad) 12%, var(--paper));
+}
+.cl-status.is-dipping {
+  background: color-mix(in srgb, var(--warn) 16%, var(--paper));
+}
+.cl-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 32px;
+  margin: 16px 0 0;
+}
+.cl-facts dt {
+  font-size: var(--text-caption);
+  color: var(--ink-3);
+}
+.cl-facts dd {
+  margin: 1px 0 0;
+  font-weight: 500;
+}
+.cl-inline-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+}
+.cl-summary {
+  margin: 20px 0 0;
+  font-size: var(--text-body-l);
+  line-height: 1.55;
+  max-width: 72ch;
+  text-wrap: pretty;
+}
+.cl-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  width: 250px;
+  padding-top: 4px;
+}
+.cl-done {
+  display: grid;
+  gap: 2px;
+  padding: 10px 14px 12px;
+  border-radius: var(--radius-s);
+  background: var(--ember-soft);
+}
+.cl-done > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+.cl-done small {
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+.cl-done .cl-link {
+  justify-self: start;
+  margin-top: 4px;
+}
+
+.cl-card {
+  margin-top: 20px;
+  padding: 20px 24px 20px;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  min-width: 0;
+}
+.cl-card--main {
+  margin-top: 28px;
+}
+.cl-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px 32px;
+  margin-bottom: 14px;
+}
+.cl-card-head h2 {
+  font-size: var(--text-body);
+}
+.cl-card-head p {
+  margin: 4px 0 0;
+  color: var(--ink-2);
+  font-size: var(--text-small);
+  max-width: 76ch;
+}
+.cl-two {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 20px;
+}
+.cl-plain {
+  margin: 12px 0 0;
+  color: var(--ink-2);
+  max-width: 60ch;
+}
+.cl-plain b {
+  color: var(--ink);
+  font-weight: 600;
+}
+.cl-note {
+  margin: 8px 0 0;
+  font-size: var(--text-caption);
+  color: var(--ink-3);
+}
+
+/* ---- charts ---- */
+.cl-chart {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  touch-action: pan-y;
+}
+.cl-chart svg {
+  display: block;
+  overflow: visible;
+}
+.cl-echo {
+  border-radius: var(--radius-s);
+}
+.cl-ax {
+  font: 400 11.5px var(--font-ui);
+  fill: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.cl-ax--strong {
+  fill: var(--ink-2);
+  font-weight: 500;
+}
+.cl-ax--band {
+  fill: color-mix(in srgb, var(--ok) 60%, var(--ink));
+  font-weight: 500;
+}
+.cl-ax--halo {
+  paint-order: stroke;
+  stroke: var(--card);
+  stroke-width: 5px;
+}
+.cl-grid {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.cl-grid--base,
+.cl-grid--zero {
+  stroke: var(--line-2);
+}
+.cl-course {
+  fill: color-mix(in srgb, var(--ink) 4%, transparent);
+}
+.cl-course-bar {
+  fill: var(--ink-3);
+}
+.cl-band {
+  fill: var(--cl-ok-wash);
+}
+.cl-band-mid {
+  stroke: color-mix(in srgb, var(--ok) 38%, transparent);
+  stroke-width: 1;
+}
+.cl-drift {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.25;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.cl-climb {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 1.25;
+  stroke-linejoin: round;
+}
+.cl-drift--under {
+  stroke: var(--bad);
+}
+.cl-drift-area {
+  fill: color-mix(in srgb, var(--bad) 14%, transparent);
+}
+.cl-drift-gap {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 1.2;
+  stroke-dasharray: 1 5;
+  stroke-linecap: round;
+}
+.cl-pt-home {
+  fill: var(--ink-3);
+  stroke: var(--card);
+  stroke-width: 1.2;
+}
+.cl-pt-clinic {
+  fill: var(--card);
+  stroke: var(--ink-2);
+  stroke-width: 1.5;
+}
+.cl-pt-mini {
+  fill: var(--card);
+  stroke: var(--ink-3);
+  stroke-width: 1.2;
+}
+.cl-lift {
+  stroke: var(--ink-3);
+  stroke-width: 1;
+}
+.cl-dose {
+  fill: var(--ink-2);
+}
+.cl-dose--flat {
+  fill: var(--line-2);
+}
+.cl-silence {
+  stroke: var(--ink-2);
+  stroke-width: 1.6;
+  stroke-dasharray: 1 6;
+  stroke-linecap: round;
+}
+.cl-end {
+  stroke: var(--card);
+  stroke-width: 2;
+  fill: var(--ink);
+}
+.cl-end--dipping {
+  fill: var(--warn);
+}
+.cl-end--low {
+  fill: var(--bad);
+}
+.cl-end--quiet {
+  fill: var(--card);
+  stroke: var(--ink);
+}
+.cl-end--calibrating {
+  fill: var(--ink-3);
+}
+.cl-endv {
+  font: 600 20px var(--font-ui);
+  fill: var(--ink);
+}
+.cl-cross {
+  stroke: var(--ink-3);
+  stroke-width: 1;
+}
+.cl-hover-ring {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+.cl-sel-ring {
+  fill: none;
+  stroke: var(--ember);
+  stroke-width: 2;
+}
+.cl-echo {
+  cursor: pointer;
+}
+.cl-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  font-size: var(--text-caption);
+  color: var(--ink-2);
+  padding-top: 2px;
+}
+.cl-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.cl-tip {
+  position: absolute;
+  top: 34px;
+  z-index: 2;
+  padding: 10px 12px;
+  border-radius: var(--radius-s);
+  background: var(--ink);
+  color: var(--paper);
+  font-size: var(--text-small);
+  pointer-events: none;
+  box-shadow: 0 8px 24px rgba(30, 27, 22, 0.22);
+}
+.cl-tip-when {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+}
+.cl-tip-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 0 6px;
+}
+.cl-tip-main b {
+  font-size: var(--text-h3);
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: normal;
+}
+.cl-tip-main span {
+  display: grid;
+  line-height: 1.25;
+}
+.cl-tip-main em {
+  font-style: normal;
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+}
+.cl-tip-rows > div {
+  display: grid;
+  grid-template-columns: 12px 1fr 26px 84px;
+  align-items: center;
+  gap: 6px;
+  padding: 1.5px 0;
+}
+.cl-tip-rows i {
+  width: 12px;
+  height: 3px;
+  border-radius: var(--radius-xs);
+}
+.cl-tip-rows b {
+  text-align: right;
+  font-weight: 600;
+}
+.cl-tip-rows em {
+  font-style: normal;
+  text-align: right;
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+}
+.cl-tip-rows .is-off {
+  color: color-mix(in srgb, var(--paper) 55%, transparent);
+  grid-template-columns: 12px 1fr auto;
+}
+.cl-tip-rows .is-off b {
+  font-weight: 400;
+}
+.cl-tip-rows .is-off em {
+  display: none;
+}
+.cl-tip-dose {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+}
+
+/* small multiples */
+.cl-multiples {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px;
+}
+.cl-multi {
+  margin: 0;
+  min-width: 0;
+}
+.cl-multi figcaption {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+.cl-multi-name {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.cl-multi-name i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+  align-self: center;
+}
+.cl-multi-name b {
+  font-weight: 600;
+}
+.cl-multi-name span {
+  color: var(--ink-3);
+  font-size: var(--text-caption);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cl-multi-val {
+  color: var(--ink-2);
+  font-size: var(--text-small);
+  white-space: nowrap;
+}
+.cl-multi-val b {
+  font-size: var(--text-title);
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: normal;
+}
+.cl-multi-val span {
+  margin-left: 8px;
+  color: var(--ink-3);
+}
+.cl-multi-val span.is-under {
+  color: var(--bad-ink);
+  font-weight: 500;
+}
+.cl-multi-sig {
+  font-size: var(--text-caption);
+  color: var(--ink-3);
+  margin-top: 2px;
+  padding-left: 32px;
+}
+
+/* dose beliefs */
+.cl-dose-name {
+  font: 500 14px var(--font-ui);
+  fill: var(--ink-2);
+}
+.cl-dose-name--best {
+  fill: var(--ink);
+  font-weight: 600;
+}
+.cl-dose-words {
+  font: 500 13.5px var(--font-ui);
+  fill: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.cl-whisk {
+  stroke: var(--ink-3);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.cl-whisk--prior {
+  stroke: var(--line-2);
+  stroke-dasharray: 1 5;
+}
+.cl-bdot {
+  fill: var(--ink-2);
+  stroke: var(--card);
+  stroke-width: 2;
+}
+.cl-bdot--best {
+  fill: var(--ink);
+}
+.cl-bdot--prior {
+  fill: var(--card);
+  stroke: var(--ink-3);
+  stroke-width: 1.5;
+}
+
+/* trace strip */
+.cl-lane {
+  font: 600 13px var(--font-ui);
+  fill: var(--ink);
+}
+.cl-lane-val {
+  font: 500 12.5px var(--font-ui);
+  fill: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.cl-lane-val--live {
+  fill: var(--ink);
+}
+
+/* ---- narrower desktops and tablets ---- */
+@media (max-width: 1240px) {
+  .cl-table {
+    --cols: minmax(130px, 1fr) 150px 140px 150px minmax(170px, 2.2fr) 190px;
+  }
+  .cl-c-since,
+  .cl-cols span:nth-child(2) {
+    display: none;
+  }
+  .cl-c-spark .cl-spark {
+    width: 150px;
+  }
+  .cl-multiples {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .cl-two {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---- phone ---- */
+@media (max-width: 760px) {
+  .cl-bar {
+    padding: 0 16px;
+    gap: 12px;
+  }
+  .cl-bar-right {
+    display: none;
+  }
+  .cl-simnote {
+    display: block;
+    width: fit-content;
+    margin: 12px 16px 0;
+    padding: 2px 8px;
+    border-radius: var(--radius-xs);
+    background: var(--ember-soft);
+    color: var(--ink);
+    font-size: var(--text-small);
+    font-weight: 500;
+  }
+  .cl-page {
+    padding: 20px 16px 40px;
+  }
+  .cl-head h1,
+  .cl-phead h1 {
+    font-size: var(--text-h2);
+  }
+  .cl-lede,
+  .cl-summary {
+    font-size: var(--text-body);
+  }
+  .cl-care-window,
+  .cl-next {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    padding: 14px;
+  }
+  .cl-care-curve { margin-top: 4px; }
+  .cl-cols {
+    display: none;
+  }
+  .cl-table {
+    margin-top: 20px;
+  }
+  .cl-row,
+  .cl-group--call .cl-row,
+  .cl-group--calm .cl-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'name status'
+      'reason reason'
+      'spark act';
+    row-gap: 6px;
+    padding: 12px 14px;
+  }
+  .cl-group--calm .cl-row {
+    grid-template-areas:
+      'name status'
+      'reason reason'
+      'spark act';
+    padding: 8px 14px;
+  }
+  .cl-group--calm .cl-c-reason { display: block; }
+  .cl-group h2 {
+    padding-left: 14px;
+  }
+  .cl-c-name {
+    grid-area: name;
+  }
+  .cl-c-status {
+    grid-area: status;
+    justify-self: end;
+    text-align: right;
+  }
+  .cl-c-status span {
+    text-align: right;
+  }
+  .cl-c-reason {
+    grid-area: reason;
+  }
+  .cl-c-spark {
+    grid-area: spark;
+  }
+  .cl-c-act {
+    grid-area: act;
+  }
+  .cl-action-state { display: none; }
+  .cl-sources { width: 100%; }
+  .cl-btn--small {
+    min-height: 44px;
+    padding: 8px 16px;
+  }
+  .cl-phead {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .cl-actions {
+    width: auto;
+  }
+  .cl-btn {
+    min-height: 48px;
+  }
+  .cl-card {
+    padding: 16px 14px;
+    margin-top: 16px;
+  }
+  .cl-multiples {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .cl-facts {
+    gap: 10px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cl * {
+    animation: none !important;
+    transition-duration: 0ms !important;
+  }
+}
+
+/* ---- the outer loop: list ---- */
+.cl-c-work {
+  min-width: 0;
+  color: var(--ink-2);
+  font-size: var(--text-small);
+  line-height: 1.35;
+}
+.cl-c-work b {
+  color: var(--ink);
+  font-weight: 600;
+}
+.cl-c-work.is-early,
+.cl-c-work.is-none {
+  color: var(--ink-3);
+}
+.cl-c-work.is-early b,
+.cl-c-work.is-none b {
+  color: var(--ink-2);
+  font-weight: 500;
+}
+.cl-outer-note {
+  display: block;
+  font-weight: 600;
+  color: var(--ink);
+}
+.cl-c-reason .cl-tag:first-of-type {
+  margin-left: 0;
+  margin-top: 4px;
+}
+.cl-outer-note + .cl-tag {
+  margin-left: 0;
+}
+.cl-reason-sub {
+  display: block;
+  margin-top: 3px;
+  color: var(--ink-3);
+  font-size: var(--text-caption);
+  line-height: 1.4;
+}
+.cl-tag--sim {
+  background: var(--paper-2);
+  color: var(--ink-2);
+}
+.cl-say {
+  grid-column: 2 / -1;
+  margin: 10px 0 2px;
+  padding: 10px 14px;
+  border-left: 3px solid var(--ember);
+  background: color-mix(in srgb, var(--ember-soft) 45%, transparent);
+  border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+  font-size: var(--text-body-s);
+  line-height: 1.45;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.cl-say span {
+  display: block;
+  margin-bottom: 2px;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.cl-say--detail {
+  grid-column: auto;
+  margin: 0 0 10px;
+}
+.cl-group--is-escalated h2 {
+  color: var(--ink);
+}
+
+/* ---- the outer loop: one person ---- */
+.cl-book {
+  display: grid;
+  gap: 8px;
+}
+.cl-book small {
+  color: var(--ink-3);
+  font-size: var(--text-caption);
+}
+.cl-slots {
+  display: grid;
+  gap: 4px;
+}
+.cl-slot {
+  padding: 6px 10px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-s);
+  background: var(--card);
+  color: var(--ink-2);
+  font: inherit;
+  font-size: var(--text-small);
+  text-align: left;
+  cursor: pointer;
+}
+.cl-slot.is-on {
+  border-color: var(--ink);
+  color: var(--ink);
+  font-weight: 600;
+}
+.cl-slot-booked {
+  font-size: var(--text-body);
+}
+.cl-outer-chart {
+  width: 100%;
+  overflow: hidden;
+}
+.cl-outer-chart svg {
+  display: block;
+}
+.cl-oc-band {
+  fill: color-mix(in srgb, var(--ink) 5%, transparent);
+}
+.cl-oc-zero {
+  stroke: var(--line-2);
+  stroke-width: 1;
+}
+.cl-oc-dip {
+  stroke: var(--warn);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+  opacity: 0.7;
+}
+.cl-oc-lane {
+  stroke: var(--line);
+}
+.cl-oc-label,
+.cl-oc-tick {
+  font: 500 11.5px var(--font-ui);
+  fill: var(--ink-3);
+}
+.cl-oc-mark {
+  font: 500 12px var(--font-ui);
+  fill: var(--ink-2);
+}
+.cl-oc-mark--strong {
+  font-weight: 600;
+  fill: var(--ink);
+}
+.cl-oc-end {
+  font: 600 12px var(--font-ui);
+  fill: var(--ink);
+}
+.cl-oc-line {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.cl-oc-line--after {
+  stroke: var(--ok);
+}
+.cl-oc-line--after.is-sim {
+  stroke-dasharray: 6 4;
+}
+.cl-oc-dot {
+  fill: var(--ink-2);
+}
+.cl-oc-dot.is-low {
+  fill: var(--warn);
+}
+.cl-oc-after {
+  fill: var(--cl-ok-wash);
+}
+.cl-oc-esc {
+  stroke: var(--warn);
+  stroke-width: 1.4;
+  stroke-dasharray: 4 3;
+}
+.cl-oc-booster {
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+.cl-pmark {
+  stroke-width: 1.5;
+}
+.cl-pmark--settled {
+  fill: var(--ink);
+  stroke: var(--ink);
+}
+.cl-pmark--done {
+  fill: var(--card);
+  stroke: var(--ink);
+}
+.cl-pmark--skipped {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-dasharray: 2 2;
+}
+.cl-oc-legend {
+  display: grid;
+  gap: 4px;
+  color: var(--ink-2);
+  font-size: var(--text-caption);
+}
+.cl-oc-legend ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cl-oc-legend-k {
+  width: 38px;
+  color: var(--ink-3);
+}
+.cl-oc-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.cl-after {
+  margin: 10px 0 0;
+  color: var(--ink-2);
+  font-size: var(--text-small);
+  max-width: 90ch;
+}
+.cl-after.is-sim b {
+  color: var(--ink);
+}
+.cl-next-path p {
+  margin: 0;
+}
+.cl-ptable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-small);
+}
+.cl-ptable th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--ink-3);
+  font-size: var(--text-caption);
+  padding: 0 8px 6px 0;
+}
+.cl-ptable td {
+  padding: 6px 8px 6px 0;
+  border-top: 1px solid var(--line);
+  color: var(--ink-2);
+}
+.cl-ptable td:first-child {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+}
+.cl-ptable tr.is-best td {
+  color: var(--ink);
+  font-weight: 600;
+}
+.cl-plist {
+  list-style: none;
+  margin: 12px 0 8px;
+  padding: 0;
+  font-size: var(--text-small);
+}
+.cl-plist li {
+  display: grid;
+  grid-template-columns: 14px 56px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 4px 0;
+  color: var(--ink-2);
+}
+.cl-plist li b {
+  font-weight: 500;
+  color: var(--ink);
+}
+.cl-plist-day {
+  color: var(--ink-3);
+}
+.cl-care-window--after {
+  margin-top: 40px;
+}
+
+/* phone: "What's working" and the nurse's sentence get their own full-width rows */
+@media (max-width: 760px) {
+  .cl-row,
+  .cl-group--call .cl-row,
+  .cl-group--calm .cl-row {
+    grid-template-areas:
+      'name status'
+      'reason reason'
+      'work work'
+      'spark act';
+  }
+  .cl-c-work { grid-area: work; }
+  .cl-c-work br { display: none; }
+  .cl-c-work b::after { content: ': '; }
+  .cl-say { grid-column: 1 / -1; }
+}

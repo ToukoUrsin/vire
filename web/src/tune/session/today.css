@@ -1,0 +1,111 @@
+.td .td-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4, 1rem);
+  width: min(100%, 44rem);
+  margin: 0 auto;
+  padding: var(--space-5, 1.5rem) var(--space-4, 1rem) var(--space-6, 2rem);
+}
+.td .td-main h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(var(--text-h1), 7vw, var(--text-d1));
+  line-height: 1.05;
+}
+.td .td-main .el-say {
+  font-size: clamp(var(--text-d2), 11vw, 6rem) !important;
+}
+.td-day {
+  margin: 0;
+  color: var(--stage-ink-2);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.td-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: td;
+  border-top: 1px solid var(--stage-line);
+}
+.td-steps li {
+  counter-increment: td;
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  column-gap: 0.5rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--stage-line);
+}
+.td-steps li::before {
+  content: counter(td);
+  grid-row: span 2;
+  color: var(--stage-ink-2);
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+}
+.td-steps b {
+  font-size: var(--text-body-l);
+}
+.td-steps span {
+  color: var(--stage-ink-2);
+  font-size: var(--text-body);
+  line-height: var(--leading);
+}
+.td-orb {
+  width: min(46vw, 13rem);
+  aspect-ratio: 1;
+  margin: 0.5rem auto 0;
+  border-radius: 50%;
+  border: 2px solid var(--stage-ink);
+  background: color-mix(in srgb, var(--stage-ink) 14%, transparent);
+  transform: scale(0.55);
+  transition-property: transform;
+  transition-timing-function: ease-in-out;
+}
+.td-orb[data-phase='in'] {
+  transform: scale(1);
+}
+.td-live {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--stage-line);
+}
+.td-live li {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--stage-line);
+  font-size: var(--text-body);
+}
+.td-live span {
+  color: var(--stage-ink-2);
+  text-align: right;
+}
+.td-rows li {
+  align-items: baseline;
+}
+.td-learn {
+  padding: 1rem 0;
+  border-top: 1px solid var(--stage-line);
+  border-bottom: 1px solid var(--stage-line);
+}
+.td-learn h2 {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-display);
+  font-size: var(--text-h2, 1.5rem);
+  line-height: 1.15;
+}
+.td-learn p {
+  margin: 0.2rem 0 0;
+  color: var(--stage-ink-2);
+  font-size: var(--text-body);
+  line-height: var(--leading);
+}
+@media (prefers-reduced-motion: reduce) {
+  .td-orb {
+    transition-duration: 0.01s !important;
+  }
+}

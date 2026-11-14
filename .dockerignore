@@ -1,0 +1,13 @@
+.git
+**/node_modules
+web/dist
+**/*.sqlite
+**/*.sqlite-*
+**/*.log
+film
+ios
+assets
+judging
+pitch
+validation
+scripts

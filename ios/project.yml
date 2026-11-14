@@ -1,0 +1,42 @@
+name: Vire
+options:
+  bundleIdPrefix: fi.heliosone
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    CODE_SIGN_STYLE: Automatic
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+targets:
+  Vire:
+    type: application
+    platform: iOS
+    sources: [Vire]
+    info:
+      path: Vire/Info.plist
+      properties:
+        CFBundleDisplayName: Vire
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UIStatusBarHidden: true
+        UIViewControllerBasedStatusBarAppearance: false
+        ITSAppUsesNonExemptEncryption: false
+        NSCameraUsageDescription: Vire watches for your smile during the 60-second ping. Video never leaves your phone.
+        NSMicrophoneUsageDescription: Vire listens to how you speak during the ping. Audio never leaves your phone.
+        NSMotionUsageDescription: Vire reads head movement from your AirPods during the ping and the forest.
+        NSHealthShareUsageDescription: Vire reads your heart rate from AirPods Pro during the ping and breathing.
+        NSHealthUpdateUsageDescription: Vire starts a short workout session so AirPods Pro can measure your heart rate. Nothing is saved to Health.
+    entitlements:
+      path: Vire/Vire.entitlements
+      properties:
+        com.apple.developer.healthkit: true
+        com.apple.developer.healthkit.access: []
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: fi.heliosone.vire.junction
+        TARGETED_DEVICE_FAMILY: "1"
+        SWIFT_STRICT_CONCURRENCY: minimal
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon

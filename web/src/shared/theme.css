@@ -1,0 +1,342 @@
+/* Vire design system. Every area (patient app, tune, clinic, stage, wall, science, lab) draws from this file:
+   one palette, one type scale, one spacing grid, one radius set, one motion language, one button, one field.
+   Feel: warm paper, ink, one ember accent. Calm, low-stimulation, never clinical-blue. Do not invent hues.
+   `node judging/scale.mjs` lists every value in web/src that is not on these scales. */
+
+/* Both faces are served from our own origin: the hall has no reliable network, and a first paint in Georgia
+   reads as broken. Latin subset. Fraunces keeps its optical-size axis and has a real italic. */
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('./fonts/fraunces-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('./fonts/fraunces-italic-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('./fonts/inter-latin.woff2') format('woff2');
+}
+
+:root {
+  /* ---- colour ---- */
+  --paper: #f6f2ea;
+  --paper-2: #efe9dd;
+  --card: #fffdf8;
+  --ink: #1e1b16;
+  --ink-2: #5b554a;
+  /* the quietest text. 5.0:1 on paper, 4.6:1 on paper-2: nothing readable goes below this */
+  --ink-3: #6e6759;
+  --line: #e2dbcc;
+  --line-2: #cfc6b3;
+  /* ember is a fill and a mark. As a fill it carries ink, never white (4.7:1 against 3.7:1) */
+  --ember: #e4572e;
+  --ember-soft: #fbe3d9;
+  /* ember as text or a thin line on paper: 5.2:1 on paper, 4.8:1 on paper-2 */
+  --ember-ink: #b33f1c;
+
+  /* the four echo channels: fixed everywhere (rings, charts, chips) */
+  --ch-smile: #e9a23b;
+  --ch-voice: #2a9d8f;
+  --ch-heart: #d1495b;
+  --ch-move: #5b6abf;
+
+  --ok: #3f8f5f;
+  --warn: #c98a1a;
+  --bad: #c2412d;
+  /* the same three as text on paper (4.9:1 or better) */
+  --ok-ink: #2c7348;
+  --warn-ink: #8a5a0a;
+  --bad-ink: #b23a27;
+
+  /* the ping stage is dark and immersive */
+  --stage: #14110d;
+  --stage-2: #1f1b15;
+  --stage-ink: #f3ece0;
+  --stage-ink-2: #a79f90;
+  --stage-line: rgba(243, 236, 224, 0.14);
+
+  /* ---- type: two faces, one scale. Fluid display sizes are clamp()s whose ends sit on this scale; the stage
+     and the hall wall are drawn on a fixed canvas and size type in canvas units. ---- */
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --text-micro: 0.6875rem; /* 11: axis ticks, dense table heads */
+  --text-caption: 0.75rem; /* 12: captions, tags */
+  --text-small: 0.8125rem; /* 13: secondary rows, fine print */
+  --text-label: 0.875rem; /* 14: labels, tool body */
+  --text-body-s: 0.9375rem; /* 15: supporting text */
+  --text-body: 1rem; /* 16: body */
+  --text-body-l: 1.0625rem; /* 17: buttons, fields, lede on a phone */
+  --text-lead: 1.1875rem; /* 19: lede, big buttons */
+  --text-title: 1.375rem; /* 22 */
+  --text-h3: 1.625rem; /* 26 */
+  --text-h2: 1.875rem; /* 30 */
+  --text-h1: 2.25rem; /* 36 */
+  --text-d3: 2.75rem; /* 44 */
+  --text-d2: 3.375rem; /* 54 */
+  --text-d1: 4rem; /* 64 */
+  --text-d0: 4.5rem; /* 72: one number on a screen */
+  --leading: 1.45;
+
+  /* ---- space: padding, margin and gap sit on 2 4 6 8 10 12 14 16 20 24 28 32 40 48 56 64 80 96, written as
+     plain px (a token per step read worse than the number); scale.mjs holds every stylesheet to the grid ---- */
+
+  /* ---- radius: five steps. A control under 48 px tall takes -s, a touch control and a card take the default ---- */
+  --radius-xs: 4px; /* bars, pips, swatches */
+  --radius-s: 8px; /* tags, compact buttons, inputs in the clinic, notes */
+  --radius: 16px; /* cards, touch buttons, fields */
+  --radius-l: 24px; /* sheets, the hero panel */
+  --radius-pill: 999px; /* dots with a label, toggles */
+
+  /* ---- depth: one shadow for anything that floats over paper; cards on paper use a line, not both ---- */
+  --shadow: 0 1px 2px rgba(30, 27, 22, 0.06), 0 8px 24px rgba(30, 27, 22, 0.06);
+
+  /* ---- motion: things arrive on an exponential ease-out and never bounce. Loops (breathing, a pulse, a
+     skeleton) use the symmetric curve; only progress that tracks real time is linear. ---- */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-loop: cubic-bezier(0.45, 0, 0.55, 1);
+  --dur-press: 120ms; /* a button going down */
+  --dur-fast: 160ms; /* hover, colour, border */
+  --dur-move: 240ms; /* a toggle, a chip, a small shift */
+  --dur-enter: 400ms; /* a block or a sheet arriving */
+  --dur-settle: 700ms; /* a bar or a ring growing to its value, a change of surface */
+
+  /* ---- controls ---- */
+  --control-touch: 54px; /* the patient's thumb */
+  --control-touch-l: 62px;
+  --control: 40px; /* a pointer, in the clinic */
+  --control-s: 32px;
+  --focus: 2px solid var(--ember);
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: var(--text-body);
+  line-height: var(--leading);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+button {
+  font: inherit;
+  color: inherit;
+}
+
+/* ---- the parts of the page nobody drew: selection, focus, caret, numerals ---- */
+::selection {
+  background: var(--ember-soft);
+  color: var(--ink);
+}
+:focus-visible {
+  outline: var(--focus);
+  outline-offset: 2px;
+}
+:where(input, textarea) {
+  caret-color: var(--ember);
+}
+:where(table, time, output) {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- one button. Each area keeps its own class (tests and the film's capture script use them); the look
+   lives here and an area only states what is different: its width and its surface.
+   Resting state is the quiet one (a soft fill). Area resets on `button` must stay at zero specificity. ---- */
+.va-btn,
+.vt-btn,
+.cl-btn,
+.wl-btn,
+.wl-print,
+.lab-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--control);
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-s);
+  background: var(--paper-2);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: var(--text-label);
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    transform var(--dur-press) var(--ease),
+    background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    opacity var(--dur-fast) var(--ease);
+}
+:is(.va-btn, .vt-btn, .cl-btn, .wl-btn, .wl-print, .lab-btn):active:not(:disabled) {
+  transform: scale(0.98);
+}
+:is(.va-btn, .vt-btn, .cl-btn, .wl-btn, .lab-btn):disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+/* thumb-sized: the patient app, tune, the wall on a phone */
+.va-btn,
+.vt-btn,
+.wl-btn {
+  min-height: var(--control-touch);
+  padding: 0 24px;
+  border-radius: var(--radius);
+  font-size: var(--text-body-l);
+}
+/* the one thing to do on a screen: ember, with ink on it */
+.va-btn.va-btn-primary,
+.vt-btn,
+.cl-btn.cl-btn--primary,
+.wl-btn,
+.lab-btn.primary {
+  background: var(--ember);
+  color: var(--stage);
+}
+@media (hover: hover) {
+  :is(.va-btn, .cl-btn, .wl-print, .lab-btn):hover:not(:disabled) {
+    background: color-mix(in oklab, var(--paper-2) 92%, var(--ink));
+  }
+  :is(.va-btn.va-btn-primary, .vt-btn, .cl-btn.cl-btn--primary, .wl-btn, .lab-btn.primary):hover:not(:disabled) {
+    background: color-mix(in oklab, var(--ember) 90%, var(--stage-ink));
+  }
+}
+
+/* ---- one field. The only text fields today are in the patient app; a new one joins this selector. ---- */
+.va-field input {
+  height: var(--control-touch);
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-body-l);
+  transition: border-color var(--dur-fast) var(--ease);
+}
+.va-field input:focus {
+  outline: none;
+  border-color: var(--ink);
+}
+.va-field input::placeholder {
+  color: var(--ink-3);
+}
+
+/* ---- a block that is still loading: a quiet sweep, never a spinner. Opacity only (no animated blur). ---- */
+.skeleton {
+  border-radius: var(--radius-s);
+  background: currentColor;
+  opacity: 0.08;
+  animation: skeleton-breathe 1.6s var(--ease-loop) infinite alternate;
+}
+@keyframes skeleton-breathe {
+  to {
+    opacity: 0.16;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
+
+/* ---- a page that could not be fetched (App.tsx): plain words and one button, on any surface ---- */
+.app-failed {
+  display: grid;
+  justify-items: start;
+  align-content: center;
+  gap: 12px;
+  min-height: 100dvh;
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 32px 24px;
+  color: var(--ink);
+}
+.app-failed h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  font-weight: 500;
+  line-height: 1.15;
+}
+.app-failed p {
+  margin: 0 0 8px;
+  color: var(--ink-2);
+  font-size: var(--text-body);
+  line-height: var(--leading);
+}
+
+/* A lazy route should have a quiet arrival state. A blank viewport reads as a broken connection. */
+.app-loading {
+  display: grid;
+  justify-items: start;
+  align-content: center;
+  gap: 12px;
+  min-height: 100dvh;
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 32px 24px;
+  color: var(--ink);
+}
+.app-loading-mark {
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.app-loading-line {
+  display: block;
+  width: 120px;
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--ember);
+  transform-origin: left center;
+  animation: app-loading-line 1.2s var(--ease-loop) infinite alternate;
+}
+.app-loading p {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-body-s);
+}
+@keyframes app-loading-line {
+  from { transform: scaleX(0.28); opacity: 0.55; }
+  to { transform: scaleX(1); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-loading-line { animation: none; }
+}

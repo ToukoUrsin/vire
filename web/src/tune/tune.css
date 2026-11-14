@@ -1,0 +1,670 @@
+/* Tune: the personal face model step. Dark stage tokens only (see shared/theme.css). */
+.vt-map {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+.vt-map canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ------------------------------------------------------------------ the flow */
+.vt-flow {
+  --vt-ink: var(--stage-ink, #f3ece0);
+  --vt-ink-2: var(--stage-ink-2, #a79f90);
+  --vt-dim: rgba(243, 236, 224, 0.13);
+  --vt-ease: var(--ease);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 5;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: max(8px, env(safe-area-inset-top, 0px)) env(safe-area-inset-right, 0px) max(12px, env(safe-area-inset-bottom, 0px)) env(safe-area-inset-left, 0px);
+  background: var(--stage, #14110d);
+  color: var(--vt-ink);
+  font-family: var(--font-ui, system-ui, sans-serif);
+  font-size: var(--text-body);
+  line-height: 1.4;
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+}
+.vt-flow h1,
+.vt-flow p,
+.vt-flow ul,
+.vt-flow ol {
+  margin: 0;
+  padding: 0;
+}
+.vt-flow i,
+.vt-flow em,
+.vt-flow u,
+.vt-flow b {
+  font-style: normal;
+  font-weight: inherit;
+  text-decoration: none;
+}
+/* zero specificity, so the shared button in theme.css is not undone here */
+:where(.vt-flow) :where(button) {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.vt-top {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 14px 0 20px;
+}
+.vt-steps {
+  flex: 1;
+  display: flex;
+  gap: 4px;
+  list-style: none;
+}
+.vt-steps li {
+  flex: 1;
+  height: 3px;
+  border-radius: var(--radius-xs);
+  background: var(--vt-dim);
+  transition: background-color var(--dur-move) var(--vt-ease);
+}
+.vt-steps li[data-gap='true'] {
+  margin-left: 8px;
+}
+.vt-steps li[data-on='true'] {
+  background: var(--vt-ink);
+}
+.vt-steps li[data-now='true'] {
+  background: var(--ember, #e4572e);
+}
+.vt-flow[data-screen='intro'] .vt-steps {
+  visibility: hidden;
+}
+.vt-flow .vt-skip {
+  flex: none;
+  width: auto;
+  min-width: 56px;
+  min-height: 44px;
+  padding: 0 8px;
+  border: 0;
+  background: none;
+  color: var(--vt-ink-2);
+  font-size: var(--text-body-s);
+  text-align: right;
+}
+
+.vt-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.vt-stage {
+  flex: 1 1 0;
+  min-height: 0;
+  container-type: size;
+  display: grid;
+  place-items: center;
+  padding: 6px 16px;
+}
+.vt-ringbox {
+  position: relative;
+  width: min(100cqw, 100cqh / 1.24);
+  height: min(124cqw, 100cqh);
+}
+.vt-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.vt-ring path {
+  fill: none;
+}
+.vt-ring-track {
+  stroke: var(--vt-dim);
+  stroke-width: 0.5;
+}
+.vt-ring-fill {
+  stroke: var(--ember, #e4572e);
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  filter: drop-shadow(0 0 5px rgba(228, 87, 46, 0.65));
+}
+.vt-ring-flash {
+  stroke: var(--ch-smile, #e9a23b);
+  stroke-width: 1.3;
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: vt-flash var(--dur-settle) var(--vt-ease) both;
+}
+@keyframes vt-flash {
+  from {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.07);
+  }
+}
+.vt-flow[data-screen='intro'] .vt-ring,
+.vt-flow[data-screen='result'] .vt-ring {
+  opacity: 0;
+}
+.vt-flow[data-screen='training'] .vt-ring-track {
+  stroke: var(--ch-smile, #e9a23b);
+  stroke-width: 1;
+  stroke-dasharray: 0.5 6;
+  stroke-linecap: round;
+  animation: vt-march 2.2s linear infinite;
+}
+.vt-flow[data-screen='training'] .vt-ring-fill {
+  display: none;
+}
+@keyframes vt-march {
+  to {
+    stroke-dashoffset: -26;
+  }
+}
+
+.vt-words {
+  flex: none;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-height: 178px;
+  padding: 10px 24px 8px;
+  text-align: center;
+}
+/* where you are in the five faces: a quiet line under the instruction, never a label over the heading
+   (it stays first in the markup so a screen reader hears it first) */
+.vt-kicker {
+  order: 3;
+  font-size: var(--text-small);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--vt-ink-2);
+}
+.vt-flow .vt-prompt,
+.vt-flow .vt-title {
+  font-family: var(--font-display, Georgia, serif);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  font-size: clamp(28px, 8.2vw, 36px);
+  text-wrap: balance;
+  color: var(--vt-ink);
+}
+.vt-prompt {
+  animation: vt-in var(--dur-enter) var(--vt-ease) both;
+}
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.vt-help {
+  max-width: 30em;
+  font-size: var(--text-body);
+  color: var(--vt-ink-2);
+  text-wrap: pretty;
+  transition: color var(--dur-move);
+}
+.vt-help[data-hold='true'] {
+  color: var(--ch-smile, #e9a23b);
+}
+.vt-fine {
+  max-width: 34em;
+  font-size: var(--text-small);
+  line-height: 1.4;
+  color: var(--vt-ink-2);
+  text-wrap: pretty;
+}
+/* the button is the shared one (shared/theme.css): ember, the same as the app around it */
+.vt-flow .vt-btn {
+  width: 100%;
+  max-width: 340px;
+  margin-top: 8px;
+}
+.vt-flow .vt-link {
+  width: auto;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  background: none;
+  color: var(--vt-ink-2);
+  font-size: var(--text-body-s);
+}
+.vt-flow[data-screen='intro'] .vt-words {
+  gap: 14px;
+  padding-bottom: 16px;
+}
+
+/* ---- the result ---- */
+.vt-flow[data-screen='result'] .vt-body {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.vt-flow[data-screen='result'] .vt-stage {
+  flex: none;
+  height: 33vh;
+  height: 33dvh;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.vt-flow[data-screen='result'] .vt-ringbox {
+  width: 100cqw;
+  height: 100cqh;
+}
+.vt-result {
+  gap: 14px;
+  padding-bottom: max(24px, env(safe-area-inset-bottom, 12px));
+  animation: vt-in var(--dur-enter) var(--vt-ease) both;
+}
+.vt-read {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: var(--text-body-s);
+  color: var(--vt-ink-2);
+}
+.vt-read b {
+  min-width: 7.5em;
+  text-align: left;
+  font-size: var(--text-lead);
+  font-weight: 600;
+  color: var(--vt-ink-2);
+}
+.vt-read b[data-on='true'] {
+  color: var(--ch-smile, #e9a23b);
+}
+.vt-acc {
+  max-width: 24em;
+  font-size: var(--text-body-l);
+  line-height: 1.35;
+  text-wrap: pretty;
+}
+.vt-ranges {
+  width: 100%;
+  max-width: 420px;
+  display: grid;
+  gap: 8px;
+  list-style: none;
+  text-align: left;
+}
+.vt-ranges li {
+  display: grid;
+  grid-template-columns: 8.6em 1fr;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--text-label);
+  color: var(--vt-ink-2);
+}
+.vt-ranges i,
+.vt-ear i {
+  position: relative;
+  display: block;
+  height: 8px;
+  border-radius: var(--radius-xs);
+  background: rgba(243, 236, 224, 0.07);
+}
+.vt-ranges li[data-weak='true'] {
+  opacity: 0.45;
+}
+.vt-ranges li[data-weak='true'] em {
+  display: none;
+}
+.vt-ranges em {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: var(--radius-xs);
+  background: rgba(243, 236, 224, 0.24);
+  overflow: hidden;
+}
+.vt-ranges u,
+.vt-ear u {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-xs);
+  background: var(--ch-smile, #e9a23b);
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform var(--dur-press) linear;
+}
+.vt-ear {
+  width: 100%;
+  max-width: 420px;
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--vt-dim);
+  border-radius: var(--radius);
+  text-align: left;
+  font-size: var(--text-body-s);
+}
+.vt-ear u {
+  background: var(--ember, #e4572e);
+}
+.vt-actions {
+  position: static;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px 0 6px;
+  background: var(--stage, #14110d);
+}
+.vt-actions .vt-btn {
+  margin-top: 0;
+}
+
+/* ---- wide screens: the face on the left, the words on the right ---- */
+@media (min-width: 860px) and (min-aspect-ratio: 5/4) {
+  .vt-top {
+    padding: 0 2.4vw 0 3.4vw;
+    min-height: 6vh;
+  }
+  .vt-steps {
+    gap: 0.5vw;
+  }
+  .vt-steps li {
+    height: 4px;
+  }
+  .vt-steps li[data-gap='true'] {
+    margin-left: 1vw;
+  }
+  .vt-flow .vt-skip {
+    font-size: max(15px, 1.05vw);
+  }
+  .vt-body {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .vt-stage {
+    flex: 1.15 1 0;
+    padding: 2vh 2vw 4vh 4vw;
+  }
+  .vt-words {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2.2vh;
+    padding: 0 6vw 6vh 2vw;
+    text-align: left;
+  }
+  .vt-kicker {
+    font-size: max(13px, 1vw);
+  }
+  .vt-flow .vt-prompt {
+    font-size: clamp(40px, 4.7vw, 104px);
+    line-height: 1.04;
+  }
+  .vt-flow .vt-title {
+    font-size: clamp(38px, 4vw, 88px);
+    line-height: 1.04;
+  }
+  .vt-help {
+    font-size: clamp(18px, 1.55vw, 34px);
+  }
+  .vt-fine {
+    font-size: clamp(13px, 0.9vw, 20px);
+  }
+  .vt-flow .vt-btn {
+    max-width: none;
+    width: auto;
+    min-width: 13em;
+    min-height: max(54px, 3.4vw);
+    font-size: clamp(17px, 1.25vw, 28px);
+  }
+  .vt-flow .vt-link {
+    font-size: clamp(15px, 1vw, 22px);
+  }
+  .vt-flow[data-screen='result'] .vt-body {
+    overflow: hidden;
+  }
+  .vt-flow[data-screen='result'] .vt-stage {
+    flex: 1.15 1 0;
+    height: auto;
+  }
+  .vt-result {
+    gap: 2vh;
+    overflow-y: auto;
+    padding-top: 2vh;
+    padding-bottom: 4vh;
+  }
+  .vt-read {
+    font-size: clamp(15px, 1.2vw, 26px);
+  }
+  .vt-read b {
+    font-size: clamp(20px, 1.7vw, 38px);
+  }
+  .vt-acc {
+    font-size: clamp(18px, 1.5vw, 32px);
+  }
+  .vt-ranges,
+  .vt-ear {
+    max-width: 34vw;
+  }
+  .vt-ranges {
+    gap: 1.3vh;
+  }
+  .vt-ranges li {
+    font-size: clamp(14px, 1.05vw, 24px);
+  }
+  .vt-ranges i,
+  .vt-ear i {
+    height: max(8px, 0.6vw);
+    border-radius: var(--radius-pill);
+  }
+  .vt-ranges em,
+  .vt-ranges u,
+  .vt-ear u {
+    border-radius: var(--radius-pill);
+  }
+  .vt-ear {
+    font-size: clamp(15px, 1.15vw, 26px);
+    padding: 1.6vh 1.2vw;
+  }
+  .vt-actions {
+    position: static;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 1vw;
+    padding: 1vh 0 0;
+    background: none;
+  }
+}
+
+/* short phones held upright: a little less air */
+@media (max-height: 700px) and (max-width: 859px) {
+  .vt-words {
+    min-height: 150px;
+    gap: 8px;
+  }
+  .vt-flow .vt-prompt,
+  .vt-flow .vt-title {
+    font-size: var(--text-h3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vt-prompt,
+  .vt-result,
+  .vt-ring-flash,
+  .vt-flow[data-screen='training'] .vt-ring-track {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------------ /#/tune: TUNE's own page */
+.vt-lab {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--stage, #14110d);
+  color: var(--stage-ink, #f3ece0);
+  font-family: var(--font-ui, system-ui, sans-serif);
+  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+}
+.vt-lab video {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 2px;
+  height: 2px;
+  opacity: 0.01;
+  pointer-events: none;
+}
+.vt-lab-map {
+  flex: 1 1 0;
+  min-height: 0;
+}
+.vt-lab-side {
+  flex: none;
+  display: grid;
+  gap: 10px;
+  padding: 10px 20px 16px;
+  font-size: var(--text-label);
+}
+.vt-lab-side h2 {
+  font-size: var(--text-title);
+}
+.vt-lab-read {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  color: var(--stage-ink-2, #a79f90);
+}
+.vt-lab-read b {
+  color: var(--stage-ink, #f3ece0);
+  font-weight: 600;
+}
+.vt-lab-bars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--stage-ink-2, #a79f90);
+}
+.vt-lab-bars li {
+  display: grid;
+  grid-template-columns: 7.6em 1fr;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-caption);
+}
+.vt-lab-bars i {
+  position: relative;
+  display: block;
+  height: 6px;
+  border-radius: var(--radius-xs);
+  background: rgba(243, 236, 224, 0.09);
+  overflow: hidden;
+}
+.vt-lab-bars u {
+  position: absolute;
+  inset: 0;
+  background: var(--ch-smile, #e9a23b);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+.vt-lab-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.vt-lab button {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-s);
+  background: var(--stage-2);
+  box-shadow: inset 0 0 0 1px var(--stage-line);
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.vt-lab button[data-main='true'] {
+  background: var(--ember);
+  box-shadow: none;
+  color: var(--stage);
+}
+.vt-lab-note {
+  color: var(--stage-ink-2, #a79f90);
+  font-size: var(--text-caption);
+}
+.vt-lab-sliders {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 12px;
+  font-size: var(--text-caption);
+}
+.vt-lab-sliders input {
+  width: 100%;
+}
+@media (min-width: 860px) and (min-aspect-ratio: 5/4) {
+  .vt-lab {
+    flex-direction: row;
+  }
+  .vt-lab-side {
+    width: 34vw;
+    align-content: center;
+    padding: 4vh 4vw 4vh 0;
+    font-size: var(--text-body);
+  }
+  .vt-lab-side h2 {
+    font-size: var(--text-h1);
+  }
+  .vt-lab-bars {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .vt-lab-bars li {
+    font-size: var(--text-label);
+    grid-template-columns: 9em 1fr;
+  }
+  .vt-lab-bars i {
+    height: 8px;
+    border-radius: var(--radius-xs);
+  }
+}

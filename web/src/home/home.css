@@ -1,0 +1,255 @@
+/* The first screen. Paper and ink, one ember button, hairlines between the ways in. Tokens from shared/theme.css. */
+.hm {
+  --gutter: 20px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 32px;
+  max-width: 34rem;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: 20px var(--gutter) 40px;
+  color: var(--ink);
+}
+.hm p,
+.hm ol {
+  margin: 0;
+}
+
+.hm-top {
+  display: flex;
+  align-items: center;
+}
+.hm-mark {
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* ---- what it is, and the one tap ---- */
+.hm-intro {
+  display: grid;
+  gap: 14px;
+  margin-top: -8px;
+}
+.hm-intro h1 {
+  font-size: clamp(var(--text-h1), 6.4vw + 0.6rem, var(--text-d2));
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.hm-lede {
+  font-size: var(--text-body-l);
+  line-height: 1.42;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.hm-who {
+  font-size: var(--text-body-s);
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.hm-watch {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 10px;
+  min-height: var(--control-touch-l);
+  padding: 12px 24px 12px 18px;
+  border-radius: var(--radius);
+  background: var(--ember);
+  color: var(--stage);
+  text-decoration: none;
+  transition:
+    transform var(--dur-press) var(--ease),
+    background-color var(--dur-fast) var(--ease);
+}
+.hm-watch:active {
+  transform: scale(0.98);
+}
+.hm-play {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  padding: 6px 5px 6px 7px;
+  border-radius: var(--radius-pill);
+  background: var(--stage);
+  fill: var(--ember);
+}
+.hm-watch span {
+  display: grid;
+  gap: 1px;
+}
+.hm-watch b {
+  font-size: var(--text-lead);
+  font-weight: 650;
+  line-height: 1.2;
+}
+.hm-watch small {
+  font-size: var(--text-label);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* ---- the other ways in: rows on hairlines ---- */
+.hm-ways {
+  display: grid;
+  border-top: 1px solid var(--line-2);
+}
+.hm-way,
+.hm-way-main {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 12px;
+  padding: 14px 2px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.hm-way {
+  border-bottom: 1px solid var(--line-2);
+}
+.hm-way b,
+.hm-way-main b {
+  grid-column: 1;
+  font-size: var(--text-body-l);
+  font-weight: 600;
+  line-height: 1.3;
+}
+.hm-way span,
+.hm-way-main span {
+  grid-column: 1;
+  font-size: var(--text-body-s);
+  color: var(--ink-2);
+}
+.hm-arrow {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  width: 20px;
+  height: 20px;
+  color: var(--ink-3);
+  transition:
+    transform var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+.hm-way-clinic {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding: 0;
+}
+.hm-way-small {
+  justify-self: start;
+  margin: -4px 0 16px 2px;
+  font-size: var(--text-label);
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--ember);
+  text-underline-offset: 3px;
+}
+@media (hover: hover) {
+  .hm-watch:hover {
+    background: color-mix(in oklab, var(--ember) 90%, var(--stage-ink));
+  }
+  :is(a.hm-way, .hm-way-main):hover .hm-arrow {
+    color: var(--ink);
+    transform: translateX(3px);
+  }
+}
+
+/* ---- the loop ---- */
+.hm-loop ol {
+  display: grid;
+  gap: 12px;
+  padding: 0;
+  list-style: none;
+}
+.hm-loop li {
+  display: grid;
+  align-content: start;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 12px;
+  font-size: var(--text-body-s);
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+.hm-loop li b {
+  font-family: var(--font-display);
+  font-size: var(--text-body-l);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.hm-honest {
+  display: grid;
+  gap: 4px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+.hm-honest p:first-child {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ---- wide: what it is on the left, the ways in on the right, the loop across ---- */
+@media (min-width: 900px) {
+  .hm {
+    --gutter: 48px;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: clamp(48px, 7vw, 120px);
+    row-gap: 40px;
+    max-width: 78rem;
+    padding-top: 28px;
+  }
+  .hm-top,
+  .hm-loop,
+  .hm-honest {
+    grid-column: 1 / -1;
+  }
+  .hm-intro {
+    margin-top: 8px;
+    gap: 18px;
+  }
+  .hm-lede {
+    max-width: 36rem;
+    font-size: var(--text-lead);
+  }
+  .hm-watch {
+    justify-self: start;
+    min-width: 22rem;
+    margin-top: 14px;
+  }
+  .hm-ways {
+    align-self: end;
+  }
+  .hm-loop ol {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .hm-loop li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+  .hm-honest {
+    grid-auto-flow: column;
+    justify-content: space-between;
+    border-top: 0;
+    padding-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hm-watch,
+  .hm-arrow {
+    transition: none;
+  }
+}

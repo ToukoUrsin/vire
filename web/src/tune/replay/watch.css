@@ -1,0 +1,203 @@
+/* /#/watch: Today's look, played back. Stage tokens only. */
+.wt {
+  gap: 16px;
+  padding-bottom: 32px;
+}
+.wt .el-top {
+  width: min(100%, 44rem);
+  margin: 0 auto;
+}
+.wt-home {
+  color: inherit;
+  text-decoration: none;
+}
+.wt-tag {
+  width: min(100%, 44rem);
+  margin: 0 auto;
+  padding: 10px 14px;
+  border: 1px solid var(--stage-ink);
+  border-radius: var(--radius-s);
+  color: var(--stage-ink);
+  font-size: var(--text-label);
+  font-weight: 600;
+  line-height: 1.35;
+}
+.wt .td-main {
+  padding-top: 0;
+  padding-bottom: 0;
+  gap: 12px;
+}
+.wt-say {
+  font-size: clamp(var(--text-h1), 9vw, var(--text-d1)) !important;
+  min-height: 1.1em;
+}
+.wt-orb {
+  width: min(40vw, 11rem);
+  margin-top: 0;
+}
+.wt-still {
+  width: min(40vw, 11rem);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  border-radius: 50%;
+  border: 2px solid var(--stage-line);
+  transform: scale(0.55);
+}
+.wt-strip {
+  margin: 4px 0 0;
+}
+.wt-strip svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.wt-sep {
+  stroke: var(--stage-line);
+  stroke-width: 1;
+}
+.wt-hr,
+.wt-mv {
+  fill: none;
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.wt-hr {
+  stroke: var(--stage-ink);
+}
+.wt-mv {
+  stroke: var(--stage-ink-2);
+  stroke-dasharray: 3 2;
+}
+.wt-head {
+  stroke: var(--stage-ink-2);
+  stroke-width: 1;
+}
+.wt-ck {
+  fill: none;
+  stroke: var(--stage-ink);
+  stroke-width: 1.2;
+}
+.wt-ck.is-yes {
+  fill: var(--stage-ink);
+}
+.wt-ck.is-still {
+  fill: var(--stage-ink-2);
+}
+.wt-strip figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 6px;
+  color: var(--stage-ink-2);
+  font-size: var(--text-caption);
+}
+.wt-k-hr::before,
+.wt-k-mv::before {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  margin-right: 6px;
+  vertical-align: middle;
+  border-top: 2px solid var(--stage-ink);
+}
+.wt-k-mv::before {
+  border-top: 2px dashed var(--stage-ink-2);
+}
+.wt-result {
+  padding-top: 8px !important;
+  border-top: 1px solid var(--stage-line);
+}
+.wt-controls {
+  width: min(100%, 44rem);
+  margin: 0 auto;
+  position: sticky;
+  bottom: 0;
+  padding: 8px 0 12px;
+  background: var(--stage);
+}
+.wt-controls .el-bar {
+  margin-top: 0;
+}
+.wt-controls a {
+  color: var(--ink);
+}
+.wt-controls a.primary {
+  color: var(--stage);
+}
+.wt :focus-visible {
+  outline: 2px solid var(--stage-ink);
+  outline-offset: 3px;
+}
+.wt .el-bar i {
+  transition: none;
+}
+
+/* the clinic's screen, in a frame of its own: the big screen's pieces at this page's size */
+.wt-clinic {
+  --u: min(0.78vw, 11px);
+  --line: rgba(243, 236, 224, 0.15);
+  --soft: #d6cec0;
+  width: min(100%, 72rem);
+  margin: 8px auto 0;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--stage-line);
+  scroll-margin-top: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.wt-clinic .sg-search {
+  margin-top: 10px;
+  padding: calc(var(--u) * 2.4);
+  border: 1px solid var(--stage-line);
+  border-radius: var(--radius);
+  background: var(--stage-2);
+  font-size: calc(var(--u) * 1.3);
+  line-height: 1.3;
+}
+/* browser margins off, at no specificity: the big screen's own margins win */
+:where(.wt-clinic) :where(h1, p, dl, dd, ol) {
+  margin-block: 0;
+}
+.wt-clinic .sg-sr-side h1 {
+  margin-top: calc(var(--u) * 1.2);
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.05;
+}
+.wt-see {
+  margin: 14px 0 0 !important;
+}
+@media (max-width: 760px) {
+  .wt-clinic {
+    --u: clamp(8px, 2.75vw, 12px);
+  }
+  .wt-clinic .sg-search {
+    grid-template-columns: minmax(0, 1fr);
+    gap: calc(var(--u) * 3);
+  }
+  .wt-clinic .sg-sr-board {
+    border-left: 0;
+    padding-left: 0;
+    border-top: 1px solid var(--line);
+    padding-top: calc(var(--u) * 2);
+  }
+  .wt-clinic .sg-sr-stats {
+    flex-wrap: wrap;
+  }
+  .wt-clinic .sg-practice .sg-sr-board li {
+    grid-template-columns: calc(var(--u) * 5) minmax(0, 1fr) calc(var(--u) * 5) calc(var(--u) * 6);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* the sea shows each breath by how light it is, not by growing */
+  .wt-orb,
+  .wt-orb[data-phase='in'] {
+    transform: scale(0.8);
+    transition-property: background-color;
+  }
+  .wt-orb[data-phase='in'] {
+    background: color-mix(in srgb, var(--stage-ink) 55%, transparent);
+  }
+}

@@ -1,0 +1,11 @@
+node_modules
+dist
+*.sqlite
+*.sqlite-*
+.DS_Store
+ios/build
+ios/*.xcodeproj
+server.log
+*.log
+pitch/deck/.deck.built.html
+__pycache__

@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Vire deck</title>
+<style>
+@font-face { font-family: 'Fraunces'; font-style: normal; font-weight: 100 900; src: url('../../web/src/shared/fonts/fraunces-latin.woff2') format('woff2'); }
+@font-face { font-family: 'Fraunces'; font-style: italic; font-weight: 100 900; src: url('../../web/src/shared/fonts/fraunces-italic-latin.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; src: url('../../web/src/shared/fonts/inter-latin.woff2') format('woff2'); }
+@page { size: 1920px 1080px; margin: 0; }
+:root {
+  --paper: #f6f2ea; --paper-2: #efe9dd; --card: #fffdf8; --ink: #1e1b16; --ink-2: #5b554a; --ink-3: #6e6759;
+  --line: #e2dbcc; --line-2: #cfc6b3; --ember: #e4572e; --ember-ink: #b33f1c;
+  --night: #14110d; --night-2: #1d1914; --night-line: #2f2921; --cream: #f3ecdf; --cream-2: #b9b0a0; --cream-3: #8d8576;
+  --ch-smile: #e9a23b; --ch-voice: #2a9d8f; --ch-heart: #d1495b; --ch-move: #5b6abf;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #000; }
+body { font-family: 'Inter', sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+.slide { width: 1920px; height: 1080px; position: relative; overflow: hidden; background: var(--paper); padding: 96px 120px 88px; page-break-after: always; break-after: page; display: flex; flex-direction: column; }
+.slide.night { background: var(--night); color: var(--cream); }
+.foot { position: absolute; left: 120px; right: 120px; bottom: 44px; display: flex; justify-content: space-between; font-size: 18px; color: var(--ink-3); letter-spacing: 0.01em; }
+.night .foot { color: var(--cream-3); }
+.foot b { font-family: 'Fraunces', serif; font-weight: 500; font-size: 22px; color: var(--ink); letter-spacing: 0; }
+.night .foot b { color: var(--cream); }
+h1 { font-family: 'Fraunces', serif; font-weight: 400; font-size: 76px; line-height: 1.06; letter-spacing: -0.02em; font-variation-settings: 'opsz' 144; max-width: 1500px; }
+h1 em { font-style: italic; }
+.lede { font-size: 32px; line-height: 1.4; color: var(--ink-2); max-width: 1100px; margin-top: 32px; }
+.night .lede { color: var(--cream-2); }
+.src { font-size: 18px; line-height: 1.45; color: var(--ink-3); }
+.night .src { color: var(--cream-3); }
+.row { display: flex; gap: 72px; flex: 1; min-height: 0; }
+.col { display: flex; flex-direction: column; min-width: 0; }
+.grow { flex: 1; }
+.mid { justify-content: center; }
+.end { justify-content: flex-end; }
+
+/* product frames */
+.phone { width: 304px; aspect-ratio: 780 / 1688; border-radius: 34px; overflow: hidden; border: 1px solid var(--night-line); background: #000; flex: none; }
+.phone img, .wide img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.wide { border-radius: 16px; overflow: hidden; border: 1px solid var(--line-2); background: var(--card); aspect-ratio: 16 / 9; }
+.night .wide { border-color: var(--night-line); }
+.cap { margin-top: 20px; }
+.cap b { display: block; font-family: 'Fraunces', serif; font-weight: 500; font-size: 30px; letter-spacing: -0.01em; }
+.cap span { display: block; font-size: 20px; line-height: 1.4; color: var(--cream-2); margin-top: 6px; }
+.dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 12px; transform: translateY(-3px); }
+
+/* facts */
+.big { font-family: 'Fraunces', serif; font-weight: 400; font-size: 300px; line-height: 0.86; letter-spacing: -0.04em; font-variation-settings: 'opsz' 144; }
+.facts { border-top: 1px solid var(--line-2); }
+.fact { display: grid; grid-template-columns: 300px 1fr; gap: 40px; padding: 26px 0; border-bottom: 1px solid var(--line-2); align-items: baseline; }
+.fact .n { font-family: 'Fraunces', serif; font-weight: 400; font-size: 60px; line-height: 1; letter-spacing: -0.02em; font-variation-settings: 'opsz' 144; white-space: nowrap; }
+.fact .n small { font-family: 'Inter', sans-serif; font-size: 22px; color: var(--ink-3); letter-spacing: 0; margin-left: 6px; }
+.fact p { font-size: 24px; line-height: 1.4; color: var(--ink-2); }
+.fact p b { color: var(--ink); font-weight: 600; }
+.list { list-style: none; }
+.list li { font-size: 26px; line-height: 1.4; color: var(--ink-2); padding: 20px 0; border-bottom: 1px solid var(--line-2); }
+.list li:first-child { border-top: 1px solid var(--line-2); }
+.list li b { color: var(--ink); font-weight: 600; }
+.night .list li { color: var(--cream-2); border-color: var(--night-line); }
+.night .list li b { color: var(--cream); }
+h2 { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 20px; letter-spacing: 0.01em; color: var(--ink-3); margin-bottom: 18px; }
+.night h2 { color: var(--cream-3); }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--line-2); margin-top: 56px; }
+.step { padding: 28px 32px 0 0; }
+.step + .step { padding-left: 32px; border-left: 1px solid var(--line-2); }
+.step b { display: block; font-family: 'Fraunces', serif; font-weight: 500; font-size: 34px; letter-spacing: -0.01em; }
+.step span { display: block; font-size: 22px; line-height: 1.4; color: var(--ink-2); margin-top: 10px; }
+.qr { width: 300px; height: 300px; background: var(--cream); border-radius: 16px; padding: 22px; }
+.qr svg { display: block; width: 100%; height: 100%; }
+.url { font-size: 26px; color: var(--cream-2); margin-top: 20px; }
+.url b { color: var(--cream); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- 1 -->
+<section class="slide night">
+  <div class="row">
+    <div class="col mid" style="width: 640px; flex: none;">
+      <h1 style="font-size: 150px;">Vire</h1>
+      <p class="lede" style="font-size: 36px; color: var(--cream);">One minute a day at home after TMS, a clinic treatment for depression.</p>
+      <p class="lede" style="margin-top: 20px;">Your phone plays a laugh and measures the smile, so your clinic knows when to call.</p>
+    </div>
+    <div class="col mid grow"><div class="wide"><img src="FRAMES/stage-laugh.png" alt=""></div></div>
+  </div>
+  <div class="foot"><span>Junction 2026 · Aalto University, Beyond the Clinic · Table A157</span><span>A measured loop, not a diagnosis</span></div>
+</section>
+
+<!-- 2 -->
+<section class="slide">
+  <div class="row">
+    <div class="col mid" style="width: 800px; flex: none;">
+      <div class="big">46%</div>
+      <p class="lede" style="color: var(--ink); margin-top: 28px;">still respond a year after TMS worked for them.</p>
+      <p class="src" style="margin-top: 16px;">Senova et al. 2019, Brain Stimulation. Nine studies, 247 patients. 95% CI 33 to 61%.</p>
+    </div>
+    <div class="col mid grow">
+      <ul class="list">
+        <li><b>A course is 20 to 30 clinic visits</b> over 4 to 6 weeks. Then you go home.</li>
+        <li><b>Going back seems to help.</b> 32 of 38 people who got worse regained the benefit with more TMS (Janicak 2010, no control group).</li>
+        <li><b>But once you're home, the clinic doesn't see you slipping.</b> Nothing validated tells it who to call back.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><b>Vire</b><span>The problem</span></div>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <div class="row">
+    <div class="col mid" style="width: 760px; flex: none;">
+      <h1 style="font-size: 68px;">A questionnaire asks how you feel. Vire measures <em>how you react.</em></h1>
+      <p class="lede" style="font-size: 28px;">In lab studies, people with depression react less to good things. So once a day, Vire plays a laugh and measures the smile that answers it.</p>
+      <p class="src" style="margin-top: 20px;">Bylsma, Morris and Rottenberg 2008: 19 laboratory studies, d = −0.53 for positive stimuli.</p>
+    </div>
+    <div class="col mid grow">
+      <div class="wide"><img src="FRAMES/stage-laugh.png" alt=""></div>
+      <p class="src" style="margin-top: 16px;">The big screen during a ping: the person's own face as a wireframe, and the smile line as the laughter plays. A recorded face is played into the phone's camera here.</p>
+    </div>
+  </div>
+  <div class="foot"><b>Vire</b><span>The idea</span></div>
+</section>
+
+<!-- 4 -->
+<section class="slide night">
+  <h1 style="font-size: 60px;">Four small things to answer, in 60 seconds.</h1>
+  <div class="row" style="margin-top: 48px; gap: 0; justify-content: space-between;">
+    <div class="col"><div class="phone"><img src="FRAMES/phone-nod.png" alt=""></div><div class="cap"><b><i class="dot" style="background: var(--ch-move)"></i>Nod</b><span>how quick, how far</span></div></div>
+    <div class="col"><div class="phone"><img src="FRAMES/phone-laugh.png" alt=""></div><div class="cap"><b><i class="dot" style="background: var(--ch-smile)"></i>Laugh</b><span>how much you smile back,<br>and how soon</span></div></div>
+    <div class="col"><div class="phone"><img src="FRAMES/phone-speak.png" alt=""></div><div class="cap"><b><i class="dot" style="background: var(--ch-voice)"></i>Speak</b><span>how your pitch moves,<br>how long you pause</span></div></div>
+    <div class="col"><div class="phone"><img src="FRAMES/phone-breathe.png" alt=""></div><div class="cap"><b><i class="dot" style="background: var(--ch-heart)"></i>Breathe</b><span>how far your heart swings<br>over two slow breaths</span></div></div>
+    <div class="col end" style="width: 380px; padding-bottom: 96px;">
+      <ul class="list">
+        <li><b>Camera and microphone</b> on any phone.</li>
+        <li><b>AirPods</b> add head movement and, on the Pro 3, heart rate.</li>
+        <li><b>Only numbers leave the phone.</b> Never video or sound.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><b>Vire</b><span>The daily ping</span></div>
+</section>
+
+<!-- 5 -->
+<section class="slide night">
+  <div class="row">
+    <div class="col mid" style="flex: none;"><div class="phone" style="width: 380px;"><img src="FRAMES/phone-echo.png" alt=""></div></div>
+    <div class="col mid grow">
+      <h1 style="font-size: 68px;">Your echo: four numbers against your own usual. <em>50 is you.</em></h1>
+      <ul class="list" style="margin-top: 44px;">
+        <li><b>Tuned to your face.</b> Five expressions in about 30 seconds train a model of your own muscle ranges, in the browser, in 44 ms.</li>
+        <li><b>Compared with you, not with everyone.</b> Your usual is set from your own pings and stays fixed.</li>
+        <li><b>Honest about gaps.</b> What it can't read today, it leaves out and says so.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><b>Vire</b><span>The echo</span></div>
+</section>
+
+<!-- 6 -->
+<section class="slide night">
+  <h1 style="font-size: 60px;">Sense, respond, learn. Then measure again.</h1>
+  <div class="row" style="margin-top: 48px; gap: 56px;">
+    <div class="col"><div class="phone"><img src="FRAMES/phone-offer.png" alt=""></div><div class="cap"><b>Respond</b><span>Vire picks one small thing<br>and says why</span></div></div>
+    <div class="col"><div class="phone"><img src="FRAMES/phone-dose.png" alt=""></div><div class="cap"><b>Dose</b><span>a forest to look around in,<br>or breathing, a walk, a voice note</span></div></div>
+    <div class="col"><div class="phone"><img src="FRAMES/phone-after.png" alt=""></div><div class="cap"><b>Learn</b><span>a short second ping shows<br>what followed, for you</span></div></div>
+    <div class="col end grow" style="padding-bottom: 96px;">
+      <ul class="list">
+        <li><b>The dose is chosen per person.</b> Each one's lift is counted, measured and as you said you felt, and the next pick follows it.</li>
+        <li><b>The probe adapts too.</b> The laugh your face answers most is used most, and another is tried now and then.</li>
+        <li><b>Small nudges, not treatment.</b> The treatment is TMS. Vire's job is to say when to go back.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><b>Vire</b><span>The loop</span></div>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <div class="row" style="gap: 64px;">
+    <div class="col mid" style="width: 560px; flex: none;">
+      <h1 style="font-size: 64px;">The clinic sees who to call.</h1>
+      <ul class="list" style="margin-top: 40px;">
+        <li><b>A well signature</b> is set from pings in the last two weeks of the course.</li>
+        <li><b>Three low days in a row, or silence,</b> moves a name up the list, with the reason in plain words.</li>
+        <li><b>One tap</b> asks the person back for a booster session.</li>
+      </ul>
+      <p class="src" style="margin-top: 24px;">The 24 patients on this dashboard are simulated.</p>
+    </div>
+    <div class="col mid grow" style="gap: 24px;">
+      <div class="wide"><img src="FRAMES/clinic-list.png" alt="" style="object-position: top;"></div>
+      <div class="wide" style="aspect-ratio: 16 / 6.2;"><img src="FRAMES/clinic-patient.png" alt="" style="object-position: 50% 62%;"></div>
+    </div>
+  </div>
+  <div class="foot"><b>Vire</b><span>The clinic</span></div>
+</section>
+
+<!-- 8 -->
+<section class="slide">
+  <h1 style="font-size: 60px;">What is real today, and what is not.</h1>
+  <div class="row" style="margin-top: 48px; gap: 96px;">
+    <div class="col" style="width: 980px; flex: none;">
+      <h2>Measured</h2>
+      <div class="facts">
+        <div class="fact"><div class="n">1.2<small>bpm</small></div><p><b>Camera pulse against a finger oximeter,</b> on public recordings of 16 people sitting still. 28% of the time the signal is poor and it shows nothing.</p></div>
+        <div class="fact"><div class="n">97%<small>/ 16%</small></div><p><b>Clear smiles found,</b> and neutral faces wrongly called a smile, on public clips of 62 people.</p></div>
+        <div class="fact"><div class="n">8<small>days</small></div><p><b>Median time for a fading echo to reach the clinic's early list,</b> in Vire's own detector on 4,000 made-up people per setting, at 70% of days pinged. The cost: 1.5 to 4.3 false calls per person a year.</p></div>
+      </div>
+    </div>
+    <div class="col grow">
+      <h2>Not yet</h2>
+      <ul class="list">
+        <li><b>No patient has used it and no clinic has seen it.</b></li>
+        <li><b>Nobody knows whether a fading echo comes before a relapse.</b> The link to depression rests on a few small studies.</li>
+        <li><b>The sensor checks ran on a desktop, not a phone.</b> Voice, head movement and AirPods are unchecked.</li>
+        <li><b>Vire doesn't diagnose and can't see a crisis.</b> The app has one tap to 112 and the MIELI crisis line.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><b>Vire</b><span>Evidence, and its limits</span></div>
+</section>
+
+<!-- 9 -->
+<section class="slide">
+  <div class="row">
+    <div class="col mid" style="width: 860px; flex: none;">
+      <h1 style="font-size: 68px;">Next: one clinic, twenty patients, one question.</h1>
+      <p class="lede">Does a person's echo move with their own symptoms?</p>
+    </div>
+    <div class="col mid grow">
+      <ul class="list">
+        <li><b>20 patients</b> of a TMS clinic, pinging daily from the last two weeks of the course and for 12 weeks after.</li>
+        <li><b>A weekly PHQ-9</b> as the yardstick. The clinic does not see the echo.</li>
+        <li><b>The shape is TMS-EEG's.</b> A pulse goes in, the brain's response is read, and in Aalto's lab that response steers the next pulse (Tervo 2022, healthy volunteers). Our pulse is a laugh, and a phone reads the answer.</li>
+      </ul>
+      <p class="src" style="margin-top: 24px;">The full protocol is on the evidence page for any group to pick up. Whether a smile and a brain response move together is untested.</p>
+    </div>
+  </div>
+  <div class="foot"><b>Vire</b><span>The pilot</span></div>
+</section>
+
+<!-- 10 -->
+<section class="slide night">
+  <div class="row">
+    <div class="col mid grow">
+      <h1 style="font-size: 84px; max-width: 1100px;">The treatment exists. The clinic just doesn't know who to call back.</h1>
+      <p class="lede" style="font-size: 34px;">Vire. One minute a day.</p>
+    </div>
+    <div class="col mid" style="flex: none; align-items: flex-start;">
+      <div class="qr">QRSVG</div>
+      <p class="url"><b>Try it on your phone.</b> One minute.</p>
+      <p class="url" style="font-size: 20px; margin-top: 8px;">vire.fly.dev/#/visit</p>
+    </div>
+  </div>
+  <div class="foot"><span>Junction 2026 · Aalto University, Beyond the Clinic · Table A157</span><span>A measured loop, not a diagnosis</span></div>
+</section>
+
+</body>
+</html>

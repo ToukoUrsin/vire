@@ -1,0 +1,950 @@
+/* Vire evidence page (/#/science). Everything is scoped under .sci. Tokens come from shared/theme.css. */
+
+.sci {
+  min-height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: var(--text-body);
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+.sci ::selection {
+  background: var(--ember-soft);
+  color: var(--ink);
+}
+.sci :focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+/* resets at zero specificity, so every class below can set its own margins */
+:where(.sci) :where(p, ul, ol, dl, dd) {
+  margin: 0;
+  padding: 0;
+}
+:where(.sci) :where(ul, ol) {
+  list-style: none;
+}
+
+/* ---------- nav ---------- */
+
+.sci-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: color-mix(in srgb, var(--paper) 90%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.sci-nav-in {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.sci-brand {
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  flex: none;
+}
+.sci-chips {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin-right: -20px;
+  padding-right: 20px;
+}
+.sci-chips::-webkit-scrollbar {
+  display: none;
+}
+.sci-chip {
+  flex: none;
+  border: 0;
+  background: none;
+  padding: 8px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-label);
+  color: var(--ink-2);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.sci-chip:hover {
+  background: var(--paper-2);
+  color: var(--ink);
+}
+
+/* ---------- frame ---------- */
+
+.sci-wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 20px 64px;
+}
+.sci-hero {
+  padding-top: 32px;
+}
+.sci h1 {
+  font-size: clamp(36px, 7.2vw, 64px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  max-width: 13em;
+}
+.sci-lead {
+  margin-top: 16px;
+  font-size: clamp(17px, 1.6vw, 20px);
+  color: var(--ink-2);
+  max-width: 40em;
+}
+.sci-daily {
+  margin-top: 20px;
+  display: grid;
+  gap: 2px;
+  max-width: 46em;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+.sci-daily b { color: var(--ink); font-weight: 600; }
+/* where things stand today, as a ledger: one rule per line, the name in ink, its state beside it */
+.sci-facts {
+  margin-top: 32px;
+  max-width: 46em;
+  border-top: 1px solid var(--ink);
+}
+.sci-facts li {
+  display: grid;
+  gap: 2px 24px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: var(--text-body-s);
+  color: var(--ink-2);
+}
+.sci-facts b {
+  color: var(--ink);
+  font-weight: 600;
+}
+@media (min-width: 560px) {
+  .sci-facts li {
+    grid-template-columns: 11em 1fr;
+  }
+}
+
+.sci-section {
+  margin-top: 64px;
+  scroll-margin-top: 68px;
+}
+.sci h2 {
+  font-size: clamp(27px, 3.4vw, 38px);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+.sci h3 {
+  font-size: var(--text-lead);
+  line-height: 1.25;
+}
+.sci-intro {
+  margin-top: 12px;
+  color: var(--ink-2);
+  max-width: 46em;
+}
+.sci-section > h2 + *,
+.sci-section > .sci-intro + * {
+  margin-top: 20px;
+}
+.sci-plain {
+  margin-top: 16px;
+  max-width: 46em;
+}
+.sci-fine {
+  margin-top: 16px;
+  font-size: var(--text-small);
+  color: var(--ink-3);
+  max-width: 50em;
+}
+.sci-note {
+  margin-top: 12px;
+  font-size: var(--text-label);
+  color: var(--ink-2);
+}
+
+.sci-cite {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--ink-3);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+.sci-cite:hover {
+  color: var(--ember-ink);
+  text-decoration-color: var(--ember-ink);
+}
+
+/* ---------- cards and tiles ---------- */
+
+.sci-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+.sci-card-sub {
+  margin-top: 4px;
+  font-size: var(--text-label);
+  color: var(--ink-2);
+}
+/* a second check inside one card: set off by a rule, a step below the card's own heading */
+.sci-card-h4 {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--ink);
+}
+.sci-two {
+  display: grid;
+  gap: 16px;
+  align-items: start;
+}
+/* a wide table inside a card must scroll in its own box, not stretch the grid column */
+.sci-two > *,
+.sci-hall > *,
+.sci-loop-grid > *,
+.sci-channels > * {
+  min-width: 0;
+}
+/* a figure is a rule, a name, a number and a note. It is never a box, and never a box inside a card:
+   on the page it hangs from its own rule, inside a card the card is the only box */
+.sci-tiles {
+  display: grid;
+  gap: 20px 24px;
+  grid-template-columns: 1fr;
+}
+.sci-card .sci-tiles {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.sci-tiles-2 {
+  grid-template-columns: 1fr 1fr;
+}
+.sci-tile {
+  min-width: 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--line-2);
+}
+.sci-card .sci-tile {
+  padding-top: 0;
+  border-top: 0;
+}
+.sci-tile-label {
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+.sci-tile-value {
+  margin-top: 2px;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: var(--text-h3);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.sci-tiles-big .sci-tile {
+  padding-top: 14px;
+  border-top-color: var(--ink);
+}
+.sci-card .sci-tiles-big .sci-tile {
+  padding-top: 0;
+}
+.sci-tiles-big .sci-tile-value {
+  margin-top: 6px;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-d3);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.sci-tiles-big .sci-tile-unit {
+  font-family: var(--font-ui);
+}
+.sci-tile-unit {
+  margin-left: 6px;
+  font-size: var(--text-label);
+  font-weight: 500;
+  color: var(--ink-2);
+  letter-spacing: 0;
+}
+.sci-tile-pending {
+  font-size: var(--text-body-s);
+  font-weight: 500;
+  min-height: 31px;
+  display: flex;
+  align-items: center;
+}
+.sci-tiles-big .sci-tile-pending {
+  font-family: var(--font-ui);
+  font-size: var(--text-body-s);
+  letter-spacing: 0;
+  min-height: 48px;
+}
+.sci-tile-note {
+  margin-top: 6px;
+  font-size: var(--text-small);
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+/* ---------- waiting and status ---------- */
+
+.sci-wait {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  color: var(--ink-2);
+}
+.sci-wait-dot,
+.sci-ok-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+  transform: translateY(-1px);
+}
+.sci-wait-dot {
+  background: var(--ember);
+  animation: sci-pulse 1.8s var(--ease-loop) infinite;
+}
+.sci-ok-dot {
+  background: var(--ok);
+  margin-right: 8px;
+}
+@keyframes sci-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--ember) 40%, transparent);
+  }
+  50% {
+    opacity: 0.55;
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sci-wait-dot {
+    animation: none;
+  }
+}
+.sci-status {
+  font-size: var(--text-label);
+  color: var(--ink-2);
+}
+.sci-status + * {
+  margin-top: 14px;
+}
+.sci-tag {
+  margin-left: 10px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  font-size: var(--text-caption);
+  color: var(--ink-2);
+}
+.sci-pending-line {
+  margin-top: 10px;
+  font-size: var(--text-body-s);
+  color: var(--ink-2);
+}
+.sci-notrun {
+  font-size: var(--text-small);
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
+/* ---------- the loop ---------- */
+
+.sci-loop-grid {
+  display: grid;
+  gap: 24px;
+  align-items: start;
+}
+.sci-loop {
+  display: block;
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  margin: 0 auto;
+}
+.sci-loop-zone {
+  fill: var(--paper-2);
+}
+.sci-loop-zone-label {
+  font-family: var(--font-ui);
+  font-size: var(--text-micro);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  fill: var(--ink-3);
+}
+.sci-loop-node,
+.sci-loop-clinic {
+  fill: var(--card);
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.sci-loop-clinic {
+  stroke: var(--ink-3);
+}
+.sci-loop-name {
+  font-family: var(--font-display);
+  font-size: var(--text-lead);
+  font-weight: 600;
+  fill: var(--ink);
+}
+.sci-loop-sub {
+  font-family: var(--font-ui);
+  font-size: var(--text-small);
+  fill: var(--ink-2);
+}
+.sci-loop-centre {
+  font-family: var(--font-display);
+  font-size: var(--text-lead);
+  font-style: italic;
+  fill: var(--ink-2);
+}
+.sci-loop-arc {
+  fill: none;
+  stroke: var(--ember);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.sci-loop-link {
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+.sci-loop-link-label {
+  font-family: var(--font-ui);
+  font-size: var(--text-small);
+  fill: var(--ink-2);
+}
+.sci-loop-head {
+  fill: none;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sci-loop-head-ember {
+  stroke: var(--ember);
+}
+.sci-loop-head-ink {
+  stroke: var(--ink-2);
+}
+
+.sci-steps {
+  counter-reset: step;
+  display: grid;
+  gap: 12px;
+}
+.sci-steps li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 32px;
+}
+.sci-steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 1px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--ink-3);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  line-height: 20px;
+  text-align: center;
+  color: var(--ink-2);
+}
+.sci-steps b {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-body-l);
+}
+.sci-aside {
+  margin-top: 20px;
+  padding: 16px 16px;
+  border-radius: var(--radius-s);
+  background: var(--paper-2);
+}
+.sci-aside h3 {
+  font-size: var(--text-body-l);
+}
+.sci-aside p {
+  margin-top: 6px;
+  font-size: var(--text-body-s);
+}
+
+/* ---------- channels ---------- */
+
+.sci-channels {
+  display: grid;
+  gap: 14px;
+}
+.sci-channel header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sci-channel h3 {
+  font-size: var(--text-title);
+}
+.sci-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}
+.sci-swatch-big {
+  width: 14px;
+  height: 14px;
+}
+.sci-measure {
+  margin-top: 10px;
+}
+.sci-figure {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+}
+.sci-figure-value {
+  font-weight: 600;
+  font-size: var(--text-h3);
+  letter-spacing: -0.01em;
+}
+.sci-figure-label {
+  font-size: var(--text-label);
+  color: var(--ink-2);
+}
+.sci-study {
+  margin-top: 8px;
+  font-size: var(--text-body-s);
+}
+.sci-also {
+  font-size: var(--text-label);
+  color: var(--ink-2);
+}
+.sci-caveat {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: var(--text-label);
+  color: var(--ink-2);
+}
+.sci-caveat b {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---------- tables, meters, rates ---------- */
+
+.sci-robust,
+.sci-limits {
+  margin-top: 16px;
+}
+.sci-table-scroll {
+  margin-top: 12px;
+  overflow-x: auto;
+}
+.sci-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-label);
+}
+.sci-table th,
+.sci-table td {
+  text-align: left;
+  padding: 8px 12px 8px 0;
+  border-top: 1px solid var(--line);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.sci-table thead th {
+  border-top: 0;
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.sci-table tbody th {
+  font-weight: 500;
+}
+.sci-table-tight {
+  margin-top: 4px;
+  font-size: var(--text-label);
+}
+.sci-meter {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: 48px minmax(40px, 120px);
+  align-items: center;
+  gap: 8px;
+}
+.sci-meter-num {
+  font-weight: 600;
+}
+.sci-meter-track {
+  height: 6px;
+  border-radius: var(--radius-xs);
+  background: var(--line);
+  overflow: hidden;
+}
+.sci-meter-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-xs);
+  background: var(--ink-2);
+}
+
+.sci-hall {
+  display: grid;
+  gap: 14px;
+  align-items: start;
+}
+.sci-again {
+  margin-top: 14px;
+}
+.sci-rate-list {
+  margin-top: 16px;
+  display: grid;
+  gap: 4px;
+}
+.sci-rate {
+  position: relative;
+  display: grid;
+  grid-template-columns: 76px 1fr 62px;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-radius: var(--radius-xs);
+}
+.sci-rate-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-body-s);
+}
+.sci-rate-track {
+  height: 8px;
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+}
+.sci-rate-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-xs);
+}
+.sci-rate-num {
+  text-align: right;
+  font-weight: 600;
+  font-size: var(--text-body-s);
+}
+
+.sci [data-tip]:hover::after,
+.sci [data-tip]:focus-visible::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 2px);
+  transform: translateX(-50%);
+  z-index: 5;
+  padding: 6px 10px;
+  border-radius: var(--radius-s);
+  background: var(--ink);
+  color: var(--paper);
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: var(--shadow);
+}
+
+/* ---------- lists ---------- */
+
+.sci-list {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+.sci-list li {
+  position: relative;
+  padding-left: 16px;
+  font-size: var(--text-body-s);
+}
+.sci-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 6px;
+  height: 1.5px;
+  background: var(--ink-3);
+}
+.sci-h3-gap {
+  margin-top: 20px;
+}
+.sci-limits h3 {
+  font-size: var(--text-body-l);
+}
+
+.sci-nots {
+  display: grid;
+  gap: 0 40px;
+}
+.sci-nots li {
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+  break-inside: avoid;
+}
+
+.sci-protocol {
+  display: grid;
+  gap: 0 40px;
+}
+.sci-protocol > div {
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+.sci-protocol dt {
+  font-family: var(--font-display);
+  font-size: var(--text-body-l);
+  font-weight: 600;
+}
+.sci-protocol dd {
+  margin-top: 4px;
+  font-size: var(--text-body-s);
+}
+
+/* ---------- detection simulation ---------- */
+
+.sci-detect-grid {
+  display: grid;
+  gap: 14px;
+  align-items: start;
+}
+.sci-detect-chart-card {
+  min-width: 0;
+}
+.sci-chart-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.sci-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px 14px;
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+.sci-chart-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.sci-chart-key {
+  display: inline-block;
+  width: 18px;
+  height: 2px;
+  background: var(--ember);
+}
+.sci-chart-key-questionnaire {
+  height: 0;
+  border-top: 2px dashed var(--ink-3);
+  background: none;
+}
+.sci-detect-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 16px;
+  overflow: visible;
+}
+.sci-chart-gridline {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.sci-chart-axis {
+  stroke: var(--ink-3);
+  stroke-width: 1;
+}
+.sci-chart-label,
+.sci-chart-axis-label {
+  fill: var(--ink-2);
+  font-family: var(--font-ui);
+  font-size: 16px;
+}
+.sci-chart-axis-label {
+  font-size: 14px;
+}
+.sci-chart-line {
+  fill: none;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-width: 2.5;
+}
+.sci-chart-line-vire {
+  stroke: var(--ember);
+}
+.sci-chart-line-questionnaire {
+  stroke: var(--ink-3);
+  stroke-dasharray: 6 5;
+  stroke-width: 2;
+}
+.sci-chart-point {
+  stroke-width: 2;
+}
+.sci-chart-point-vire {
+  fill: var(--paper);
+  stroke: var(--ember);
+}
+.sci-chart-point-questionnaire {
+  fill: var(--paper);
+  stroke: var(--ink-3);
+}
+.sci-chart-alt {
+  margin-top: 10px;
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+.sci-detect-cost {
+  min-width: 0;
+}
+.sci-detect-cost .sci-tiles {
+  margin-top: 16px;
+}
+.sci-detect-copy {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  max-width: 48em;
+}
+.sci-detect-copy p {
+  font-size: var(--text-body-s);
+}
+.sci-detect-empty {
+  min-height: 96px;
+  display: flex;
+  align-items: center;
+}
+
+.sci-refs {
+  counter-reset: ref;
+  font-size: var(--text-small);
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.sci-refs li {
+  counter-increment: ref;
+  position: relative;
+  padding: 0 0 10px 28px;
+  break-inside: avoid;
+}
+.sci-refs li::before {
+  content: counter(ref);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 22px;
+  text-align: right;
+  color: var(--ink-3);
+}
+.sci-refs .sci-cite {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.sci-foot {
+  margin-top: 56px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: var(--text-label);
+  color: var(--ink-2);
+}
+
+/* ---------- wider screens ---------- */
+
+@media (min-width: 720px) {
+  .sci-nav-in,
+  .sci-wrap {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+  .sci-hero {
+    padding-top: 64px;
+  }
+  .sci-section {
+    margin-top: 80px;
+  }
+  .sci-tiles-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .sci-two,
+  .sci-channels {
+    grid-template-columns: 1fr 1fr;
+  }
+  .sci-nots,
+  .sci-protocol {
+    grid-template-columns: 1fr 1fr;
+  }
+  .sci-card {
+    padding: 24px;
+  }
+}
+
+@media (min-width: 980px) {
+  .sci-loop-grid {
+    grid-template-columns: 460px 1fr;
+    gap: 56px;
+  }
+  .sci-loop {
+    margin: 0;
+  }
+  .sci-hall {
+    grid-template-columns: 1fr 1.25fr;
+  }
+  .sci-hall .sci-tiles-3 {
+    grid-template-columns: 1fr;
+  }
+  .sci-refs {
+    columns: 2;
+    column-gap: 48px;
+  }
+  .sci-detect-grid {
+    grid-template-columns: minmax(0, 1.65fr) minmax(260px, 0.75fr);
+  }
+}
