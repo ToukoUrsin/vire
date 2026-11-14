@@ -33,6 +33,7 @@ const TodayLoop = page(() => import('./tune/session/Today'))
 const Eeg = page(() => import('./tune/eeg/Eeg'))
 const Home = page(() => import('./home/Home'))
 const Watch = page(() => import('./tune/replay/Watch'))
+const Try = page(() => import('./try/Try'))
 
 /** A page that could not be fetched or that threw says so and offers the one thing that helps, never a blank screen. */
 class Guard extends Component<{ children: ReactNode }, { failed: boolean }> {
@@ -70,6 +71,7 @@ export default function App() {
             <Route path="/today" element={<TodayLoop />} />
             <Route path="/eeg" element={<Eeg />} />
             <Route path="/watch" element={<Watch />} />
+            <Route path="/try" element={<Try />} />
             <Route path="/" element={<Home />} />
             <Route path="/*" element={<PatientApp />} />
           </Routes>

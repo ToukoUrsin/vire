@@ -189,8 +189,11 @@ export function breathRate(rows: number[][], t0: number, t1: number): BreathRead
   return { perMin: result.frequency * 60, conf: result.confidence }
 }
 
-/** Lock in at the requested pace and report how much angle motion is at that frequency. */
-export function followsPace(rows: number[][], t0: number, t1: number, perMin: number): PaceFollow {
+/**
+ * Lock in at the requested pace and report how much angle motion is at that frequency. `minAmplitudeDeg` is the
+ * least motion at that pace, peak to trough, that counts: a head's by default; a phone on a chest passes its own.
+ */
+export function followsPace(rows: number[][], t0: number, t1: number, perMin: number, minAmplitudeDeg = 0.06): PaceFollow {
   const prepared = selected(rows, t0, t1)
   if (!prepared || !(perMin > 0 && Number.isFinite(perMin))) return { follows: false, coherence: 0, amplitudeDeg: 0 }
   const motion = stillness(rows, t0, t1)
@@ -204,7 +207,7 @@ export function followsPace(rows: number[][], t0: number, t1: number, perMin: nu
   const angle = angleFits.reduce((a, b) => b.amplitude > a.amplitude ? b : a, angleFits[0]!)
   const amplitudeDeg = angle.amplitude * 2
   const nearAsked = !best || Math.abs(best.frequency - asked) <= Math.max(0.025, 1 / (prepared.duration / 1000))
-  const follows = nearAsked && fixed.score >= 0.08 && coherence >= 0.42 && amplitudeDeg >= 0.06
+  const follows = nearAsked && fixed.score >= 0.08 && coherence >= 0.42 && amplitudeDeg >= minAmplitudeDeg
   return { follows, coherence, amplitudeDeg }
 }
 

@@ -1,0 +1,231 @@
+/* /#/try: the stage, white on black, ember for the one thing to do and for the person's own line. */
+.ty {
+  gap: 12px;
+  padding: 20px clamp(16px, 5vw, 64px) 20px;
+}
+.ty .el-top {
+  width: min(100%, 34rem);
+  margin: 0 auto;
+}
+.ty-main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(100%, 34rem);
+  min-width: 0;
+  margin: 0 auto;
+  flex: 1;
+}
+.ty[data-stage='start'] .ty-main,
+.ty[data-stage='result'] .ty-main,
+.ty[data-stage='refused'] .ty-main,
+.ty[data-stage='nophone'] .ty-main {
+  justify-content: center;
+  padding-bottom: 6vh;
+}
+.ty-main h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.75rem, 8.4vw, var(--text-d3));
+  line-height: 1.08;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+.ty-eyebrow {
+  margin: 0;
+  color: var(--stage-ink-2);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.ty-lede {
+  margin: 0;
+  font-size: var(--text-lead);
+  line-height: 1.45;
+  max-width: 32em;
+}
+.ty-quiet {
+  color: var(--stage-ink-2);
+  font-size: var(--text-body-l);
+}
+.ty-btns {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-top: 8px;
+}
+.ty .lab-btn {
+  min-height: var(--control-touch);
+  padding: 0 20px;
+  border-radius: var(--radius);
+  font-size: var(--text-body-l);
+  background: var(--stage-2);
+  color: var(--stage-ink);
+  box-shadow: inset 0 0 0 1px var(--stage-line);
+}
+.ty .lab-btn.primary {
+  background: var(--ember);
+  color: var(--stage);
+  box-shadow: none;
+}
+.ty-go {
+  flex: 1 1 12rem;
+}
+.ty-link {
+  color: var(--stage-ink);
+  font-size: var(--text-body-l);
+  text-underline-offset: 3px;
+  padding: 12px 4px;
+}
+.ty-fine {
+  margin: 0;
+  color: var(--stage-ink-2);
+  font-size: var(--text-small);
+  line-height: 1.4;
+}
+.ty-btns + .ty-fine {
+  margin-top: 10px;
+}
+
+/* the minute */
+.ty-orb {
+  width: min(34vw, 9.5rem);
+  aspect-ratio: 1;
+  margin: 4px auto 0;
+  border-radius: 50%;
+  border: 2px solid var(--stage-ink);
+  background: color-mix(in srgb, var(--stage-ink) 14%, transparent);
+  transform: scale(0.55);
+  transition-property: transform;
+  transition-timing-function: ease-in-out;
+}
+.ty-orb[data-phase='in'] {
+  transform: scale(1);
+}
+.ty-main .ty-say {
+  font-size: clamp(2.25rem, 12vw, var(--text-d1));
+  text-align: center;
+}
+.ty-pace {
+  margin: 0;
+  color: var(--stage-ink-2);
+  font-size: var(--text-body-l);
+  text-align: center;
+}
+.ty-read {
+  margin: 4px 0 0;
+  padding: 12px 14px;
+  min-height: 4.2em;
+  border: 1px solid var(--stage-line);
+  border-radius: var(--radius-s);
+  font-size: var(--text-lead);
+  line-height: 1.35;
+}
+.ty-read[data-read='yes'] {
+  border-color: var(--stage-ink);
+}
+.ty-trace {
+  margin: 0;
+}
+.ty-trace svg {
+  display: block;
+  width: 100%;
+  height: 96px;
+  overflow: visible;
+}
+.ty-mid {
+  stroke: var(--stage-line);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.ty-tilt,
+.ty-sea {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.ty-tilt {
+  stroke: var(--ember);
+  stroke-width: 3;
+}
+.ty-sea {
+  stroke: var(--stage-ink-2);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+.ty-trace figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-top: 6px;
+  color: var(--stage-ink-2);
+  font-size: var(--text-small);
+}
+.ty-k-tilt::before,
+.ty-k-sea::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  margin-right: 6px;
+  vertical-align: middle;
+  border-top: 3px solid var(--ember);
+}
+.ty-k-sea::before {
+  border-top: 2px dashed var(--stage-ink-2);
+}
+.ty-flat {
+  margin: 8px 0 0;
+  font-size: var(--text-body-s);
+  line-height: 1.4;
+}
+.ty .el-bar {
+  margin-top: 4px;
+}
+.ty .el-bar i {
+  transition: none;
+}
+
+/* what was read */
+.ty-lines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--stage-line);
+}
+.ty-lines li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--stage-line);
+  font-size: var(--text-body-l);
+  line-height: 1.4;
+}
+.ty-address {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--stage-ink);
+  border-radius: var(--radius-s);
+  font-size: var(--text-body-l);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+.ty :focus-visible {
+  outline: 2px solid var(--stage-ink);
+  outline-offset: 3px;
+}
+@media (max-height: 720px) {
+  .ty-orb {
+    width: min(26vw, 7rem);
+  }
+  .ty-read {
+    font-size: var(--text-body-l);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* the circle changes in steps: small on the out-breath, large on the in-breath */
+  .ty-orb {
+    transition-duration: 0.01s !important;
+  }
+}
