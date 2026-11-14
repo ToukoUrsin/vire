@@ -265,7 +265,10 @@ export default function Today() {
   const connect = useCallback(async () => {
     setError(null)
     if (inApp()) return postNative({ cmd: 'start' })
-    if (!(await connectEars())) setError('Vire Ears did not answer on this Mac.')
+    // a phone's browser cannot reach AirPods at all: say so at once, and where Today does run
+    const elsewhere = 'Today runs in the Vire iPhone app, or in Chrome on a Mac with the Vire Ears helper. Watch a run shows it in 40 seconds.'
+    if (here() === 'phone') return setError(`AirPods cannot connect in this phone's browser. ${elsewhere}`)
+    if (!(await connectEars())) setError(`No AirPods found on this ${here()}. ${elsewhere}`)
   }, [])
 
   const start = useCallback(
@@ -664,7 +667,7 @@ export default function Today() {
               )}
             </div>
             <p className="el-fine" data-air={streaming ? hz : 0}>
-              {streaming ? `AirPods: ${hz} samples a second.` : inApp() ? 'Waiting for your AirPods. Put both in.' : 'AirPods not connected.'}{' '}
+              {streaming ? `AirPods: ${hz} samples a second.` : inApp() ? 'Waiting for your AirPods. Put both in.' : info.state === 'connecting' ? 'Looking for your AirPods.' : 'AirPods not connected.'}{' '}
               {mine && mine.learned.total > 0 ? `${NAME[next]} is today's practice: ${mine.learned.why}.` : 'The first practice is slow breathing.'} Or pick:{' '}
               {SESSION_KINDS.filter((k) => k !== next).map((k, i) => (
                 <span key={k}>

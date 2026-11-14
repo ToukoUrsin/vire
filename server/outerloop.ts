@@ -101,22 +101,29 @@ function escalationDay(run: Run, practices: PracticeRec[], until: number): numbe
   return null
 }
 
-/** What we tried, what worked and what did not, as the nurse can say it to the person on the phone. */
-export function sentenceOf(driftDays: number, inDrift: PracticeRec[]): string {
-  const done = inDrift.filter((p) => p.done)
+/**
+ * What we tried, what worked and what did not, as the nurse can say it to the person on the phone.
+ * Two counts, each said with what it covers: the practices done in the days below usual, and how often each kind
+ * has settled the person over every scored practice so far. The second is the same count as the list's
+ * "what's working" and the patient page's table, so one person never shows two different fractions.
+ */
+export function sentenceOf(driftDays: number, inDrift: PracticeRec[], all: PracticeRec[] = inDrift): string {
+  const doneIn = inDrift.filter((p) => p.done)
+  const scored = all.filter((p) => p.done && p.settle != null)
   const parts = KINDS.map((k) => {
-    const xs = done.filter((p) => p.kind === k)
+    const xs = scored.filter((p) => p.kind === k)
     return xs.length ? { k, n: xs.length, s: xs.filter(isSettled).length } : null
   })
     .filter((x): x is { k: PracticeKind; n: number; s: number } => x != null)
     .sort((a, b) => b.s / b.n - a.s / a.n || b.n - a.n)
   const anySettled = parts.some((p) => p.s > 0)
-  const said = parts.map((p, i) => (i === 0 ? `${PRACTICE_WORD[p.k]} settled you ${p.s} of ${p.n} ${p.n === 1 ? 'time' : 'times'}` : `${PRACTICE_WORD[p.k]} ${p.s} of ${p.n}`))
+  const said = parts.map((p, i) => (i === 0 ? `${PRACTICE_WORD[p.k]} has settled you ${p.s} of ${p.n} ${p.n === 1 ? 'time' : 'times'}` : `${PRACTICE_WORD[p.k]} ${p.s} of ${p.n}`))
   const list = said.length <= 1 ? said.join('') : `${said.slice(0, -1).join(', ')} and ${said.at(-1)}`
   const head = `Your days have been below your usual for ${plural(driftDays, 'day')}`
-  if (!done.length) return `${head}, and the practices were offered but not done.`
-  if (!anySettled) return `${head}; in those days you did ${plural(done.length, 'practice')}, none of them settled you, and the days have not come back.`
-  return `${head}; in those days you did ${plural(done.length, 'practice')}, ${list}, but the days have not come back.`
+  if (!doneIn.length) return `${head}, and the practices were offered but not done.`
+  const tried = `${head}, in spite of ${plural(doneIn.length, 'practice')} in those days`
+  if (!anySettled) return `${tried}. So far none of your practices has settled you, and the days have not come back.`
+  return `${tried}. So far ${list}, and the days have not come back.`
 }
 
 export interface OuterInput {
@@ -162,10 +169,10 @@ export function outerOf({ now, days, practices, booking }: OuterInput): OuterRow
     const silent = today - lastDay!.day
     const esc = silent <= 2 ? escalationDay(current, practices, today) : null
     if (booking) {
-      return { ...base, state: 'booked', inDrift: t, escalatedAt: esc == null ? null : noonOf(esc), sentence: sentenceOf(driftDays, inRun), note: `Booster booked; ${plural(driftDays, 'day')} below usual` }
+      return { ...base, state: 'booked', inDrift: t, escalatedAt: esc == null ? null : noonOf(esc), sentence: sentenceOf(driftDays, inRun, practices), note: `Booster booked; ${plural(driftDays, 'day')} below usual` }
     }
     if (esc != null) {
-      return { ...base, state: 'escalated', inDrift: t, escalatedAt: noonOf(esc), sentence: sentenceOf(driftDays, inRun), note: `${plural(driftDays, 'day')} below usual in spite of ${plural(t.done, 'practice')}` }
+      return { ...base, state: 'escalated', inDrift: t, escalatedAt: noonOf(esc), sentence: sentenceOf(driftDays, inRun, practices), note: `${plural(driftDays, 'day')} below usual in spite of ${plural(t.done, 'practice')} in those days` }
     }
     return {
       ...base,

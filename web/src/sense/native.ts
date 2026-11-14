@@ -198,9 +198,21 @@ export function connectEars(): Promise<boolean> {
     ears = s
     earsState = 'connecting'
     earsChanged()
+    // a browser that blocks the helper's address (Safari from an https page) never opens the socket and never closes it:
+    // settle here, or the page waits for ever with its button greyed
     const giveUp = setTimeout(() => {
-      if (earsState === 'connecting' && ears === s) s.close()
-    }, 4000)
+      if (earsState !== 'connecting' || ears !== s) return
+      ears = null
+      earsState = 'missing'
+      earsAirpods = false
+      earsChanged()
+      done(false)
+      try {
+        s.close()
+      } catch {
+        /* never opened */
+      }
+    }, 3000)
     s.onopen = () => {
       clearTimeout(giveUp)
       if (ears !== s) return

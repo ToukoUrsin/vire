@@ -259,7 +259,9 @@ export function summaryOf(p: Person, a: Analysis, row: PatientRow, f: RowFacts, 
 export function practiceLine(o: OuterRow, offered: number): string {
   const w = o.working
   const done = w.total
-  const head = `The phone offered ${offered} ${offered === 1 ? 'practice' : 'practices'} and ${done} ${done === 1 ? 'was' : 'were'} done`
+  // the days below usual have their own count on the list; said here next to the whole count, so the two are not read as one
+  const inRun = o.driftDays > 0 && o.inDrift.done > 0 && o.inDrift.done < done ? `, ${o.inDrift.done} of them in the ${o.driftDays} ${o.driftDays === 1 ? 'day' : 'days'} below usual` : ''
+  const head = `So far the phone offered ${offered} ${offered === 1 ? 'practice' : 'practices'} and ${done} ${done === 1 ? 'was' : 'were'} done${inRun}`
   if (!done) return `${head}.`
   if (w.settled === 0 || w.said === 'early' || w.said === 'none' || !w.best) return `${head}; too early to say which one settles them.`
   const label = PRACTICE_LABEL[w.best].toLowerCase()

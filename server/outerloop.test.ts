@@ -63,8 +63,8 @@ describe('the outer loop', () => {
     expect(esc.driftDays).toBe(6)
     expect(esc.escalatedAt).toBe(noon(today - 1)) // day 5 of the run; three done by then
     expect(esc.inDrift).toEqual({ offered: 5, done: 4, settled: 2 })
-    expect(esc.note).toBe('6 days below usual in spite of 4 practices')
-    expect(esc.sentence).toBe('Your days have been below your usual for 6 days; in those days you did 4 practices, breathing settled you 2 of 3 times and the body scan 0 of 1, but the days have not come back.')
+    expect(esc.note).toBe('6 days below usual in spite of 4 practices in those days')
+    expect(esc.sentence).toBe('Your days have been below your usual for 6 days, in spite of 4 practices in those days. So far breathing has settled you 2 of 3 times and the body scan 0 of 1, and the days have not come back.')
     expect(ESCALATE_DONE).toBe(3)
   })
 
@@ -99,8 +99,8 @@ describe('the outer loop', () => {
 
   test('sentences stay plain', () => {
     const s = sentenceOf(9, [pr(3, 'breathe', 20), pr(2, 'walk', 1), pr(1, 'scan', null, false)])
-    expect(s).toBe('Your days have been below your usual for 9 days; in those days you did 2 practices, breathing settled you 1 of 1 time and the walk 0 of 1, but the days have not come back.')
-    expect(sentenceOf(4, [pr(1, 'scan', 2)])).toBe('Your days have been below your usual for 4 days; in those days you did 1 practice, none of them settled you, and the days have not come back.')
+    expect(s).toBe('Your days have been below your usual for 9 days, in spite of 2 practices in those days. So far breathing has settled you 1 of 1 time and the walk 0 of 1, and the days have not come back.')
+    expect(sentenceOf(4, [pr(1, 'scan', 2)])).toBe('Your days have been below your usual for 4 days, in spite of 1 practice in those days. So far none of your practices has settled you, and the days have not come back.')
     expect(sentenceOf(4, [pr(1, 'scan', null, false)])).toBe('Your days have been below your usual for 4 days, and the practices were offered but not done.')
     expect(SETTLED).toBe(10)
   })
@@ -178,6 +178,37 @@ describe('the simulated cohort tells the outer loop story', () => {
         expect(text).not.toMatch(/—|brain|depress|relaps|diagnos/i)
       }
     }
+  })
+
+  test('one person never shows two different counts for the same thing', () => {
+    // a judge found 10, 12 and 14 practices and "5 of 6" next to "5 of 7" on one patient: every count now says what it covers,
+    // and the fraction per practice is one number on the list, in the nurse's sentence, in the summary and in the table
+    const sentenceWord: Record<string, string> = { breathe: 'breathing', scan: 'the body scan', walk: 'the walk' }
+    let checked = 0
+    for (const { p, row } of rows) {
+      const o = row.outer!
+      const done = p.practices.filter((x) => x.done)
+      const scored = done.filter((x) => x.settle != null)
+      expect(o.working.total).toBe(done.length) // the summary's "were done" and the table's Done column
+      const line = practiceLine(o, p.practices.length)
+      expect(line).toContain(`offered ${p.practices.length} practice`)
+      if (o.working.best && o.working.said !== 'early' && o.working.settled > 0) {
+        const ofBest = scored.filter((x) => x.kind === o.working.best)
+        expect(o.working.text).toContain(`${ofBest.filter((x) => (x.settle ?? 0) >= SETTLED).length} of ${ofBest.length}`)
+        expect(line).toContain(`${o.working.settled} of ${o.working.n} sessions`)
+      }
+      if (!o.sentence || !done.length) continue
+      checked++
+      expect(o.sentence).toContain(`in spite of ${o.inDrift.done} practice`)
+      if (o.state === 'escalated') expect(o.note).toContain(`in spite of ${o.inDrift.done} practice`)
+      if (o.inDrift.done < done.length) expect(line).toContain(`${o.inDrift.done} of them in the ${o.driftDays} day`)
+      for (const k of ['breathe', 'scan', 'walk'] as const) {
+        const xs = scored.filter((x) => x.kind === k)
+        if (!xs.length || !xs.some((x) => (x.settle ?? 0) >= SETTLED) && !scored.some((x) => (x.settle ?? 0) >= SETTLED)) continue
+        expect(o.sentence).toMatch(new RegExp(`${sentenceWord[k]}(?: has settled you)? ${xs.filter((x) => (x.settle ?? 0) >= SETTLED).length} of ${xs.length}\\b`))
+      }
+    }
+    expect(checked).toBeGreaterThan(0)
   })
 
   test('practices are history: the clock moving on only adds new ones', () => {
