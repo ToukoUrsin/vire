@@ -72,6 +72,7 @@ import { clearReplay, currentReplay, pickReplay } from './earreplay'
 import { registerSoundRoutes } from './sound'
 import { registerPassiveRoutes } from './earpassive'
 import { registerEegRoutes } from './eeglog'
+import { registerTryRoutes } from './trylog'
 
 const PORT = Number(process.env.PORT ?? 8871)
 
@@ -610,6 +611,7 @@ const WORKER_TOKEN = process.env.VIRE_WORKER_TOKEN || ''
 const isWorker = (c: Context) => !!WORKER_TOKEN && c.req.header('authorization') === `Bearer ${WORKER_TOKEN}`
 registerPassiveRoutes(app, { allow, asker, tooMany, isWorker })
 registerEegRoutes(app, { allow, asker, tooMany, isWorker })
+registerTryRoutes(app, { allow, asker, tooMany, isWorker })
 
 app.post('/api/ear/recordings', async (c) => {
   if (!allow(asker(c), 'ear', 40)) return tooMany(c)
