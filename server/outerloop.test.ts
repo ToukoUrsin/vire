@@ -130,6 +130,20 @@ describe('booster slots and bookings', () => {
     expect(resolveBooking(store.get('a'), seeded)).toBeNull()
     expect(store.all().get('a')).toBeNull()
   })
+
+  test('what a visitor booked on a simulated person clears itself; a real person keeps theirs', () => {
+    const store = bookingStore(new Database(':memory:'))
+    const seeded = { at: '2026-11-17T09:00:00.000Z', bookedAt: '2026-11-13T12:00:00.000Z', by: 'simulated' as const }
+    store.set('sim', null, now) // a visitor cancelled the story's own booking
+    store.set('sim2', '2026-11-16T07:00:00.000Z', now)
+    store.set('real', '2026-11-16T08:00:00.000Z', now)
+    const sim = (id: string) => id.startsWith('sim')
+    expect(store.lapse(20 * 60_000, sim, now + 19 * 60_000)).toEqual([])
+    expect(store.lapse(20 * 60_000, sim, now + 21 * 60_000).sort()).toEqual(['sim', 'sim2'])
+    expect(resolveBooking(store.get('sim'), seeded)).toEqual(seeded) // the story is back
+    expect(store.get('sim2')).toBeUndefined()
+    expect(store.get('real')!.at).toBe('2026-11-16T08:00:00.000Z')
+  })
 })
 
 describe('the simulated cohort tells the outer loop story', () => {

@@ -639,7 +639,7 @@ export default function Today() {
             <ol className="td-steps">
               <li>
                 <b>Check-in</b>
-                <span>a minute of asked smiles and nods, set against your usual. Then 22 seconds sitting still: head movement and heart rate</span>
+                <span>a minute of asked smiles, nods and head shakes, set against your usual. Then 22 seconds sitting still: head movement and heart rate</span>
               </li>
               <li data-next={next}>
                 <b>{NAME[next]}</b>
@@ -649,7 +649,7 @@ export default function Today() {
               </li>
               <li>
                 <b>Re-check</b>
-                <span>the same 22 seconds sitting still, and two smiles: calmer after than before?</span>
+                <span>the same 22 seconds sitting still: calmer after than before? Then two smiles, shown but not counted</span>
               </li>
             </ol>
             <div className="el-btns">

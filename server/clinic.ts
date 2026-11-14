@@ -170,7 +170,7 @@ export function buildRow(p: Person, a: Analysis, o: { now: number; live: boolean
   const latestPHQ2 = p.phq2?.at(-1)
   // a two-question self-report, shown beside the signals; Vire has not been checked against it
   const phqReason = latestPHQ2 && latestPHQ2.total >= 3
-    ? `PHQ-2 self-report ${latestPHQ2.total} of 6 (its cut-off is 3)`
+    ? `the two weekly questions (PHQ-2, two taps) ${latestPHQ2.total} of 6, its cut-off is 3`
     : null
   const baseReason = reasonOf(a, facts, adherence7)
   // the outer loop: for people who carry practices (the simulated ones; real phones are not linked yet), or whom the clinic booked

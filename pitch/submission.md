@@ -48,7 +48,7 @@ A signal for the clinic, not a diagnosis.
 
 - The whole Today loop is online, tested with a script in place of AirPods.
 - From my AirPods alone, on a whole minute the model never saw: nod 0.97, head shake 0.97 (1.00 is never wrong, 0.50 is luck). Smile 0.64, too weak to count yet.
-- Four hours later, camera off, the same model heard 3 of 3 asked nods and 3 of 3 head shakes, and none unasked. That's one check, on me.
+- Four hours later, camera off, the same model heard 3 of 3 asked nods and 3 of 3 head shakes, none unasked. One check, on me: https://vire.fly.dev/#/heard
 - The clinic list and booster booking, on simulated patients.
 
 ### Not yet
@@ -89,7 +89,7 @@ What ran on Modal:
 
 ## (stop pasting here)
 
-Current count of the paste region: **4,922** characters, markdown included (counted with `python3`: `len()` of the stripped text between the "Description (paste from here)" heading and "(stop pasting here)"). Room left: 78. This text is what the Junction draft holds (project 2079, "Vire", Beyond the Clinic, Draft, "Best use of Modal" ticked; saved Sunday 01:28 Helsinki time with `python3 /home/ubuntu/junction/tools/junction_draft.py /bulk3/runs/depression/junction-draft/fields.json --save`, Save Draft only). It has no open slots. Not in the draft yet: the video link and the deck PDF.
+Current count of the paste region: **4,940** characters, markdown included (counted with `python3`: `len()` of the stripped text between the "Description (paste from here)" heading and "(stop pasting here)"). Room left: 60. This text is what the Junction draft holds (project 2079, "Vire", Beyond the Clinic, Draft, "Best use of Modal" ticked; saved Sunday 01:28 Helsinki time with `python3 /home/ubuntu/junction/tools/junction_draft.py /bulk3/runs/depression/junction-draft/fields.json --save`, Save Draft only). It has no open slots. Not in the draft yet: the video link and the deck PDF.
 
 ## Slots to fill on Sunday morning
 
@@ -101,5 +101,5 @@ Current count of the paste region: **4,922** characters, markdown included (coun
 - The shared model sentence (EarSet, 30 people; smile 0.78 against 0.66, head shake 0.95 against 0.97): `pitch/evidence-shared-model.md`, the 6-epoch run fixed as the result before looking. Filled on Saturday night.
 - 46 seconds, 366 models, 0.97 / 0.97 / 0.64: production job `ej_f4d4185419864d00a87c4f6c32804718` (`GET /api/ear/jobs/latest`). If a newer job is on the screen, use its numbers.
 - 50 patients, "about half a minute", "over 9,000 models": the screen shows each run's own numbers and anyone can press the button, so the text pins no single run. Runs so far with all 50: 27 s and 9,595 models (`cr_231f14871d724b76875d8f64c010688d`, Sunday 00:54), 34.8 s and 9,886 (`cr_07bb74dc724f4f16851d03adbfb76d27`, Sunday 01:25, a judge's press). The 50 are the people on the clinic list (`server/cohort.ts`). If someone presses "Re-train the whole clinic" again, the latest run changes: recheck.
-- "Four hours later, camera off": `claims.md` row 134.
+- "Four hours later, camera off": `claims.md` row 134. The link plays that recording (`#/heard`, `GET /api/ear/check`; the bundle is made by `scripts/realcheck.ts` and sent with the worker token, it is not in the repo).
 - After filling, recount: it must stay at or under 5,000 characters.

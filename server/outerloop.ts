@@ -250,5 +250,12 @@ export function bookingStore(db: Database) {
       const rows = db.query('SELECT * FROM booster_bookings').all() as R[]
       return new Map(rows.map((r) => [r.patient_id, toBooking(r)]))
     },
+    /** Forget what was booked or cancelled on this screen longer ago than `olderThanMs`, for the people `only` picks. Returns their ids. */
+    lapse(olderThanMs: number, only: (id: string) => boolean, now = Date.now()): string[] {
+      const rows = db.query('SELECT * FROM booster_bookings').all() as R[]
+      const gone = rows.filter((r) => now - Date.parse(r.booked_at) > olderThanMs && only(r.patient_id)).map((r) => r.patient_id)
+      for (const id of gone) db.query('DELETE FROM booster_bookings WHERE patient_id = ?').run(id)
+      return gone
+    },
   }
 }

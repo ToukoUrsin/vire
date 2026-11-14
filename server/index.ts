@@ -27,6 +27,7 @@ import type {
   PHQ2Upload,
 } from '../shared/types'
 import { buildDetail, buildRow } from './clinic'
+import { clearCheck, currentCheck, keepCheck } from './earcheck'
 import { bookingStore, nextSlots, resolveBooking, seededBooking, slotOk } from './outerloop'
 import type { RowFacts } from './clinic'
 import { generateCohort, synthTraces } from './cohort'
@@ -469,6 +470,12 @@ app.get('/api/users/:id/notice', (c) => {
 // booster bookings made on the clinic screen; a simulated person's own story can carry one too (outerloop.ts)
 const bookings = bookingStore(db)
 const bookingOf = (person: Person) => resolveBooking(bookings.get(person.id), seededBooking(person))
+// The clinic list is a shared demo: what one visitor booked or cancelled on a simulated person clears itself, so the next
+// visitor finds the list as the story has it. A real person's booking stays.
+const DEMO_BOOKING_MS = 20 * 60_000
+function lapseDemoBookings(now: number) {
+  for (const id of bookings.lapse(DEMO_BOOKING_MS, (id) => cohort().byId.has(id), now)) setBooster(id, false)
+}
 function takenSlots(): string[] {
   const stored = bookings.all()
   const seeded = cohort().people.filter((p) => !stored.has(p.id)).map((p) => p.booster?.at)
@@ -526,6 +533,7 @@ function clinicRows(now = Date.now(), warmDetails = false, showTests = false, ph
 
 app.get('/api/clinic/patients', (c) => {
   const test = asker(c).via === 'test'
+  lapseDemoBookings(Date.now())
   return c.json(clinicRows(Date.now(), false, test, test || c.req.query('phones') === '1'))
 })
 
@@ -546,6 +554,7 @@ app.get('/api/clinic/patients/:id', async (c) => {
   const f = findPerson(c.req.param('id'))
   if (!f) return c.json({ error: 'unknown patient' }, 404)
   const now = Date.now()
+  lapseDemoBookings(now)
   const { row, facts } = rowFor(f.person, f.analysis, boosterSet(), now)
   const detail: PatientDetail = buildDetail(f.person, f.analysis, row, facts, cohort().prior)
   // the cohort's summaries are warmed at startup; a fresh one gets 1.5 s, then the template stands until the next open
@@ -728,6 +737,24 @@ app.post('/api/ear/replay', async (c) => {
 app.delete('/api/ear/replay', async (c) => {
   if (!isWorker(c)) return c.json({ error: 'not allowed' }, 401)
   await clearReplay()
+  return c.json({ ok: true })
+})
+
+// "Watch a real check" (#/heard): one person's own check-in, camera off, read by their own model. The worker sends the
+// bundle (scripts/realcheck.ts makes it); anyone may watch it.
+app.get('/api/ear/check', async (c) => {
+  const got = await currentCheck()
+  return got ? c.json(got) : c.json({ error: 'no check' }, 404)
+})
+app.post('/api/ear/check', async (c) => {
+  if (!isWorker(c)) return c.json({ error: 'not allowed' }, 401)
+  if (Number(c.req.header('content-length') ?? 0) > 600_000) return c.json({ error: 'too big' }, 413)
+  const got = await keepCheck(await c.req.json().catch(() => null))
+  return got ? c.json({ ok: true, recordedAt: got.recordedAt, score: got.score }) : c.json({ error: 'not a check' }, 400)
+})
+app.delete('/api/ear/check', async (c) => {
+  if (!isWorker(c)) return c.json({ error: 'not allowed' }, 401)
+  await clearCheck()
   return c.json({ ok: true })
 })
 

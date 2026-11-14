@@ -52,6 +52,7 @@ Caption "Simulated patients" on shots 8 and 9. On shot 9 also keep this label on
 - **The result says "No change today" or "Not calmer today":** keep it. Say "It says what it saw."
 - **The sound didn't step down:** say "It stays at my pace when my breath doesn't follow."
 - **The result says the sound "went by how still you sat"** (the breath could not be read): keep the line in shot 5, it says both.
+- **Your own run didn't happen before filming:** in shot 7 say "This is the scripted run" instead of "That run was real", and drop the numbers from shot 6.
 - **The practice doesn't land on the big screen:** reload `#/clinic/live?practice=1` and send it again, or skip shot 7.
 - **The opening's sound doesn't please:** use `open_clean.mp4` plus your voice, or mute `open.mp4` (the type stays).
 - **AirPods drop:** back in the case for two seconds, out again.

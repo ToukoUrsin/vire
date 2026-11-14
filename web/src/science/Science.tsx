@@ -709,10 +709,11 @@ export default function Science() {
 
       <main className="sci-wrap">
         <header className="sci-hero">
-          <h1>One minute a day, after TMS.</h1>
+          <h1>What Vire rests on.</h1>
           <p className="sci-lead">
-            Vire gives your body four small things to answer, once a day, and shows your clinic when the answers fade. This page is what the idea
-            rests on, how well the phone reads it today, and what nobody knows yet.
+            After TMS, Vire follows your day through your AirPods against your own usual, answers a drift with a short practice, and shows your
+            clinic what did not help. This page is the research under that, and what nobody knows yet. Much of it was written for the
+            one-minute camera check, the version for people without AirPods: four small things for your body to answer, once a day.
           </p>
           <ul className="sci-facts">
             <li>

@@ -1,0 +1,121 @@
+/* /#/heard: a real check played back. The replay's look (watch.css); stage tokens only. */
+.hd .hd-now-say {
+  min-height: 10.5rem;
+}
+.hd .wt-say {
+  margin-top: 4px;
+  text-wrap: balance;
+}
+.hd-hears {
+  margin: 8px 0 0;
+  font-size: var(--text-lead);
+  line-height: 1.3;
+  color: var(--stage-ink-2);
+}
+.hd-hears[data-hears]:not([data-hears='']) {
+  color: var(--stage-ink);
+  font-weight: 600;
+}
+.hd-chart {
+  display: grid;
+  gap: 16px;
+}
+.hd-row {
+  margin: 0;
+}
+.hd-row figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 16px;
+  margin-bottom: 6px;
+  font-size: var(--text-label);
+  line-height: 1.35;
+}
+.hd-row figcaption b {
+  font-weight: 600;
+}
+.hd-row figcaption span {
+  color: var(--stage-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.hd-row svg {
+  display: block;
+  width: 100%;
+  height: 86px;
+}
+.hd-asked {
+  fill: var(--stage-line);
+}
+.hd-zero {
+  stroke: var(--stage-line);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.hd-line {
+  fill: none;
+  stroke: var(--stage-ink);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.hd-heard {
+  fill: var(--stage-ink);
+}
+.hd-now {
+  stroke: var(--stage-ink-2);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.hd[data-ended='1'] .hd-now {
+  display: none;
+}
+.hd-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin: 0;
+  color: var(--stage-ink-2);
+  font-size: var(--text-small);
+  line-height: 1.35;
+}
+.hd-key span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.hd-key i {
+  display: inline-block;
+  flex: none;
+  width: 22px;
+}
+.hd-k-asked {
+  height: 14px;
+  border-radius: 3px;
+  background: var(--stage-line);
+}
+.hd-k-line {
+  height: 2px;
+  background: var(--stage-ink);
+}
+.hd-k-heard {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--stage-ink);
+}
+.hd-facts {
+  display: grid;
+  gap: 10px;
+  margin: 8px 0 0;
+  padding: 16px 0 0;
+  list-style: none;
+  border-top: 1px solid var(--stage-line);
+  color: var(--stage-ink-2);
+  font-size: var(--text-body-s);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+.hd .wt-controls .el-btns {
+  flex-wrap: wrap;
+}

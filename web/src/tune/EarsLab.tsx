@@ -797,7 +797,7 @@ export default function EarsLab() {
           {state === 'idle' && (
             <>
               <h1>Teach your AirPods.</h1>
-              <p className="el-lede">One minute of smiles and nods in front of the camera, in three short rounds. The camera is the teacher. After that the AirPods follow you on their own.</p>
+              <p className="el-lede">One minute of smiles, nods and head shakes in front of the camera, in three short rounds. The camera is the teacher. After that the AirPods follow you on their own.</p>
               <div className="el-btns">
                 {!linked && !streaming ? (
                   <button type="button" className="lab-btn primary" onClick={connect} disabled={info.state === 'connecting'}>

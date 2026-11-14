@@ -31,6 +31,7 @@ Built at Junction 2026 (13 to 15 November, Espoo) for Aalto University's challen
 |---|---|
 | [/](https://vire.fly.dev/) | the first screen: what Vire is, then the replay, Today and the clinic |
 | [/#/watch](https://vire.fly.dev/#/watch) | a Today run played back in about 40 seconds, no AirPods needed (a scripted run with stand-in AirPods, labelled so, until a real run is picked) |
+| [/#/heard](https://vire.fly.dev/#/heard) | a real check played back in 22 seconds: the founder's own check-in, camera off, four hours after setup, with what his AirPods felt and what his model heard (3 of 3 asked nods, 3 of 3 head shakes, none unasked; one check, one person) |
 | [/#/today](https://vire.fly.dev/#/today) | the loop: check-in, still check, practice in the ears, re-check, what was learned (AirPods, camera off) |
 | [/#/day](https://vire.fly.dev/#/day) | the passive day from the AirPods, against your own earlier days |
 | [/#/ears](https://vire.fly.dev/#/ears) | the one-off setup: the camera teaches the AirPods your nods and head shakes |

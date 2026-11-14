@@ -98,7 +98,7 @@ export function PracticeBoard({ seen }: { seen: PracticeSeen }) {
           )}
           {seen.pieces.set + seen.pieces.live > 0 && (
             <li data-note="sound">
-              Sound: {seen.pieces.set + seen.pieces.live} {seen.pieces.set + seen.pieces.live === 1 ? 'piece' : 'pieces'} made on a Modal GPU
+              Sound: this practice played {seen.pieces.set + seen.pieces.live} {seen.pieces.set + seen.pieces.live === 1 ? 'piece' : 'pieces'} made on a Modal GPU
               {seen.pieces.live ? `, ${seen.pieces.live} of them during the practice from what the AirPods read` : ''}.
             </li>
           )}
@@ -135,7 +135,7 @@ export function PracticeBoard({ seen }: { seen: PracticeSeen }) {
           Next: {SHORT[l.next]} ({WHY[l.why]}).
         </p>
         <p className="sg-pr-fine">
-          {seen.practices} {seen.practices === 1 ? 'practice' : 'practices'} from this device, {l.total} scored. Each is scored by how much stiller the head sat when asked to sit still, after it against before it. That is restlessness, not the head
+          {seen.practices} {seen.practices === 1 ? 'practice' : 'practices'} {demo ? 'from the script' : 'from this device'}, {l.total} scored. Each is scored by how much stiller the head sat when asked to sit still, after it against before it. That is restlessness, not the head
           movement through a day that the clinic list follows. No comparison without a practice yet. A signal for the clinic, not a diagnosis.
         </p>
       </div>
