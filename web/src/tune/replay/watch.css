@@ -228,8 +228,10 @@
   font-weight: 500;
   line-height: 1.05;
 }
+/* the next step sits on the reading column's edge, in line with Pause and Replay under it, not on the wide card's */
 .wt-see {
-  margin: 14px 0 0 !important;
+  width: min(100%, 44rem);
+  margin: 14px auto 0 !important;
 }
 @media (max-width: 760px) {
   .wt-clinic {
