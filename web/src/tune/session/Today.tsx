@@ -84,6 +84,8 @@ async function keepScreenOn(onHeld: (held: boolean) => void): Promise<() => void
 const STILL_MS = 22_000
 const PRACTICE_MS = 150_000
 const SIT_MS = 10_000
+/** no AirPods data for this long in a run: the run stops and says so */
+const PODS_GONE_MS = 15_000
 const NAME: Record<SessionKind, string> = { breathe: 'Slow breathing', scan: 'Body scan', walk: 'A short walk' }
 const SHORT: Record<SessionKind, string> = { breathe: 'slow breathing', scan: 'the body scan', walk: 'the walk' }
 const ABOUT: Record<SessionKind, string> = {
@@ -179,7 +181,7 @@ export default function Today() {
   const sense = todaySense
   const swell = useRef(new Swell())
   const run = useRef(0)
-  const S = useRef({ on: false, t0: 0, epoch0: 0, head: [] as number[][], gyro: 0, airHr: [] as number[][], hs: [] as NonNullable<EarSessionRec['heartSamples']>, heartState: 'off', route: '', times: [] as number[] })
+  const S = useRef({ on: false, t0: 0, epoch0: 0, head: [] as number[][], gyro: 0, airHr: [] as number[][], hs: [] as NonNullable<EarSessionRec['heartSamples']>, heartState: 'off', route: '', times: [] as number[], lastHead: 0 })
   const rec = useRef(new EarRecorder())
   const [info, setInfo] = useState<EarsInfo>(earsInfo())
   const [hz, setHz] = useState(0)
@@ -226,7 +228,8 @@ export default function Today() {
     const offs = [
       sense.on('head', (h) => {
         if (h.source !== 'airpods') return
-        s.times.push(performance.now())
+        s.lastHead = performance.now()
+        s.times.push(s.lastHead)
         rec.current.head(h)
         swell.current.head(h.yaw, h.pitch)
         if (!s.on) return
@@ -305,7 +308,7 @@ export default function Today() {
         }
       }
       const t0 = performance.now()
-      Object.assign(s, { on: true, t0, epoch0: Date.now(), head: [], gyro: 0, airHr: [], hs: [] })
+      Object.assign(s, { on: true, t0, epoch0: Date.now(), head: [], gyro: 0, airHr: [], hs: [], lastHead: t0 })
       const at = new Date().toISOString()
       const steps: EarStep[] = []
       const phases: SessionPhase[] = []
@@ -382,8 +385,16 @@ export default function Today() {
           tick?.()
           await wait(100)
           if (token !== run.current) return false
-          if (document.visibilityState === 'hidden') {
+          // On the iPhone the AirPods stop when Vire is hidden. On a Mac the helper keeps sending behind another
+          // window, so the run goes on there.
+          if (document.visibilityState === 'hidden' && inApp()) {
             stopped = 'The screen went off or Vire was hidden, and the AirPods stop then. Keep Vire open and start again.'
+            return false
+          }
+          // nothing from the AirPods for a quarter of a minute: they are out of the ears or on another device, and
+          // a result made of that would be made of nothing
+          if (performance.now() - s.lastHead > Math.max(4000, PODS_GONE_MS / sp)) {
+            stopped = 'Your AirPods stopped sending: they are out of your ears, or they moved to another device. Put them in and start again.'
             return false
           }
         }
