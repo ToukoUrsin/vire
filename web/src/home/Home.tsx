@@ -47,6 +47,9 @@ export default function Home() {
           After TMS for depression, Vire spots drift from your usual, plays a practice in your ears, learns what helps you
           and tells your clinic.
         </p>
+        <p className="hm-who" data-why>
+          A year after a TMS course, it has stopped working for about half of the people it helped. Once you&rsquo;re home, the clinic doesn&rsquo;t see you.
+        </p>
         <p className="hm-who">For people home after a TMS course, and the clinic that treated them.</p>
 
         <a className="hm-watch" href="#/watch" data-real={real === true ? '1' : '0'}>
@@ -78,11 +81,16 @@ export default function Home() {
             The big screen
           </a>
         </div>
-        <a href="#/visit" className="hm-way">
-          <b>No AirPods?</b>
-          <span>One minute with the camera</span>
-          <Arrow />
-        </a>
+        <div className="hm-way hm-way-clinic">
+          <a href="#/try" className="hm-way-main" data-try>
+            <b>No AirPods?</b>
+            <span>Try the breathing on your phone</span>
+            <Arrow />
+          </a>
+          <a href="#/visit" className="hm-way-small">
+            Or one minute with the camera
+          </a>
+        </div>
       </nav>
 
       <section className="hm-loop" aria-label="How Vire works">

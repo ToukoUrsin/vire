@@ -812,7 +812,10 @@ app.all('/api/*', (c) => c.json({ error: 'not found' }, 404))
 
 // ---------- static web build ----------
 
-const DIST = process.env.VIRE_DIST ? normalize(process.env.VIRE_DIST + '/') : fileURLToPath(new URL('../web/dist/', import.meta.url))
+const WEB_DIST = process.env.VIRE_DIST ? normalize(process.env.VIRE_DIST + '/') : fileURLToPath(new URL('../web/dist/', import.meta.url))
+// The phone app (mobile/, built to mobile/dist) is served at /app/ on this same address, so it shares this site's
+// storage and its /api. Where no build is present, /app/ is the web app like any other path.
+const APP_DIST = process.env.VIRE_APP_DIST ? normalize(process.env.VIRE_APP_DIST + '/') : fileURLToPath(new URL('../mobile/dist/', import.meta.url))
 const MIME: Record<string, string> = {
   html: 'text/html; charset=utf-8',
   js: 'text/javascript; charset=utf-8',
@@ -850,7 +853,7 @@ const isFile = (p: string) => {
   }
 }
 
-function serveStatic(pathname: string, req: Request): Response {
+function serveStatic(pathname: string, req: Request, DIST = WEB_DIST): Response {
   if (req.method !== 'GET' && req.method !== 'HEAD') return new Response('method not allowed', { status: 405 })
   let rel: string
   try {
@@ -915,6 +918,11 @@ const server = Bun.serve({
       if (!prefixed) return app.fetch(req)
       url.pathname = path
       return app.fetch(new Request(url.toString(), req))
+    }
+    if ((path === '/app' || path.startsWith('/app/')) && isFile(join(APP_DIST, 'index.html'))) {
+      // relative assets need the trailing slash
+      if (path === '/app') return new Response(null, { status: 302, headers: { location: `${prefixed ? '/vire' : ''}/app/${url.search}` } })
+      return serveStatic(path.slice(4), req, APP_DIST)
     }
     return serveStatic(path, req)
   },

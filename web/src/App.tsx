@@ -1,6 +1,6 @@
 import { Component, lazy, Suspense } from 'react'
 import type { ComponentType, ReactNode } from 'react'
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
@@ -73,7 +73,11 @@ export default function App() {
             <Route path="/watch" element={<Watch />} />
             <Route path="/try" element={<Try />} />
             <Route path="/" element={<Home />} />
-            <Route path="/*" element={<PatientApp />} />
+            {/* the camera version: the hall's one-minute check and the daily minute */}
+            <Route path="/visit/*" element={<PatientApp />} />
+            <Route path="/minute/*" element={<PatientApp />} />
+            {/* an address that is nothing goes to the first screen, not to the camera version */}
+            <Route path="/*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
       </Guard>

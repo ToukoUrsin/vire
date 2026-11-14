@@ -40,9 +40,9 @@ for (const [w, h] of [[390, 844], [1440, 900]]) {
     const box = await page.locator('.hm-watch').boundingBox()
     check(!!box && box.y >= 0 && box.y + box.height <= h && box.x >= 0 && box.x + box.width <= w, `${tag}: replay button inside the first view (${box && Math.round(box.y + box.height)}px of ${h})`)
     const hrefs = await page.locator('main a').evaluateAll((as) => as.map((a) => a.getAttribute('href')))
-    const order = ['#/watch', '#/today', '#/clinic', '#/clinic/live', '#/visit']
+    const order = ['#/watch', '#/today', '#/clinic', '#/clinic/live', '#/try', '#/visit']
     check(JSON.stringify(hrefs.filter((x) => order.includes(x))) === JSON.stringify(order), `${tag}: ways in, in order (${hrefs.join(' ')})`)
-    check(text.includes('Today') && text.includes('AirPods in, five minutes') && text.includes('The clinic') && text.includes('The big screen') && text.includes('No AirPods?') && text.includes('One minute with the camera'), `${tag}: the four ways in are named`)
+    check(text.includes('Today') && text.includes('AirPods in, five minutes') && text.includes('The clinic') && text.includes('The big screen') && text.includes('No AirPods?') && text.includes('Try the breathing on your phone') && text.includes('Or one minute with the camera') && text.includes('stopped working for about half of the people it helped'), `${tag}: the four ways in are named`)
     check(text.includes('A signal for the clinic, not a diagnosis.') && text.includes('No patient has used Vire yet. The clinic’s patients are simulated.'), `${tag}: the honest lines`)
     const scrollW = await page.evaluate(() => document.documentElement.scrollWidth)
     check(scrollW <= w, `${tag}: no sideways scroll (${scrollW})`)

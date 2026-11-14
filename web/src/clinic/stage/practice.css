@@ -41,3 +41,8 @@
   font-size: calc(var(--u) * 1.1);
   line-height: 1.35;
 }
+
+/* the verdict is the heading's second sentence: it goes to a new line whole, never "day 1. It / helped today." */
+.sg-pr-verdict {
+  display: inline-block;
+}

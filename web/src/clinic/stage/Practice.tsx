@@ -50,7 +50,7 @@ export function PracticeBoard({ seen }: { seen: PracticeSeen }) {
         </p>
         <h1>
           {NAME[r.kind]}
-          {r.day ? `, day\u00a0${r.day}` : ''}. {v.h}
+          {r.day ? `, day\u00a0${r.day}` : ''}. <span className="sg-pr-verdict">{v.h}</span>
         </h1>
         <p className="sg-sr-sub">{v.p}</p>
         {demo && <p className="sg-sr-demo">Demo signals: a script made this practice, not a person.</p>}

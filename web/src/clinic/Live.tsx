@@ -118,9 +118,10 @@ export default function Live() {
   const cohortAt = cohort.seen?.run.at ?? 0
   const practiceLeads = !!((practice.shows || holdPractice) && practice.seen)
   const practiceAt = practice.seen?.arrivedAt ?? 0
-  // the newest of the three takes the screen
-  const practiceFirst = practiceLeads && (!searchLeads || practiceAt > searchAt) && (!cohortLeads || practiceAt > cohortAt)
-  const cohortFirst = !practiceFirst && cohortLeads && (!searchLeads || cohortAt > searchAt)
+  // the newest of the three takes the screen; a tab opened on ?practice=1 or ?cohort=1 keeps its own board whatever
+  // else arrives (at a table the practice tab must not turn into the clinic run the next tab just started)
+  const practiceFirst = practiceLeads && (holdPractice || ((!searchLeads || practiceAt > searchAt) && (!cohortLeads || practiceAt > cohortAt)))
+  const cohortFirst = !practiceFirst && cohortLeads && (holdCohort || !searchLeads || cohortAt > searchAt)
   const rawMode = code && busy ? view.mode : practiceFirst ? 'practice' : cohortFirst ? 'cohort' : searchLeads ? 'search' : code ? view.mode : 'attract'
   // a phone that is connected but has not started the camera minute does not take the screen: it stays on the loop, with a line saying the phone is there
   const phoneHere = rawMode === 'ready'
@@ -165,18 +166,20 @@ export default function Live() {
       <header className="sg-top">
         <div className="sg-who">
           <span className="sg-mark">Vire</span>
-          <span className="sg-rule" aria-hidden="true" />
-          <span className={`sg-beacon${view.streaming ? ' is-on' : ''}`} aria-hidden="true" />
+          {code && <span className="sg-rule" aria-hidden="true" />}
+          {code && <span className={`sg-beacon${view.streaming ? ' is-on' : ''}`} aria-hidden="true" />}
           {/* idle, the screen names nobody and no room: a phone that is only connected is not this screen's story */}
           {!idle && who && <b>{who}</b>}
-          {!idle && (
+          {/* with no room open there is no phone to wait for: a practice or a clinic run needs none */}
+          {!idle && code && (
             <small>
               {note}
               {name && code && code !== '*' ? `, room ${code}` : ''}
             </small>
           )}
         </div>
-        <Sound view={view} />
+        {/* the hall's sound is the camera minute's laughter: only a room has it */}
+        {code && <Sound view={view} />}
         {mode !== 'attract' && (
           <div className="sg-join">
             <div>
@@ -266,7 +269,7 @@ export default function Live() {
 
       {!idle && !['tune', 'teach', 'search', 'cohort', 'practice'].includes(mode) && <Story stage={stage} view={view} />}
       {/* idle, the screen links to the clinic view; on ?cohort=1 the button sits with those links and starts the run */}
-      {!busy && !idle && <CohortButton start={cohort.start} going={cohortGoing} />}
+      {!busy && !idle && !holdPractice && <CohortButton start={cohort.start} going={cohortGoing} />}
       {debug && <Debug stage={stage} view={view} />}
     </div>
   )

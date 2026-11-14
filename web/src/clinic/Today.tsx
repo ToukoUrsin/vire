@@ -125,6 +125,11 @@ export default function Today() {
               </button>
             )}
           </div>
+          {/* why a person at -2.0 can be Dipping while one at -1.9 is Low: Low is about how long, not how far */}
+          <p className="cl-key">
+            Dipping: the running average of their days is more than 0.75 SD below their usual. Low: it has stayed more than 1.5 SD below for three days in a row or longer. Quiet: nothing from their AirPods for three
+            days or more.
+          </p>
         </section>
       )}
 
@@ -286,7 +291,7 @@ function Row({ row, vs, group, calledAt, focus, onCalled }: { row: PatientRow; v
           </>
         ) : (
           <>
-            <span className="cl-reason-plain">{whole(row.reason)}</span>
+            <PlainReason text={row.reason} lead={group === 'call'} />
             {row.boosterRequested && <span className="cl-tag">Booster requested</span>}
           </>
         )}
@@ -324,6 +329,19 @@ function Row({ row, vs, group, calledAt, focus, onCalled }: { row: PatientRow; v
 }
 
 /** "Breathing: 9 of 12 sessions settled": the practice in bold, the counts plain */
+/** A call row with no headline of its own: the first clause of its reason is set as the headline and the rest under it,
+ *  so every call row reads the same way. The words and their order are the server's, untouched. */
+function PlainReason({ text, lead }: { text: string; lead: boolean }) {
+  if (!lead) return <>{whole(text)}</>
+  const cut = text.indexOf('; ')
+  return (
+    <>
+      <b className="cl-outer-note">{whole(cut > 0 ? text.slice(0, cut) : text)}</b>
+      {cut > 0 && <span className="cl-reason-sub cl-reason-sub--rest">{whole(text.slice(cut + 2))}</span>}
+    </>
+  )
+}
+
 function WorkingText({ text }: { text: string }) {
   const i = text.indexOf(': ')
   if (i < 0) return <span>{text}</span>

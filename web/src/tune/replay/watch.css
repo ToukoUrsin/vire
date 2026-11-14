@@ -52,6 +52,9 @@
 .wt-none {
   margin-top: 24px;
 }
+.wt-none h1 {
+  text-wrap: balance;
+}
 /* on the stage a quiet button is an outline; cream slabs would outshout the run itself */
 .wt .lab-btn:not(.primary) {
   border: 1px solid var(--stage-line);
@@ -177,6 +180,15 @@
 }
 .wt-controls .el-bar {
   margin-top: 0;
+}
+/* the narrowest phones: Pause, Replay and the way back stay on one row */
+@media (max-width: 350px) {
+  .wt-controls .lab-btn {
+    padding: 0 12px;
+  }
+  .wt-controls .el-btns {
+    gap: 8px;
+  }
 }
 .wt :focus-visible {
   outline: 2px solid var(--stage-ink);

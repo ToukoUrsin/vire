@@ -4,7 +4,8 @@
 // went with it (flow.ts, with Today's own breath.ts and pace.ts), the sea steps down, holds or eases back, and the
 // screen says what was read. The slow tilt is drawn beside the sea's rise and fall as it happens.
 // A try is not a practice: it goes to /api/try alone, as motion numbers, and to no person or clinic list.
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { encode } from 'uqr'
 import { apiUrl } from '../shared/api'
 import { loadManifest, nextSegment } from '../tune/session/sound'
 import type { SoundManifest } from '../tune/session/sound'
@@ -396,6 +397,7 @@ export default function Try() {
             <p className="ty-eyebrow">No motion sensor here</p>
             <h1>This needs a phone.</h1>
             <p className="ty-lede">It reads your breath from the way a phone tilts on your chest, and this device gave no motion. Open this address on your phone:</p>
+            <Qr text={address()} />
             <p className="ty-address" data-address>
               {address()}
             </p>
@@ -411,5 +413,21 @@ export default function Try() {
         )}
       </section>
     </main>
+  )
+}
+
+/** this page's address as a code a phone's camera opens */
+function Qr({ text }: { text: string }) {
+  const { d, n } = useMemo(() => {
+    const q = encode(text, { ecc: 'M', border: 2 })
+    let path = ''
+    q.data.forEach((row, yy) => row.forEach((on, xx) => on && (path += `M${xx} ${yy}h1v1h-1z`)))
+    return { d: path, n: q.size }
+  }, [text])
+  return (
+    <svg className="ty-qr" viewBox={`0 0 ${n} ${n}`} role="img" aria-label={`QR code for ${text}`} shapeRendering="crispEdges">
+      <rect width={n} height={n} fill="#f3ece0" />
+      <path d={d} fill="#14110d" />
+    </svg>
   )
 }

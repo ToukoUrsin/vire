@@ -16,6 +16,8 @@ COPY server/package.json server/bun.lock ./server/
 RUN cd server && bun install --frozen-lockfile --production
 COPY server ./server
 COPY --from=web /app/web/dist ./web/dist
+# the phone app, already built (mobile/dist is committed); served at /app/
+COPY mobile/dist ./mobile/dist
 ENV PORT=8080 HOST=0.0.0.0 VIRE_DB=/data/vire.sqlite VIRE_DAILY_DIR=/data/daily VIRE_HALL_LOG=/data/hall.jsonl VIRE_ELEVEN_LOG=/data/elevenlabs.jsonl VIRE_EAR_DIR=/data/ear/ VIRE_SOUND_DIR=/data/sound/
 EXPOSE 8080
 WORKDIR /app/server

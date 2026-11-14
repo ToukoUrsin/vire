@@ -95,7 +95,7 @@ function One({ channel, detail, domain, hover, onHover }: Props & { channel: Cha
         </div>
         <div className="cl-multi-val">
           {shown && shown.v !== null && air ? (
-            z !== null && <span className={z < -0.75 ? 'is-under' : ''}>{Math.abs(z) < 0.75 ? (detail.status === 'calibrating' ? 'in the typical range' : 'in their usual') : `${AIR_DIR[channel][z < 0 ? 0 : 1]}, ${Math.abs(z).toFixed(1)} SD`}</span>
+            z !== null && <span className={z < -0.75 ? 'is-under' : ''}>{Math.abs(z) < 0.75 ? (detail.status === 'calibrating' ? 'in the typical range' : 'in their usual') : `${AIR_DIR[channel][z < 0 ? 0 : 1]}, ${Math.abs(z).toFixed(1)} SD${hv ? '' : ' on the last day'}`}</span>
           ) : shown && shown.v !== null ? (
             <>
               <b>{fmt(shown.v, span)}</b> {sig?.unit}
