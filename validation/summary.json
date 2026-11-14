@@ -1,0 +1,593 @@
+{
+  "generatedAt": "2026-11-14T08:49:47Z",
+  "pulse": {
+    "dataset": "UBFC-rPPG, dataset 2 (Bobbia et al. 2017)",
+    "url": "https://sites.google.com/view/ybenezeth/ubfcrppg",
+    "subjects": 16,
+    "minutes": 17.0,
+    "maeBpm": 1.17,
+    "rmseBpm": 1.53,
+    "within5Pct": 99.2,
+    "coveragePct": 71.9,
+    "reference": "Finger pulse oximeter (CMS50E) recorded with each video: the rate of its pulse wave over the same video frames",
+    "note": "Error is over the 124 of 172 ten-second windows where the app showed a number; it shows none when the signal is weak. With nothing withheld the error is 1.81 bpm (RMSE 5.31). Coverage rose to 81.1 % on a run that dropped fewer frames. 16 of the dataset's 42 people: the download quota stopped the rest. Still, well-lit people at a desk."
+  },
+  "heartSwing": {
+    "dataset": "UBFC-rPPG dataset 2, 20-second windows in 10-second steps",
+    "reference": "Finger oximeter over the same seconds, through the same beat picking and the same lock-in",
+    "people": 16,
+    "windows": 76,
+    "windowsReferenceClean": 59,
+    "windowsShown": 46,
+    "shownPct": 78,
+    "maeBpm": 1.28,
+    "medianAbsErrorBpm": 1.16,
+    "biasBpm": 0.26,
+    "rmseBpm": 1.73,
+    "correlation": 0.958,
+    "limitsOfAgreementBpm": [
+      -3.13,
+      3.65
+    ],
+    "meanReferenceBpm": 5.36,
+    "worst": {
+      "subject": "subject14",
+      "startS": 0,
+      "reading": 13.12,
+      "reference": 6.37,
+      "error": 6.75
+    },
+    "byHalf": {
+      "A": {
+        "windows": 24,
+        "mae": 1.51,
+        "bias": 0.5,
+        "correlation": 0.877
+      },
+      "B": {
+        "windows": 22,
+        "mae": 1.03,
+        "bias": 0,
+        "correlation": 0.983
+      }
+    },
+    "seCalibration": {
+      "medianErrorOverSe": 0.96,
+      "within2Se": 84.8
+    },
+    "oldMaeBpm": 9.41,
+    "oldBiasBpm": 9.34,
+    "oldRmseBpm": 10.49,
+    "oldCorrelation": 0.678,
+    "oldLimitsOfAgreementBpm": [
+      -0.13,
+      18.81
+    ],
+    "errorByReferenceSwing": {
+      "new": [
+        {
+          "referenceSwing": "0-1.5",
+          "windows": 10,
+          "mae": 0.68,
+          "bias": 0.29
+        },
+        {
+          "referenceSwing": "1.5-3",
+          "windows": 8,
+          "mae": 1.36,
+          "bias": 0.12
+        },
+        {
+          "referenceSwing": "3-6",
+          "windows": 13,
+          "mae": 1.24,
+          "bias": 0.51
+        },
+        {
+          "referenceSwing": "6+",
+          "windows": 15,
+          "mae": 1.68,
+          "bias": 0.09
+        }
+      ],
+      "old": [
+        {
+          "referenceSwing": "0-1.5",
+          "windows": 10,
+          "mae": 10.83,
+          "bias": 10.83
+        },
+        {
+          "referenceSwing": "1.5-3",
+          "windows": 8,
+          "mae": 12.62,
+          "bias": 12.62
+        },
+        {
+          "referenceSwing": "3-6",
+          "windows": 14,
+          "mae": 8.13,
+          "bias": 8.13
+        },
+        {
+          "referenceSwing": "6+",
+          "windows": 15,
+          "mae": 7.93,
+          "bias": 7.73
+        }
+      ]
+    },
+    "still": {
+      "referenceUnder": 1.5,
+      "falseOver": 3,
+      "windows": 10,
+      "newShown": 10,
+      "newFalse": 0,
+      "oldShown": 10,
+      "oldFalse": 10
+    },
+    "dropouts": {
+      "300": {
+        "trials": 295,
+        "new": {
+          "shown": 217,
+          "mae": 1.23,
+          "bias": 0.24,
+          "stillTrials": 48,
+          "stillFalse": 1
+        },
+        "old": {
+          "shown": 228,
+          "mae": 9.62,
+          "bias": 9.55,
+          "stillTrials": 48,
+          "stillFalse": 48
+        }
+      },
+      "500": {
+        "trials": 295,
+        "new": {
+          "shown": 209,
+          "mae": 1.29,
+          "bias": 0.21,
+          "stillTrials": 44,
+          "stillFalse": 1
+        },
+        "old": {
+          "shown": 215,
+          "mae": 9.69,
+          "bias": 9.64,
+          "stillTrials": 44,
+          "stillFalse": 44
+        }
+      },
+      "700": {
+        "trials": 295,
+        "new": {
+          "shown": 201,
+          "mae": 1.32,
+          "bias": 0.37,
+          "stillTrials": 46,
+          "stillFalse": 2
+        },
+        "old": {
+          "shown": 212,
+          "mae": 10.21,
+          "bias": 10.15,
+          "stillTrials": 47,
+          "stillFalse": 47
+        }
+      },
+      "850": {
+        "trials": 295,
+        "new": {
+          "shown": 188,
+          "mae": 1.37,
+          "bias": 0.31,
+          "stillTrials": 43,
+          "stillFalse": 0
+        },
+        "old": {
+          "shown": 213,
+          "mae": 10.11,
+          "bias": 10.05,
+          "stillTrials": 45,
+          "stillFalse": 45
+        }
+      },
+      "1000": {
+        "trials": 295,
+        "new": {
+          "shown": 0,
+          "mae": null,
+          "bias": null,
+          "stillTrials": 0,
+          "stillFalse": 0
+        },
+        "old": {
+          "shown": 231,
+          "mae": 7.05,
+          "bias": 6.82,
+          "stillTrials": 49,
+          "stillFalse": 49
+        }
+      }
+    },
+    "ownPeriod": {
+      "windows": 39,
+      "people": 15,
+      "mae": 1.67,
+      "bias": -0.36,
+      "correlation": 0.939,
+      "meanReference": 7.42
+    },
+    "oneBreath": {
+      "windowsReferenceClean": 76,
+      "windows": 36,
+      "people": 15,
+      "mae": 1.38,
+      "bias": 0.24,
+      "correlation": 0.963,
+      "meanReference": 7.02
+    },
+    "lateStamps": {
+      "windows": 41,
+      "people": 14,
+      "mae": 1.41,
+      "bias": 0.78,
+      "correlation": 0.961
+    },
+    "knownSwing": {
+      "simulated": true,
+      "beatTimingErrorMs": 32,
+      "trialsEach": 400,
+      "results": [
+        {
+          "bpm": 60,
+          "swing": 0,
+          "trials": 400,
+          "shown": 399,
+          "withheld": 1,
+          "meanReading": 0.62,
+          "sdReading": 0.8,
+          "p5": 0,
+          "p95": 2.36
+        },
+        {
+          "bpm": 60,
+          "swing": 4,
+          "trials": 400,
+          "shown": 400,
+          "withheld": 0,
+          "meanReading": 3.9,
+          "sdReading": 1.01,
+          "p5": 2.25,
+          "p95": 5.53
+        },
+        {
+          "bpm": 60,
+          "swing": 8,
+          "trials": 400,
+          "shown": 400,
+          "withheld": 0,
+          "meanReading": 7.99,
+          "sdReading": 0.96,
+          "p5": 6.45,
+          "p95": 9.54
+        },
+        {
+          "bpm": 60,
+          "swing": 12,
+          "trials": 400,
+          "shown": 400,
+          "withheld": 0,
+          "meanReading": 11.92,
+          "sdReading": 1.07,
+          "p5": 10.2,
+          "p95": 13.71
+        },
+        {
+          "bpm": 60,
+          "swing": 16,
+          "trials": 400,
+          "shown": 397,
+          "withheld": 3,
+          "meanReading": 15.83,
+          "sdReading": 1.06,
+          "p5": 13.99,
+          "p95": 17.37
+        },
+        {
+          "bpm": 80,
+          "swing": 0,
+          "trials": 400,
+          "shown": 400,
+          "withheld": 0,
+          "meanReading": 0.64,
+          "sdReading": 0.85,
+          "p5": 0,
+          "p95": 2.38
+        },
+        {
+          "bpm": 80,
+          "swing": 4,
+          "trials": 400,
+          "shown": 400,
+          "withheld": 0,
+          "meanReading": 3.89,
+          "sdReading": 1.17,
+          "p5": 1.9,
+          "p95": 5.79
+        },
+        {
+          "bpm": 80,
+          "swing": 8,
+          "trials": 400,
+          "shown": 400,
+          "withheld": 0,
+          "meanReading": 7.94,
+          "sdReading": 1.1,
+          "p5": 6.14,
+          "p95": 9.75
+        },
+        {
+          "bpm": 80,
+          "swing": 12,
+          "trials": 400,
+          "shown": 400,
+          "withheld": 0,
+          "meanReading": 11.85,
+          "sdReading": 1.13,
+          "p5": 10,
+          "p95": 13.62
+        },
+        {
+          "bpm": 80,
+          "swing": 16,
+          "trials": 400,
+          "shown": 399,
+          "withheld": 1,
+          "meanReading": 15.81,
+          "sdReading": 1.17,
+          "p5": 13.7,
+          "p95": 17.65
+        },
+        {
+          "bpm": 100,
+          "swing": 0,
+          "trials": 400,
+          "shown": 400,
+          "withheld": 0,
+          "meanReading": 0.61,
+          "sdReading": 0.9,
+          "p5": 0,
+          "p95": 2.43
+        },
+        {
+          "bpm": 100,
+          "swing": 4,
+          "trials": 400,
+          "shown": 400,
+          "withheld": 0,
+          "meanReading": 3.77,
+          "sdReading": 1.32,
+          "p5": 1.58,
+          "p95": 5.97
+        },
+        {
+          "bpm": 100,
+          "swing": 8,
+          "trials": 400,
+          "shown": 400,
+          "withheld": 0,
+          "meanReading": 7.9,
+          "sdReading": 1.26,
+          "p5": 5.85,
+          "p95": 9.97
+        },
+        {
+          "bpm": 100,
+          "swing": 12,
+          "trials": 400,
+          "shown": 400,
+          "withheld": 0,
+          "meanReading": 11.96,
+          "sdReading": 1.2,
+          "p5": 10.16,
+          "p95": 13.93
+        },
+        {
+          "bpm": 100,
+          "swing": 16,
+          "trials": 400,
+          "shown": 399,
+          "withheld": 1,
+          "meanReading": 15.94,
+          "sdReading": 1.24,
+          "p5": 13.98,
+          "p95": 17.99
+        }
+      ]
+    },
+    "browser": {
+      "synthetic": true,
+      "results": [
+        {
+          "swing": 0,
+          "runs": [
+            {
+              "run": "browser-0-1.json",
+              "swingBpm": 0.8,
+              "swingSe": 0.47,
+              "fps": 21.2
+            },
+            {
+              "run": "browser-0-2.json",
+              "swingBpm": 1.1,
+              "swingSe": 0.48,
+              "fps": 17.79
+            },
+            {
+              "run": "browser-0-3.json",
+              "swingBpm": 0.3,
+              "swingSe": 0.34,
+              "fps": 22.6
+            }
+          ],
+          "shown": 3,
+          "meanReading": 0.73
+        },
+        {
+          "swing": 4,
+          "runs": [
+            {
+              "run": "browser-4-1.json",
+              "swingBpm": 4,
+              "swingSe": 0.27,
+              "fps": 28.74
+            },
+            {
+              "run": "browser-4-2.json",
+              "swingBpm": 5.4,
+              "swingSe": 0.37,
+              "fps": 14.01
+            },
+            {
+              "run": "browser-4-3.json",
+              "swingBpm": 4.1,
+              "swingSe": 0.31,
+              "fps": 26.36
+            }
+          ],
+          "shown": 3,
+          "meanReading": 4.5
+        },
+        {
+          "swing": 8,
+          "runs": [
+            {
+              "run": "browser-8-1.json",
+              "swingBpm": 7.6,
+              "swingSe": 0.27,
+              "fps": 9.59
+            },
+            {
+              "run": "browser-8-2.json",
+              "swingBpm": 8.7,
+              "swingSe": 0.49,
+              "fps": 16.32
+            },
+            {
+              "run": "browser-8-3.json",
+              "swingBpm": 7.4,
+              "swingSe": 0.26,
+              "fps": 21.7
+            }
+          ],
+          "shown": 3,
+          "meanReading": 7.9
+        },
+        {
+          "swing": 12,
+          "runs": [
+            {
+              "run": "browser-12-1.json",
+              "swingBpm": 12,
+              "swingSe": 0.29,
+              "fps": 19.86
+            },
+            {
+              "run": "browser-12-2.json",
+              "swingBpm": 12,
+              "swingSe": 0.5,
+              "fps": 24.23
+            },
+            {
+              "run": "browser-12-3.json",
+              "swingBpm": 12.4,
+              "swingSe": 0.33,
+              "fps": 22.53
+            }
+          ],
+          "shown": 3,
+          "meanReading": 12.13
+        }
+      ]
+    },
+    "gate": {
+      "minQuality": 0.3,
+      "maxSeBpm": 2
+    },
+    "note": "Not paced: these people sat at a desk and breathed as they liked, so this is the part of the heart rate that moves at a 10 s period, which paced breathing makes large. Sitting still in good light; uncompressed video; 16 people; frame capture times from the dataset; reference from the oximeter over the same seconds. A known paced swing is simulated or synthetic, never a person."
+  },
+  "smile": {
+    "clips": 72,
+    "people": 62,
+    "sensitivityPct": 96.7,
+    "falsePositivePct": 16.1,
+    "faceFoundPct": 93.2,
+    "source": "Mixkit free stock video (mixkit.co), frames labelled by eye before any score was seen",
+    "note": "91 clear-smile frames and 211 no-smile frames; a smile counts as found at a raw score of 0.15 or more (AUC 0.98). Facing the camera with the face at least 100 px wide: 100.0 % found, 3.2 % false positives. Subtle smiles (65 frames, scored apart): 80.0 % found."
+  },
+  "robustness": [
+    {
+      "condition": "Unchanged video",
+      "faceFoundPct": 99.8,
+      "pulseCoveragePct": 83.4,
+      "smileSensitivityPct": 100.0
+    },
+    {
+      "condition": "Half the light, some camera noise",
+      "faceFoundPct": 99.9,
+      "pulseCoveragePct": 5.1,
+      "smileSensitivityPct": 100.0
+    },
+    {
+      "condition": "Quarter of the light, more noise",
+      "faceFoundPct": 96.2,
+      "pulseCoveragePct": 0.0,
+      "smileSensitivityPct": 100.0
+    },
+    {
+      "condition": "One eighth of the light (dark corner)",
+      "faceFoundPct": 65.9,
+      "pulseCoveragePct": 0.0,
+      "smileSensitivityPct": 46.5
+    },
+    {
+      "condition": "Backlit: dark face, washed-out contrast",
+      "faceFoundPct": 93.6,
+      "pulseCoveragePct": 0.0,
+      "smileSensitivityPct": 97.6
+    },
+    {
+      "condition": "Normal light, heavy camera noise",
+      "faceFoundPct": 99.9,
+      "pulseCoveragePct": 0.2,
+      "smileSensitivityPct": 100.0
+    },
+    {
+      "condition": "15 frames per second",
+      "faceFoundPct": 99.7,
+      "pulseCoveragePct": 79.0,
+      "smileSensitivityPct": 100.0
+    },
+    {
+      "condition": "Half resolution (face about 65 px wide)",
+      "faceFoundPct": 99.9,
+      "pulseCoveragePct": 83.6,
+      "smileSensitivityPct": 100.0
+    }
+  ],
+  "limits": [
+    "This validates that the sensors read the body. It does not test any link between these readings and depression.",
+    "Pulse: one webcam dataset of still, well-lit people (16 of 42), uncompressed video. No phone camera, no moving or talking people.",
+    "Heart swing: the same 16 people, who breathed as they liked. A known paced swing is simulated or synthetic so far, never a person.",
+    "Pulse in dim or noisy light: the app showed no number rather than a wrong one. Expect that in a dark hall.",
+    "Smile: one rater, six frames per clip, stock footage. Few people with medium (5) or dark (8) skin, 4 children, 12 older adults.",
+    "Smile false positives come mostly from turned heads and small faces: 26 % outside the framing limits, 3 % inside.",
+    "Bad conditions are simulated with filters on the same videos, not filmed in a dark room.",
+    "Frame rate on a phone was not measured: runs were in headless desktop Chrome on a server.",
+    "Voice and head-movement sensors are not part of this validation."
+  ]
+}

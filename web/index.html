@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="./favicon.png" />
+    <link rel="apple-touch-icon" href="./icon-180.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Vire</title>
+    <meta name="theme-color" content="#14110d" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Vire" />
+    <!-- the two faces every first screen uses, fetched before the script asks for them: no flash of Georgia -->
+    <link rel="preload" href="/src/shared/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/src/shared/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin />
+  </head>
+  <body>
+    <!-- What shows before the app's code arrives, and when it does not arrive (hall Wi-Fi): never a blank page.
+         React replaces everything inside #root when it mounts. -->
+    <style>
+      .boot { position: fixed; inset: 0; display: grid; place-content: center; justify-items: start; gap: 12px; padding: 32px; background: #14110d; color: #f3ecdf; font: 400 17px/1.45 Inter, system-ui, sans-serif; }
+      .boot b { font: 500 44px/1 Fraunces, Georgia, serif; letter-spacing: -0.02em; }
+      .boot p { margin: 0; max-width: 30ch; color: #b9b0a0; }
+      .boot .boot-failed, .boot.failed .boot-wait { display: none; }
+      .boot.failed .boot-failed { display: block; }
+      .boot button { margin-top: 12px; height: 48px; padding: 0 24px; border: 0; border-radius: 12px; background: #e4572e; color: #1e1b16; font: 600 16px/1 Inter, system-ui, sans-serif; }
+    </style>
+    <div id="root">
+      <div class="boot" id="boot">
+        <b>Vire</b>
+        <p class="boot-wait">One moment.</p>
+        <p class="boot-failed">Vire didn&rsquo;t load. The connection dropped on the way.</p>
+        <button class="boot-failed" type="button" onclick="sessionStorage.removeItem('vire.boot'); location.reload()">Try again</button>
+      </div>
+    </div>
+    <script>
+      // The app's code is one request that can drop. Ask again twice by itself, then say so with a button.
+      ;(function () {
+        function failed() {
+          if (window.__vireUp) return
+          var n = 0
+          try { n = +(sessionStorage.getItem('vire.boot') || 0); sessionStorage.setItem('vire.boot', String(n + 1)) } catch (e) { n = 9 }
+          if (n < 2) setTimeout(function () { location.reload() }, 700 * (n + 1))
+          else { var el = document.getElementById('boot'); if (el) el.className = 'boot failed' }
+        }
+        addEventListener('error', function (e) {
+          var t = e.target
+          if (t && (t.tagName === 'SCRIPT' || t.tagName === 'LINK') && /assets\/.*\.(js|css)/.test(t.src || t.href || '')) failed()
+        }, true)
+      })()
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

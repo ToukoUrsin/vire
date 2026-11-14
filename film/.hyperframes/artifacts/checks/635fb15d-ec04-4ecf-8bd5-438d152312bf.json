@@ -1,0 +1,1156 @@
+{
+  "ok": false,
+  "strict": false,
+  "browserSkipped": false,
+  "lint": {
+    "ok": false,
+    "errorCount": 9,
+    "warningCount": 32,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "studio_missing_editable_id",
+        "severity": "warning",
+        "message": "<video data-start=\"8\"> has no id, so Studio cannot use a stable edit target for its timeline and canvas controls.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Add a stable, human-readable id such as id=\"hero-title\" or id=\"scene-1-card\" to every timeline-visible element you want agents or Studio to edit."
+      },
+      {
+        "code": "studio_missing_editable_id",
+        "severity": "warning",
+        "message": "<video data-start=\"24\"> has no id, so Studio cannot use a stable edit target for its timeline and canvas controls.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Add a stable, human-readable id such as id=\"hero-title\" or id=\"scene-1-card\" to every timeline-visible element you want agents or Studio to edit."
+      },
+      {
+        "code": "studio_missing_editable_id",
+        "severity": "warning",
+        "message": "<video data-start=\"38\"> has no id, so Studio cannot use a stable edit target for its timeline and canvas controls.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Add a stable, human-readable id such as id=\"hero-title\" or id=\"scene-1-card\" to every timeline-visible element you want agents or Studio to edit."
+      },
+      {
+        "code": "studio_missing_editable_id",
+        "severity": "warning",
+        "message": "<video data-start=\"68\"> has no id, so Studio cannot use a stable edit target for its timeline and canvas controls.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Add a stable, human-readable id such as id=\"hero-title\" or id=\"scene-1-card\" to every timeline-visible element you want agents or Studio to edit."
+      },
+      {
+        "code": "studio_missing_editable_id",
+        "severity": "warning",
+        "message": "<video data-start=\"70\"> has no id, so Studio cannot use a stable edit target for its timeline and canvas controls.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Add a stable, human-readable id such as id=\"hero-title\" or id=\"scene-1-card\" to every timeline-visible element you want agents or Studio to edit."
+      },
+      {
+        "code": "studio_missing_editable_id",
+        "severity": "warning",
+        "message": "<video data-start=\"92\"> has no id, so Studio cannot use a stable edit target for its timeline and canvas controls.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Add a stable, human-readable id such as id=\"hero-title\" or id=\"scene-1-card\" to every timeline-visible element you want agents or Studio to edit."
+      },
+      {
+        "code": "video_nested_in_timed_element",
+        "severity": "error",
+        "message": "<video> with data-start is nested inside <div id=\"stage-tension\"> which also has data-start. The frame extractor resolves the video's start from its own data-start without the wrapper's offset, while visibility uses the wrapper's window, so the two disagree: the clip shows the wrong source frames and then disappears partway through its slot.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "A <video> takes no timing from its wrapper: time the <video> and leave the wrapper untimed (remove its data-start; it only places or animates), or move the <video> up to be a direct child of the stage."
+      },
+      {
+        "code": "video_nested_in_timed_element",
+        "severity": "error",
+        "message": "<video> with data-start is nested inside <div id=\"tune-stage\"> which also has data-start. The frame extractor resolves the video's start from its own data-start without the wrapper's offset, while visibility uses the wrapper's window, so the two disagree: the clip shows the wrong source frames and then disappears partway through its slot.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "A <video> takes no timing from its wrapper: time the <video> and leave the wrapper untimed (remove its data-start; it only places or animates), or move the <video> up to be a direct child of the stage."
+      },
+      {
+        "code": "video_nested_in_timed_element",
+        "severity": "error",
+        "message": "<video> with data-start is nested inside <div id=\"tune-phone\"> which also has data-start. The frame extractor resolves the video's start from its own data-start without the wrapper's offset, while visibility uses the wrapper's window, so the two disagree: the clip shows the wrong source frames and then disappears partway through its slot.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "A <video> takes no timing from its wrapper: time the <video> and leave the wrapper untimed (remove its data-start; it only places or animates), or move the <video> up to be a direct child of the stage."
+      },
+      {
+        "code": "video_nested_in_timed_element",
+        "severity": "error",
+        "message": "<video> with data-start is nested inside <div id=\"loop-stage\"> which also has data-start. The frame extractor resolves the video's start from its own data-start without the wrapper's offset, while visibility uses the wrapper's window, so the two disagree: the clip shows the wrong source frames and then disappears partway through its slot.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "A <video> takes no timing from its wrapper: time the <video> and leave the wrapper untimed (remove its data-start; it only places or animates), or move the <video> up to be a direct child of the stage."
+      },
+      {
+        "code": "video_nested_in_timed_element",
+        "severity": "error",
+        "message": "<video> with data-start is nested inside <div id=\"loop-phone\"> which also has data-start. The frame extractor resolves the video's start from its own data-start without the wrapper's offset, while visibility uses the wrapper's window, so the two disagree: the clip shows the wrong source frames and then disappears partway through its slot.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "A <video> takes no timing from its wrapper: time the <video> and leave the wrapper untimed (remove its data-start; it only places or animates), or move the <video> up to be a direct child of the stage."
+      },
+      {
+        "code": "video_nested_in_timed_element",
+        "severity": "error",
+        "message": "<video> with data-start is nested inside <div id=\"dose-stage\"> which also has data-start. The frame extractor resolves the video's start from its own data-start without the wrapper's offset, while visibility uses the wrapper's window, so the two disagree: the clip shows the wrong source frames and then disappears partway through its slot.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "A <video> takes no timing from its wrapper: time the <video> and leave the wrapper untimed (remove its data-start; it only places or animates), or move the <video> up to be a direct child of the stage."
+      },
+      {
+        "code": "video_nested_in_timed_element",
+        "severity": "error",
+        "message": "<video> with data-start is nested inside <div id=\"dose-phone\"> which also has data-start. The frame extractor resolves the video's start from its own data-start without the wrapper's offset, while visibility uses the wrapper's window, so the two disagree: the clip shows the wrong source frames and then disappears partway through its slot.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "A <video> takes no timing from its wrapper: time the <video> and leave the wrapper untimed (remove its data-start; it only places or animates), or move the <video> up to be a direct child of the stage."
+      },
+      {
+        "code": "video_nested_in_timed_element",
+        "severity": "error",
+        "message": "<video> with data-start is nested inside <div id=\"clinic-video\"> which also has data-start. The frame extractor resolves the video's start from its own data-start without the wrapper's offset, while visibility uses the wrapper's window, so the two disagree: the clip shows the wrong source frames and then disappears partway through its slot.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "A <video> takes no timing from its wrapper: time the <video> and leave the wrapper untimed (remove its data-start; it only places or animates), or move the <video> up to be a direct child of the stage."
+      },
+      {
+        "code": "media_missing_id",
+        "severity": "error",
+        "message": "<video> has data-start but no id attribute. The renderer requires id to discover media elements, so this video will be FROZEN in renders.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Add a unique id attribute: <video id=\"my-video\" ...>"
+      },
+      {
+        "code": "timeline_track_too_dense",
+        "severity": "warning",
+        "message": "Track 1 has 4 timed elements in this HTML file. Smaller sub-compositions keep timelines easier to read, iterate on, and diff.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move coherent scene groups into separate .html files under compositions/ and mount them from the parent with data-composition-src so the timeline stays easier to inspect, revise, and validate."
+      },
+      {
+        "code": "timeline_track_too_dense",
+        "severity": "warning",
+        "message": "Track 0 has 5 timed elements in this HTML file. Smaller sub-compositions keep timelines easier to read, iterate on, and diff.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move coherent scene groups into separate .html files under compositions/ and mount them from the parent with data-composition-src so the timeline stays easier to inspect, revise, and validate."
+      },
+      {
+        "code": "timeline_track_too_dense",
+        "severity": "warning",
+        "message": "Track 5 has 7 timed elements in this HTML file. Smaller sub-compositions keep timelines easier to read, iterate on, and diff.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move coherent scene groups into separate .html files under compositions/ and mount them from the parent with data-composition-src so the timeline stays easier to inspect, revise, and validate."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"hook-card\"> is a timeline element that contains nested <div>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#hook-card",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"hook-card\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"hook-stat\"> is a timeline element that contains nested <div>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#hook-stat",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"hook-stat\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"stage-tension\"> is a timeline element that contains nested <video>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#stage-tension",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"stage-tension\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"tension-copy\"> is a timeline element that contains nested <div>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#tension-copy",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"tension-copy\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"reveal-copy\"> is a timeline element that contains nested <div>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#reveal-copy",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"reveal-copy\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"channels-copy\"> is a timeline element that contains nested <div>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#channels-copy",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"channels-copy\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"tune-stage\"> is a timeline element that contains nested <video>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#tune-stage",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"tune-stage\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"tune-phone\"> is a timeline element that contains nested <video>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#tune-phone",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"tune-phone\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"tune-copy\"> is a timeline element that contains nested <div>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#tune-copy",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"tune-copy\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"loop-stage\"> is a timeline element that contains nested <video>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#loop-stage",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"loop-stage\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"loop-phone\"> is a timeline element that contains nested <video>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#loop-phone",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"loop-phone\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"ping-copy\"> is a timeline element that contains nested <div>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#ping-copy",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"ping-copy\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"ping-channels\"> is a timeline element that contains nested <div>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#ping-channels",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"ping-channels\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"echo-copy\"> is a timeline element that contains nested <div>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#echo-copy",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"echo-copy\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"dose-stage\"> is a timeline element that contains nested <video>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#dose-stage",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"dose-stage\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"dose-phone\"> is a timeline element that contains nested <video>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#dose-phone",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"dose-phone\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"dose-copy\"> is a timeline element that contains nested <div>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#dose-copy",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"dose-copy\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"learn-copy\"> is a timeline element that contains nested <div>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#learn-copy",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"learn-copy\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"clinic-video\"> is a timeline element that contains nested <video>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#clinic-video",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"clinic-video\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"clinic-copy\"> is a timeline element that contains nested <div>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#clinic-copy",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"clinic-copy\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"proof\"> is a timeline element that contains nested <h2>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#proof",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"proof\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"honesty\"> is a timeline element that contains nested <h2>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#honesty",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"honesty\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"end\"> is a timeline element that contains nested <div>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#end",
+        "dataAttributes": {},
+        "sourceFile": "/home/ubuntu/junction/depression/film/index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"end\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      }
+    ],
+    "filesScanned": 1
+  },
+  "runtime": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 1,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Could not read the duration of 1 media element(s) within the validate timeout (product-sound); their slot vs. source fit was not checked. Re-run with a longer --timeout if the source is slow to load.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "116",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      }
+    ]
+  },
+  "layout": {
+    "ok": false,
+    "errorCount": 1,
+    "warningCount": 0,
+    "infoCount": 1,
+    "findings": [
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 111.438,
+        "selector": "#honesty > h2:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 499.81,
+          "top": 360,
+          "right": 1420.19,
+          "bottom": 520,
+          "width": 920.38,
+          "height": 160
+        },
+        "containerSelector": "div.brand > span:nth-of-type(1)",
+        "text": "Reads the body. Does not diagnose depression.",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 499.81,
+          "y": 360,
+          "width": 920.38,
+          "height": 160
+        },
+        "firstSeen": 111.438,
+        "lastSeen": 116,
+        "occurrences": 8,
+        "heldMs": 4561.999999999997,
+        "times": [
+          111.438,
+          112.09,
+          112.742,
+          113.393,
+          114.045,
+          114.697,
+          115.348,
+          116
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "info",
+        "time": 111.438,
+        "selector": "div.proofgrid > div:nth-of-type(2) > div:nth-of-type(3)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 1008,
+          "top": 386.8,
+          "right": 1506.55,
+          "bottom": 412.8,
+          "width": 498.55,
+          "height": 26
+        },
+        "containerSelector": "#honesty > h2:nth-of-type(1)",
+        "text": "72 clips · 62 people for smile · public recordings",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 1008,
+          "y": 386.8,
+          "width": 498.55,
+          "height": 26
+        },
+        "firstSeen": 111.438,
+        "lastSeen": 111.438,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          111.438
+        ]
+      }
+    ],
+    "duration": 116,
+    "samples": [
+      6.444,
+      19.333,
+      32.222,
+      45.111,
+      58,
+      70.889,
+      83.778,
+      96.667,
+      109.556
+    ],
+    "transitionSamples": [],
+    "transitionSamplesDropped": 0,
+    "tolerance": 2,
+    "totalIssueCount": 2,
+    "truncated": false
+  },
+  "motion": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "enabled": false,
+    "samples": 0
+  },
+  "contrast": {
+    "ok": false,
+    "errorCount": 1,
+    "warningCount": 1,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "contrast_aa_failure",
+        "severity": "error",
+        "message": "Contrast is 4.03:1; WCAG AA requires 4.5:1.",
+        "text": "Vire · Junction 2026 · prototype · every number ha",
+        "fg": "rgb(127,115,100)",
+        "bg": "rgb(21,18,15)",
+        "ratio": 4.03,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(134,123,109)",
+        "large": false,
+        "selector": "div > div:nth-of-type(25)",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 120,
+          "y": 1017,
+          "width": 560.3125,
+          "height": 21
+        },
+        "time": 6.444,
+        "times": [
+          6.444,
+          32.222,
+          58,
+          83.778
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 1.04:1; WCAG AA requires 3:1.",
+        "text": "What is checked so far",
+        "fg": "rgb(244,237,222)",
+        "bg": "rgb(248,241,234)",
+        "ratio": 1.04,
+        "requiredRatio": 3,
+        "suggestedColor": "rgb(144,139,131)",
+        "large": true,
+        "selector": "div > div:nth-of-type(22) > h2",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 140,
+          "y": 108,
+          "width": 1640,
+          "height": 54
+        },
+        "time": 109.556,
+        "times": [
+          109.556
+        ]
+      }
+    ],
+    "enabled": true,
+    "samples": [
+      6.444,
+      32.222,
+      58,
+      83.778,
+      109.556
+    ],
+    "checked": 26,
+    "passed": 21
+  },
+  "craft": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 3,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 24 text elements stay under it for 0.5 s or more, the smallest \"Vire · Junction 2026 · prototype · ev...\" at 18 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "Vire · Junction 2026 · prototype · every number has a source",
+        "selector": "div.source",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 120,
+          "y": 1017,
+          "width": 560.31,
+          "height": 21
+        },
+        "time": 0,
+        "times": [
+          0,
+          0.194,
+          0.194,
+          4.067,
+          8.134,
+          15.105,
+          20.14,
+          20.14,
+          20.14,
+          20.14,
+          25.175,
+          40.28,
+          49.189,
+          49.189,
+          49.189,
+          49.189,
+          58.29,
+          58.29,
+          70.104,
+          84.24,
+          84.24,
+          93.149,
+          103.219,
+          103.219
+        ],
+        "fontPx": 18,
+        "floorPx": 28,
+        "seconds": 116,
+        "elements": [
+          {
+            "selector": "div.source",
+            "text": "Vire · Junction 2026 · prototype · every number has a source",
+            "fontPx": 18,
+            "time": 0,
+            "seconds": 116
+          },
+          {
+            "selector": "div.fine",
+            "text": "Senova 2019 · 9 studies · 247 patients",
+            "fontPx": 20,
+            "time": 4.067,
+            "seconds": 7.746
+          },
+          {
+            "selector": "#hook-card > div:nth-of-type(1)",
+            "text": "After TMS",
+            "fontPx": 22,
+            "time": 0.194,
+            "seconds": 7.94
+          },
+          {
+            "selector": "#hook-card > div:nth-of-type(4)",
+            "text": "20–30 clinic visits · 4–6 weeks",
+            "fontPx": 22,
+            "time": 0.194,
+            "seconds": 7.94
+          },
+          {
+            "selector": "#tension-copy > div:nth-of-type(1)",
+            "text": "At home",
+            "fontPx": 22,
+            "time": 8.134,
+            "seconds": 7.94
+          },
+          {
+            "selector": "#reveal-copy > div:nth-of-type(1)",
+            "text": "Vire",
+            "fontPx": 22,
+            "time": 15.105,
+            "seconds": 10.071
+          },
+          {
+            "selector": "#tune-copy > div:nth-of-type(1)",
+            "text": "Tune",
+            "fontPx": 22,
+            "time": 25.175,
+            "seconds": 9.877
+          },
+          {
+            "selector": "#ping-copy > div:nth-of-type(1)",
+            "text": "The ping",
+            "fontPx": 22,
+            "time": 40.28,
+            "seconds": 19.754
+          },
+          {
+            "selector": "#echo-copy > div:nth-of-type(1)",
+            "text": "Your echo",
+            "fontPx": 22,
+            "time": 58.29,
+            "seconds": 9.877
+          },
+          {
+            "selector": "#echo-copy > div:nth-of-type(4)",
+            "text": "A quieter petal is a change worth noticing.",
+            "fontPx": 22,
+            "time": 58.29,
+            "seconds": 9.877
+          },
+          {
+            "selector": "#dose-copy > div:nth-of-type(1)",
+            "text": "When a channel is flat",
+            "fontPx": 22,
+            "time": 70.104,
+            "seconds": 12.007
+          },
+          {
+            "selector": "#learn-copy > div:nth-of-type(1)",
+            "text": "Learn",
+            "fontPx": 22,
+            "time": 84.24,
+            "seconds": 9.877
+          },
+          {
+            "selector": "#learn-copy > div:nth-of-type(3)",
+            "text": "A dose is not a treatment. It is a small next step.",
+            "fontPx": 22,
+            "time": 84.24,
+            "seconds": 9.877
+          },
+          {
+            "selector": "#clinic-copy > div:nth-of-type(1)",
+            "text": "Clinic",
+            "fontPx": 22,
+            "time": 93.149,
+            "seconds": 13.943
+          },
+          {
+            "selector": "div.proofgrid > div:nth-of-type(1) > div:nth-of-type(3)",
+            "text": "shown windows only · finger pulse reference · 16 people · 17 min",
+            "fontPx": 22,
+            "time": 103.219,
+            "seconds": 8.908
+          },
+          {
+            "selector": "div.proofgrid > div:nth-of-type(2) > div:nth-of-type(3)",
+            "text": "72 clips · 62 people for smile · public recordings",
+            "fontPx": 22,
+            "time": 103.219,
+            "seconds": 8.908
+          },
+          {
+            "selector": "#channels-copy > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "smile",
+            "fontPx": 24,
+            "time": 20.14,
+            "seconds": 12.007
+          },
+          {
+            "selector": "#channels-copy > div:nth-of-type(1) > div:nth-of-type(2)",
+            "text": "voice",
+            "fontPx": 24,
+            "time": 20.14,
+            "seconds": 12.007
+          },
+          {
+            "selector": "#channels-copy > div:nth-of-type(1) > div:nth-of-type(3)",
+            "text": "heart",
+            "fontPx": 24,
+            "time": 20.14,
+            "seconds": 12.007
+          },
+          {
+            "selector": "#channels-copy > div:nth-of-type(1) > div:nth-of-type(4)",
+            "text": "move",
+            "fontPx": 24,
+            "time": 20.14,
+            "seconds": 12.007
+          },
+          {
+            "selector": "#ping-channels > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "smile",
+            "fontPx": 24,
+            "time": 49.189,
+            "seconds": 13.943
+          },
+          {
+            "selector": "#ping-channels > div:nth-of-type(1) > div:nth-of-type(2)",
+            "text": "voice",
+            "fontPx": 24,
+            "time": 49.189,
+            "seconds": 13.943
+          },
+          {
+            "selector": "#ping-channels > div:nth-of-type(1) > div:nth-of-type(3)",
+            "text": "heart",
+            "fontPx": 24,
+            "time": 49.189,
+            "seconds": 13.943
+          },
+          {
+            "selector": "#ping-channels > div:nth-of-type(1) > div:nth-of-type(4)",
+            "text": "move",
+            "fontPx": 24,
+            "time": 49.189,
+            "seconds": 13.943
+          }
+        ]
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 3.29 s (0.39–3.68 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0.387,
+        "seconds": 3.292,
+        "floorSeconds": 3,
+        "until": 3.679
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 3.68 s (4.26–7.94 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 4.26,
+        "seconds": 3.68,
+        "floorSeconds": 3,
+        "until": 7.94
+      }
+    ],
+    "enabled": true,
+    "step": 0.19399999999999906,
+    "samples": 599
+  },
+  "audio": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": []
+  },
+  "hdr": {
+    "autoPromotion": null,
+    "inspection": "available"
+  },
+  "snapshots": {
+    "enabled": false,
+    "files": [],
+    "times": [],
+    "findingFiles": []
+  }
+}

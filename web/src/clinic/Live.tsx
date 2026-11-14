@@ -1,0 +1,265 @@
+// The big-screen mirror for the stage: one person's face, head, heart and voice as they are measured, the ping told
+// as a story, and the echo it resolves into. The pieces live in ./stage; this file decides which one leads.
+import { useEffect, useMemo } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { encode } from 'uqr'
+import { api } from '../shared/api'
+import { isMock } from './data'
+import { mockRooms } from './mock'
+import { Debug } from './stage/Debug'
+import { AgainPanel } from './stage/Again'
+import { EchoPanel } from './stage/Echo'
+import { Bars, Face } from './stage/Face'
+import { Head } from './stage/Head'
+import { Heart } from './stage/Heart'
+import { Lane } from './stage/Lane'
+import { Sound } from './stage/Sound'
+import { Story } from './stage/Story'
+import { TunePanel } from './stage/Tune'
+import { AirPodsOnly, SearchBoard, Teaching } from './stage/Ears'
+import { pageQuery, useStage } from './stage/store'
+import { useEarSearch } from './stage/search'
+import { CohortBoard, CohortButton } from './stage/Cohort'
+import { useCohort } from './stage/retrain'
+import { PracticeBoard } from './stage/Practice'
+import { usePractice } from './stage/practice'
+import type { View } from './stage/store'
+import { displayName } from '../shared/name'
+import './stage/stage.css'
+
+interface Room {
+  code: string
+  name: string
+  since: string
+}
+
+function joinUrl(): string {
+  const u = new URL('./', document.baseURI)
+  u.hash = ''
+  u.search = ''
+  return u.toString()
+}
+
+/** what is being asked right now, for someone walking past */
+function say(view: View, whose: string): { h: string; p: string } {
+  const again = view.runKind === 'mini'
+  if (view.mode === 'reading') return { h: 'Reading the echo', p: `Four answers, set against ${whose} own usual.` }
+  if (view.mode === 'dose') return { h: 'The dose', p: 'One small thing. Then Vire measures again to see if it helped.' }
+  switch (view.phase) {
+    case 'settle':
+      return { h: 'Settle', p: `A resting face and a resting pulse. This is ${whose} usual starting point.` }
+    case 'nod':
+      return { h: 'Nod', p: '“Nod when you’re ready.” How big is the nod, and how fast?' }
+    case 'laugh':
+      return again ? { h: 'Laugh again', p: 'The same laughter, after the dose. Does the face answer more now?' } : { h: 'Laugh', p: `Laughter plays in ${whose} ears. How much does the face answer, and how soon?` }
+    case 'speak':
+      return { h: 'Speak', p: 'One sentence, out loud. How much does the voice move?' }
+    case 'breathe':
+      return again ? { h: 'Breathe again', p: 'One slow breath. Does the heart swing further now?' } : { h: 'Breathe', p: 'Two slow breaths. How far does the heart swing?' }
+    default:
+      return { h: 'Ready', p: 'Sixty seconds. Five small questions for the body.' }
+  }
+}
+
+export default function Live() {
+  const { code: raw } = useParams()
+  const code = raw ? (raw === '*' ? '*' : raw.toUpperCase()) : null
+  const nav = useNavigate()
+  const { stage, view } = useStage(code)
+  const search = useEarSearch()
+  const debug = useMemo(() => pageQuery().get('debug') === '1', [])
+  // ?board=1 keeps the newest finished search on the screen (for a talk: the board of this morning's minute)
+  const hold = useMemo(() => pageQuery().get('board') === '1', [])
+  // the whole clinic re-learning at once (simulated patients); ?cohort=1 keeps the newest run on the screen
+  const cohort = useCohort()
+  const holdCohort = useMemo(() => pageQuery().get('cohort') === '1', [])
+  // a practice that just arrived from someone's AirPods; ?practice=1 keeps the newest one on the screen
+  const practice = usePractice()
+  const holdPractice = useMemo(() => pageQuery().get('practice') === '1', [])
+
+  // no code: wait for the newest room with a phone in it and open it
+  useEffect(() => {
+    if (code || hold || holdCohort || holdPractice) return
+    let dead = false
+    const look = async () => {
+      let rooms: Room[] = []
+      if (isMock()) rooms = mockRooms()
+      else {
+        try {
+          rooms = await api<Room[]>('live/rooms')
+        } catch {
+          rooms = []
+        }
+      }
+      if (!dead && Array.isArray(rooms) && rooms[0]?.code) nav(`/clinic/live/${rooms[0].code}${isMock() ? '?mock=1' : ''}`, { replace: true })
+    }
+    void look()
+    const id = setInterval(look, 2000)
+    return () => {
+      dead = true
+      clearInterval(id)
+    }
+  }, [code, nav, hold, holdCohort, holdPractice])
+
+  const url = useMemo(joinUrl, [])
+  const devAddress = /^(?:127\.0\.0\.1|localhost)$/i.test(new URL(url).hostname)
+  const shortUrl = devAddress ? '' : url.replace(/^https?:\/\//, '').replace(/\/$/, '')
+  // the Modal search leads while it waits, runs, or has just finished, unless someone is in the middle of something
+  const busy = view.mode === 'tune' || view.mode === 'ping' || view.mode === 'reading' || view.mode === 'dose' || (view.mode === 'teach' && view.teach?.state !== 'done')
+  const held = hold && search.seen?.job.state === 'done'
+  const searchLeads = !!((search.shows || held) && search.seen)
+  const cohortLeads = !!((cohort.shows || holdCohort) && cohort.seen)
+  // a person's own search takes the screen when it is newer than the clinic's run
+  const searchAt = search.seen ? Math.max(search.seen.job.at ?? 0, search.seen.job.dailyAt ?? 0) : 0
+  const cohortAt = cohort.seen?.run.at ?? 0
+  const practiceLeads = !!((practice.shows || holdPractice) && practice.seen)
+  const practiceAt = practice.seen?.arrivedAt ?? 0
+  // the newest of the three takes the screen
+  const practiceFirst = practiceLeads && (!searchLeads || practiceAt > searchAt) && (!cohortLeads || practiceAt > cohortAt)
+  const cohortFirst = !practiceFirst && cohortLeads && (!searchLeads || cohortAt > searchAt)
+  const mode = code && busy ? view.mode : practiceFirst ? 'practice' : cohortFirst ? 'cohort' : searchLeads ? 'search' : code ? view.mode : 'attract'
+  const cohortGoing = cohort.seen?.run.state === 'queued' || cohort.seen?.run.state === 'running'
+  const name = view.name && !/^(guest|stage|clinic)$/i.test(view.name.trim()) ? displayName(view.name) : ''
+  const whose = name ? `${name}’s` : 'their'
+  const measuring = mode === 'ping' || mode === 'dose' || mode === 'reading'
+  const asked = mode === 'tune' && view.tuneStep !== null && view.tuneStep !== 'training' && view.tuneStep !== 'done'
+  const showBars = (measuring || mode === 'tune') && (view.streaming || mode === 'reading')
+  const copy = say(view, whose)
+  // the face has done its work: the screen belongs to what it resolved into
+  const resolved = (mode === 'echo' && !!view.echo) || mode === 'again'
+  const airpodsOnly = view.camera === false && !['attract', 'teach', 'search', 'cohort', 'practice', 'echo', 'again'].includes(mode)
+
+  const who = name || (code && code !== '*' ? `Room ${code}` : '')
+  const note =
+    view.conn === 'simulated'
+      ? 'Simulated signal'
+      : view.conn === 'open'
+        ? view.streaming
+          ? 'Live'
+          : view.present
+            ? 'Connected'
+            : 'Waiting for a phone'
+        : view.conn === 'closed'
+          ? 'Reconnecting'
+          : code
+            ? 'Connecting'
+            : 'Looking for a phone'
+  const cap = view.ownMesh
+    ? '478 points. No picture leaves the phone.'
+    : view.streaming
+      ? 'A standard face, moved by the measured numbers. No picture leaves the phone.'
+      : asked
+        ? 'A standard face, showing what is asked. No picture leaves the phone.'
+        : 'A wireframe, never the camera picture.'
+
+  return (
+    <div className="sg" data-mode={mode} data-phase={view.phase}>
+      <header className="sg-top">
+        <div className="sg-who">
+          <span className="sg-mark">Vire</span>
+          <span className="sg-rule" aria-hidden="true" />
+          <span className={`sg-beacon${view.streaming ? ' is-on' : ''}`} aria-hidden="true" />
+          {who && <b>{who}</b>}
+          <small>
+            {note}
+            {name && code && code !== '*' ? `, room ${code}` : ''}
+          </small>
+        </div>
+        <Sound view={view} />
+        {mode !== 'attract' && (
+          <div className="sg-join">
+            <div>
+              <b>Try it on your phone</b>
+              {shortUrl && <small>{shortUrl}</small>}
+            </div>
+            <Qr text={url} />
+          </div>
+        )}
+      </header>
+
+      <aside className="sg-phone-note" aria-label="Big-screen mirror">
+        <b>Big-screen mirror</b>
+        <span>
+          This phone is connected to <strong>{code && code !== '*' ? `room ${code}` : 'the newest room'}</strong>. Open the mirror on a laptop for the full view.
+        </span>
+      </aside>
+
+      <main className="sg-main" data-mode={mode}>
+        {!resolved && !['teach', 'search', 'cohort', 'practice'].includes(mode) && !airpodsOnly && (
+          <section className={`sg-left${showBars ? '' : ' is-solo'}`} aria-label="The face, as a wireframe">
+            <div className="sg-facebox">
+              <Face stage={stage} />
+            </div>
+            {showBars && <Bars stage={stage} own={view.ownMuscles} whose={whose} read={view.faceRead} />}
+            <p className="sg-cap">{cap}</p>
+          </section>
+        )}
+
+        {mode === 'attract' && (
+          <section className="sg-right sg-attract">
+            <h1>We play laughter in your ears and measure how your face answers.</h1>
+            <div className="sg-attract-join">
+              <Qr text={url} />
+              <div>
+                <b>Try it on your phone</b>
+                <p>Sixty seconds: a nod, a laugh, a sentence, two slow breaths. Your face shows up here as a wireframe.</p>
+                {shortUrl && <small>{shortUrl}</small>}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {mode === 'ready' && (
+          <section className="sg-right sg-attract sg-ready" aria-live="polite">
+            <h1>{name ? `${name} is here.` : 'A phone is connected.'}</h1>
+            <p>Start a check-in on the phone. This screen follows along: face, head, heart and voice, as they are measured.</p>
+          </section>
+        )}
+
+        {mode === 'tune' && <TunePanel stage={stage} view={view} whose={whose} />}
+
+        {mode === 'teach' && <Teaching stage={stage} view={view} />}
+        {mode === 'search' && search.seen && <SearchBoard seen={search.seen} />}
+        {mode === 'cohort' && cohort.seen && <CohortBoard seen={cohort.seen} />}
+        {mode === 'practice' && practice.seen && <PracticeBoard seen={practice.seen} />}
+        {airpodsOnly && <AirPodsOnly stage={stage} view={view} />}
+
+        {measuring && !airpodsOnly && (
+          <section className="sg-right" aria-live="polite">
+            <header className="sg-say" key={`${mode}-${view.phase}-${view.runKind}`}>
+              <h1>{copy.h}</h1>
+              <p>{copy.p}</p>
+            </header>
+            <div className="sg-panels">
+              <Head stage={stage} source={view.headSource} dim={view.phase !== 'nod' || mode !== 'ping'} />
+              <Lane stage={stage} mode={mode} headSource={view.headSource} hasEar={view.hasEar} camera={view.camera} />
+              <Heart stage={stage} source={view.heartSource} dim={mode === 'reading' || (mode === 'ping' && view.phase !== 'breathe' && view.phase !== 'settle')} />
+            </div>
+          </section>
+        )}
+
+        {mode === 'echo' && view.echo && <EchoPanel echo={view.echo} before={view.before} name={name} whose={whose} phoneReadings={view.phoneReadings} />}
+        {mode === 'again' && <AgainPanel stage={stage} whose={whose} />}
+      </main>
+
+      {!['tune', 'teach', 'search', 'cohort', 'practice'].includes(mode) && <Story stage={stage} view={view} />}
+      {!busy && <CohortButton start={cohort.start} going={cohortGoing} />}
+      {debug && <Debug stage={stage} view={view} />}
+    </div>
+  )
+}
+
+function Qr({ text }: { text: string }) {
+  const { d, n } = useMemo(() => {
+    const q = encode(text, { ecc: 'M', border: 2 })
+    let path = ''
+    q.data.forEach((row, yy) => row.forEach((on, xx) => on && (path += `M${xx} ${yy}h1v1h-1z`)))
+    return { d: path, n: q.size }
+  }, [text])
+  return (
+    <svg className="sg-qr" viewBox={`0 0 ${n} ${n}`} role="img" aria-label={`QR code for ${text}`} shapeRendering="crispEdges">
+      <rect width={n} height={n} fill="#f3ece0" />
+      <path d={d} fill="#14110d" />
+    </svg>
+  )
+}

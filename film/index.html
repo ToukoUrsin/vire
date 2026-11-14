@@ -1,0 +1,567 @@
+<!doctype html>
+<!-- Written by film/scripts/build.mjs from the capture, the narration and web/public/validation.json. Don't edit: run film/render.sh vN. -->
+<html lang="en" data-resolution="landscape">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920,height=1080">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<style>
+@font-face{font-family:'Fraunces';font-style:normal;font-weight:100 900;src:url('assets/fonts/fraunces-latin.woff2') format('woff2')}
+@font-face{font-family:'Fraunces';font-style:italic;font-weight:100 900;src:url('assets/fonts/fraunces-italic-latin.woff2') format('woff2')}
+@font-face{font-family:'Vire Sans';font-style:normal;font-weight:100 900;src:url('assets/fonts/inter-latin.woff2') format('woff2')}
+:root{--bg:#14110d;--bg2:#1f1b15;--line:#3a3229;--ink:#f3ece0;--ink2:#a79f90;--ember:#e4572e;--smile:#e9a23b;--voice:#35b3a3;--heart:#e0596b;--move:#8794ea}
+*{box-sizing:border-box}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#14110d}
+#root{position:relative;width:1920px;height:1080px;overflow:hidden;background:#14110d;color:var(--ink);font-family:'Vire Sans',sans-serif;font-weight:450}
+#bg{position:absolute;inset:0;background:radial-gradient(1300px 900px at 74% 12%,#2b2219 0,#14110d 64%)}
+.scene{position:absolute;inset:0;opacity:0;visibility:hidden}
+.scene.first{opacity:1;visibility:visible}
+.h{position:absolute;left:96px;top:50px;max-width:1300px;font-family:'Fraunces',serif;font-weight:540;font-size:60px;line-height:1.1;letter-spacing:-0.018em}
+.warm{color:var(--smile)}.ember{color:var(--ember)}.smile{color:var(--smile)}.voice{color:var(--voice)}.heart{color:var(--heart)}.move{color:var(--move)}
+.src{position:absolute;left:96px;right:96px;bottom:20px;font-size:20px;line-height:1.3;color:#8f8676;letter-spacing:.005em}
+.crop{position:absolute;overflow:hidden;border-radius:20px;background:#0f0d0a;box-shadow:0 30px 90px rgba(0,0,0,.55),0 0 0 1px #3a3229}
+.zoom{position:absolute;inset:0}
+.crop video{position:absolute;max-width:none}
+.tag{position:absolute;left:16px;top:16px;padding:7px 16px 9px;border-radius:999px;background:rgba(20,17,13,.88);box-shadow:0 0 0 1px #4a4136;color:var(--ink);font-size:22px;font-weight:600}
+.phone{position:absolute;overflow:hidden;border-radius:46px;background:#0b0a08;box-shadow:0 34px 90px rgba(0,0,0,.6),0 0 0 8px #26211b,0 0 0 10px #40382d}
+.phone video{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover}
+.read{position:absolute}
+.q{font-size:30px;line-height:1.25;color:var(--ink2);margin-bottom:14px}
+.num{font-family:'Fraunces',serif;font-weight:600;font-size:150px;line-height:1;letter-spacing:-0.035em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.num.huge{font-size:230px}
+.num .u{font-size:.3em;letter-spacing:-0.01em;font-weight:500;color:var(--ink)}
+.unit{font-family:'Fraunces',serif;font-weight:500;font-size:44px;line-height:1.1;margin-top:6px}
+.lab{font-size:28px;line-height:1.35;color:var(--ink2);margin-top:18px}
+.lab.wide{font-size:36px;max-width:1300px;color:var(--ink)}
+.lab.strong,.strong{color:var(--ink);font-weight:600}
+.note{position:absolute;font-size:27px;line-height:1.4;color:var(--ink2)}
+.big{position:absolute;font-family:'Fraunces',serif;font-weight:520;font-size:74px;line-height:1.1;letter-spacing:-0.02em;white-space:nowrap}
+.big.dim{color:var(--smile)}
+.big2{font-family:'Fraunces',serif;font-weight:520;font-size:54px;line-height:1.14;letter-spacing:-0.015em}
+.wordmark{position:absolute;left:680px;top:120px;font-family:'Fraunces',serif;font-weight:600;font-size:270px;line-height:1;letter-spacing:-0.045em}
+.tagline{position:absolute;font-family:'Fraunces',serif;font-weight:540;font-size:44px;line-height:1.1;letter-spacing:-0.015em;white-space:nowrap}
+#why-n{position:absolute;left:88px;top:310px;font-size:330px}
+.rail{position:absolute;display:flex;gap:14px}
+.chip{display:inline-flex;align-items:center;gap:12px;padding:7px 22px 8px 10px;border:2px solid var(--line);border-radius:999px;font-size:27px;font-weight:600;color:var(--ink2)}
+.chip i{font-style:normal;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.1);font-size:20px}
+.bar{position:absolute;height:80px}
+.bar .bn{position:absolute;left:0;top:12px;font-family:'Fraunces',serif;font-weight:540;font-size:44px}
+.bar .track{position:absolute;top:22px;height:36px;border-radius:18px;background:#221d17;overflow:hidden}
+.bar .fill{position:absolute;left:0;top:0;height:100%;border-radius:18px}
+.fill.smile{background:var(--smile)}.fill.voice{background:var(--voice)}.fill.heart{background:var(--heart)}.fill.move{background:var(--move)}
+.bar .bv{position:absolute;top:4px;font-family:'Fraunces',serif;font-weight:600;font-size:58px;font-variant-numeric:tabular-nums}
+.usual{position:absolute;width:0;border-left:3px dashed #f3ece0}
+.usual b{position:absolute;left:-150px;width:300px;top:-38px;text-align:center;font-size:24px;font-weight:600;color:var(--ink);white-space:nowrap}
+.total{position:absolute;font-size:38px;color:var(--ink2);white-space:nowrap}
+.total b{font-family:'Fraunces',serif;font-weight:600;font-size:92px;color:var(--ink);padding:0 10px 0 16px;font-variant-numeric:tabular-nums}
+.verdict{position:absolute;font-family:'Fraunces',serif;font-weight:560;font-size:60px;line-height:1.08;letter-spacing:-0.02em;white-space:nowrap}
+.pill{position:absolute;right:96px;top:62px;padding:9px 24px 11px;border-radius:999px;background:var(--ember);color:#14110d;font-size:28px;font-weight:700;white-space:nowrap}
+.pill.sm{right:auto;font-size:22px;padding:6px 18px 8px}
+.card{position:absolute;left:96px;top:200px;width:1728px;height:700px;padding:50px 64px;border-radius:28px;background:#1c1813;box-shadow:0 0 0 1px #3a3229,0 30px 90px rgba(0,0,0,.45);opacity:0;visibility:hidden}
+#pf-1{visibility:visible}
+.card .q{font-size:38px;color:var(--ink)}
+.card .two{display:flex;gap:90px}
+.card .fine{position:absolute;left:64px;right:64px;bottom:36px;font-size:25px;line-height:1.35;color:var(--ink2)}
+.wordmark.end{left:0;right:0;top:330px;text-align:center;font-size:250px}
+.endline{position:absolute;left:0;right:0;top:640px;text-align:center;font-family:'Fraunces',serif;font-weight:500;font-size:60px;letter-spacing:-0.015em}
+.endmeta{position:absolute;left:0;right:0;top:752px;text-align:center;font-size:30px;color:var(--ink2)}
+.petals{position:absolute;left:885px;top:150px;width:150px;height:150px}
+.petals i{position:absolute;left:50px;top:0;width:50px;height:78px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;transform-origin:25px 75px;opacity:.92}
+.petals i.smile{background:var(--smile)}.petals i.voice{background:var(--voice)}.petals i.heart{background:var(--heart)}.petals i.move{background:var(--move)}
+#caps{position:absolute;inset:0;pointer-events:none}
+.cap{position:absolute;left:0;right:0;bottom:84px;text-align:center;opacity:0;visibility:hidden}
+.cap span{display:inline-block;padding:8px 24px 11px;border-radius:14px;background:rgba(12,10,8,.86);color:var(--ink);font-size:40px;font-weight:600;line-height:1.2;letter-spacing:-0.005em}
+#min-wide,#min-p1,#min-p2,#min-p3,#min-p4,.read[id^="min-r"],#dose-turn,#dose-face,#dose-pair,#dose-r1,#dose-r2,#dose-r3,#dose-h2,#cl-h2,#cl-h3,#cl-h4,#cl-chart,#cl-boost{opacity:0;visibility:hidden}
+#min-wide{opacity:1;visibility:visible}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="111.59" data-width="1920" data-height="1080">
+<div id="bg"></div>
+<div class="scene first" id="s-hook">
+<div class="h" id="hook-h">It plays a laugh.<br><span class="warm" id="hook-h2">Then it times the smile that comes back.</span></div>
+<div class="crop" id="hook-face" style="left:96px;top:236px;width:587px;height:660px"><div class="zoom" id="hook-face-z"><video class="clip" id="hook-face-v" muted playsinline src="assets/capture/stage-laugh.mp4" data-start="0" data-duration="4.54" data-media-start="3.25" data-track-index="1" style="left:-49.53px;top:-202.41px;width:2067.21px;height:1162.81px"></video></div></div>
+<div class="read" id="hook-read" style="left:747px;top:296px;width:635px"><div class="q">From the laugh to the smile</div><div class="num smile" id="hook-n">0.0 s</div><div class="lab" id="hook-l">measured in this recording</div></div>
+<div class="note" id="hook-note" style="left:747px;top:666px;width:635px">Left: what the phone's camera reads, drawn live on the big screen. Face muscles, never the picture.</div>
+<div class="phone" id="hook-phone" style="left:1438px;top:64px;width:386px;height:836px"><video class="clip" id="hook-phone-v1" muted playsinline src="assets/capture/phone-laugh.mp4" data-start="0" data-duration="4.54" data-media-start="1.27" data-track-index="2"></video></div>
+<div class="src">Recorded face, with stand-in AirPods readings for head and heart, played into the live product.</div>
+</div>
+
+<div class="scene" id="s-name">
+<div class="phone" id="name-phone" style="left:150px;top:64px;width:386px;height:836px"><video class="clip" id="name-phone-v1" muted playsinline src="assets/capture/phone-settle.mp4" data-start="4.54" data-duration="8.72" data-media-start="0.6" data-track-index="5"></video></div>
+<div class="wordmark" id="name-w">Vire</div>
+<div class="big" id="name-1" style="left:690px;top:410px;font-size:62px;white-space:normal;max-width:1040px">TMS is magnetic brain stimulation for depression: 20 to 30 clinic visits.</div>
+<div class="big dim" id="name-2" style="left:690px;top:590px;font-size:62px;white-space:normal;max-width:1040px">Vire checks you for one minute a day at home.</div>
+<div class="note" id="name-3" style="left:690px;top:760px;width:1000px">A course is usually 20 to 30 clinic sessions over 4 to 6 weeks. Then you go home.</div>
+<div class="src">Course length: Perera et al. 2016, Brain Stimulation</div>
+</div>
+
+<div class="scene" id="s-why">
+<div class="h" id="why-h">Within a year, it stops working for about half.</div>
+<div class="num huge ember" id="why-n">0%</div>
+<div class="lab wide" id="why-l" style="left:100px;top:650px">still respond 12 months after TMS</div>
+<div class="tagline" id="why-t" style="left:1010px;top:290px">Vire shows the clinic who to call back.</div>
+<div class="crop" id="why-list" style="left:1010px;top:372px;width:814px;height:474px"><div class="zoom" id="why-list-z"><video class="clip" id="why-list-v" muted playsinline src="assets/capture/clinic-list.mp4" data-start="18.86" data-duration="3.02" data-media-start="0.5" data-track-index="6" style="left:-294.85px;top:-305.38px;width:2021.84px;height:1137.28px"></video></div></div>
+<div class="pill sm" id="why-sim" style="left:1572px;top:862px">Simulated patients</div>
+<div class="src">Senova et al. 2019 · 9 studies · 247 patients</div>
+</div>
+
+<div class="scene" id="s-min">
+<div class="phone" id="min-phone" style="left:96px;top:64px;width:386px;height:836px"><video class="clip" id="min-phone-v1" muted playsinline src="assets/capture/phone-settle.mp4" data-start="21.88" data-duration="2.46" data-media-start="1" data-track-index="8"></video><video class="clip" id="min-phone-v2" muted playsinline src="assets/capture/phone-nod.mp4" data-start="24.34" data-duration="3.27" data-media-start="0.9" data-track-index="9"></video><video class="clip" id="min-phone-v3" muted playsinline src="assets/capture/phone-laugh.mp4" data-start="27.61" data-duration="4.53" data-media-start="3.12" data-track-index="10"></video><video class="clip" id="min-phone-v4" muted playsinline src="assets/capture/phone-speak.mp4" data-start="32.14" data-duration="4.44" data-media-start="4.6" data-track-index="11"></video><video class="clip" id="min-phone-v5" muted playsinline src="assets/capture/phone-breathe.mp4" data-start="36.58" data-duration="4.18" data-media-start="1" data-playback-rate="4" data-track-index="12"></video></div>
+<div class="h" id="min-h" style="left:560px">One minute. Four small things.</div>
+<div class="rail" id="min-rail" style="left:562px;top:150px"><span class="chip" id="min-c1"><i>1</i>Nod</span><span class="chip" id="min-c2"><i>2</i>Laugh</span><span class="chip" id="min-c3"><i>3</i>Speak</span><span class="chip" id="min-c4"><i>4</i>Breathe</span></div>
+<div class="crop" id="min-wide" style="left:560px;top:252px;width:1264px;height:629px"><div class="zoom" id="min-wide-z"><video class="clip" id="min-wide-v" muted playsinline src="assets/capture/stage-settle.mp4" data-start="21.88" data-duration="2.46" data-media-start="1" data-track-index="7" style="left:0px;top:-81.63px;width:1264px;height:711px"></video></div><div class="tag">The big screen at the table shows what the phone reads</div></div>
+<div class="crop" id="min-p1" style="left:560px;top:236px;width:408px;height:660px"><div class="zoom" id="min-p1-z"><video class="clip" id="min-p1-v" muted playsinline src="assets/capture/stage-nod.mp4" data-start="24.34" data-duration="3.27" data-media-start="0.9" data-track-index="13" style="left:-1060.14px;top:-415.09px;width:2207.67px;height:1241.81px"></video></div></div>
+<div class="read" id="min-r1" style="left:1436px;top:276px;width:388px"><div class="q">How big, how quick?</div><div class="num move" id="min-n1">0</div><div class="unit move">° a second</div><div class="lab">at its fastest · 6° deep</div></div>
+<div class="crop" id="min-p2" style="left:560px;top:314px;width:820px;height:505px"><div class="zoom" id="min-p2-z"><video class="clip" id="min-p2-v" muted playsinline src="assets/capture/stage-laugh.mp4" data-start="27.61" data-duration="4.53" data-media-start="5.1" data-track-index="14" style="left:-1829.45px;top:-510.38px;width:2714.48px;height:1526.9px"></video></div></div>
+<div class="read" id="min-r2" style="left:1436px;top:276px;width:388px"><div class="q">How fast does the smile come?</div><div class="num smile" id="min-n2">0.0</div><div class="unit smile">seconds</div><div class="lab">from the laugh to the smile · held 2.3 s</div></div>
+<div class="crop" id="min-p3" style="left:560px;top:314px;width:820px;height:505px"><div class="zoom" id="min-p3-z"><video class="clip" id="min-p3-v" muted playsinline src="assets/capture/stage-speak.mp4" data-start="32.14" data-duration="4.44" data-media-start="5.2" data-track-index="15" style="left:-1829.45px;top:-510.38px;width:2714.48px;height:1526.9px"></video></div></div>
+<div class="read" id="min-r3" style="left:1436px;top:276px;width:388px"><div class="q">How much does your voice rise and fall?</div><div class="num voice" id="min-n3">0.0</div><div class="unit voice">semitones</div><div class="lab">of pitch movement in one sentence</div></div>
+<div class="crop" id="min-p4" style="left:560px;top:314px;width:820px;height:505px"><div class="zoom" id="min-p4-z"><video class="clip" id="min-p4-v" muted playsinline src="assets/capture/stage-breathe.mp4" data-start="36.58" data-duration="4.18" data-media-start="1.6" data-playback-rate="4" data-track-index="16" style="left:-1829.45px;top:-510.38px;width:2714.48px;height:1526.9px"></video></div><div class="tag">4× speed</div></div>
+<div class="read" id="min-r4" style="left:1436px;top:276px;width:388px"><div class="q">How far does your heart rate swing?</div><div class="num heart" id="min-n4">0</div><div class="unit heart">beats a minute</div><div class="lab">lowest to highest, over two slow breaths · 63 at rest</div></div>
+<div class="src">Live product capture · the numbers are the ones the app shows here.</div>
+</div>
+
+<div class="scene" id="s-echo">
+<div class="phone" id="echo-phone" style="left:96px;top:64px;width:386px;height:836px"><video class="clip" id="echo-phone-v1" muted playsinline src="assets/capture/phone-echo.mp4" data-start="40.76" data-duration="10.13" data-media-start="0.2" data-track-index="19"></video></div>
+<div class="h" id="echo-h" style="left:560px">The echo: today, against your own usual.</div>
+<div class="crop" id="echo-fig" style="left:560px;top:266px;width:600px;height:600px"><div class="zoom" id="echo-fig-z"><video class="clip" id="echo-fig-v" muted playsinline src="assets/capture/stage-echo.mp4" data-start="40.76" data-duration="10.13" data-media-start="0.2" data-track-index="18" style="left:-67.29px;top:-128.17px;width:1538.05px;height:865.15px"></video></div></div>
+<div class="q" id="echo-q" style="position:absolute;left:1220px;top:242px">Each reading, against your usual</div>
+<div class="bar" id="echo-b1" style="left:1220px;top:314px;width:604px"><span class="bn">Smile</span><span class="track" style="left:150px;width:344px"><i class="fill smile" id="echo-f1" style="width:344px"></i></span><span class="bv smile" id="echo-v1" style="left:516px">50</span></div>
+<div class="bar" id="echo-b2" style="left:1220px;top:410px;width:604px"><span class="bn">Voice</span><span class="track" style="left:150px;width:344px"><i class="fill voice" id="echo-f2" style="width:344px"></i></span><span class="bv voice" id="echo-v2" style="left:516px">50</span></div>
+<div class="bar" id="echo-b3" style="left:1220px;top:506px;width:604px"><span class="bn">Heart</span><span class="track" style="left:150px;width:344px"><i class="fill heart" id="echo-f3" style="width:344px"></i></span><span class="bv heart" id="echo-v3" style="left:516px">50</span></div>
+<div class="bar" id="echo-b4" style="left:1220px;top:602px;width:604px"><span class="bn">Nod</span><span class="track" style="left:150px;width:344px"><i class="fill move" id="echo-f4" style="width:344px"></i></span><span class="bv move" id="echo-v4" style="left:516px">50</span></div>
+<div class="usual" id="echo-u" style="left:1542px;top:320px;height:370px"><b>50 · your usual</b></div>
+<div class="total" id="echo-t" style="left:1220px;top:736px">Today's echo <b id="echo-tn">50</b><span> of 100</span></div>
+<div class="verdict" id="echo-d" style="left:1220px;top:722px">A measurement,<br>not a diagnosis.</div>
+<div class="src">Live product capture · four channels read on this recording.</div>
+</div>
+
+<div class="scene" id="s-dose">
+<div class="phone" id="dose-phone" style="left:96px;top:64px;width:386px;height:836px"><video class="clip" id="dose-phone-v1" muted playsinline src="assets/capture/phone-intro.mp4" data-start="50.89" data-duration="3.73" data-media-start="0.4" data-track-index="24"></video><video class="clip" id="dose-phone-v2" muted playsinline src="assets/capture/phone-dose.mp4" data-start="54.62" data-duration="4.83" data-media-start="2.42" data-track-index="25"></video><video class="clip" id="dose-phone-v3" muted playsinline src="assets/capture/phone-mini.mp4" data-start="59.45" data-duration="0.27" data-media-start="12.77" data-track-index="26"></video><video class="clip" id="dose-phone-v4" muted playsinline src="assets/capture/phone-after.mp4" data-start="59.72" data-duration="6.94" data-media-start="5.85" data-track-index="27"></video></div>
+<div class="h" id="dose-h1" style="left:560px">Then one small thing to do.</div>
+<div class="h" id="dose-h2" style="left:560px">Then the same measure again.</div>
+<div class="read" id="dose-r0" style="left:560px;top:286px;width:1160px"><div class="q">Today's offer</div><div class="big2">The forest. Birds call from around you.<br>Turn your head to find them.</div><div class="lab">Three minutes, in your earbuds.</div></div>
+<div class="crop" id="dose-turn" style="left:560px;top:236px;width:408px;height:660px"><div class="zoom" id="dose-turn-z"><video class="clip" id="dose-turn-v" muted playsinline src="assets/capture/stage-dose.mp4" data-start="54.62" data-duration="4.83" data-media-start="2.42" data-track-index="21" style="left:-1060.14px;top:-415.09px;width:2207.67px;height:1241.81px"></video></div></div>
+<div class="read" id="dose-r1" style="left:1024px;top:276px;width:800px"><div class="q">Turn your head to the call</div><div class="num move"><span id="dose-n1">0</span><span class="u"> of 5</span></div><div class="unit move">birds found so far</div><div class="lab">The AirPods read which way the head turns.</div></div>
+<div class="crop" id="dose-face" style="left:560px;top:236px;width:587px;height:660px"><div class="zoom" id="dose-face-z"><video class="clip" id="dose-face-v" muted playsinline src="assets/capture/stage-mini.mp4" data-start="59.45" data-duration="0.27" data-media-start="12.77" data-track-index="22" style="left:-49.53px;top:-202.41px;width:2067.21px;height:1162.81px"></video></div></div>
+<div class="read" id="dose-r2" style="left:1203px;top:296px;width:621px"><div class="q">The same laugh, played again</div><div class="big2">Same clock.<br>Smile and heart,<br>20 seconds.</div></div>
+<div class="crop" id="dose-pair" style="left:560px;top:324px;width:820px;height:485px"><div class="zoom" id="dose-pair-z"><video class="clip" id="dose-pair-v" muted playsinline src="assets/capture/stage-after.mp4" data-start="59.72" data-duration="6.94" data-media-start="4.45" data-track-index="23" style="left:-41.82px;top:-317.27px;width:1745.45px;height:981.82px"></video></div></div>
+<div class="read" id="dose-r3" style="left:1436px;top:296px;width:388px"><div class="q">Before and after</div><div class="big2">It keeps count of what followed.</div><div class="lab strong">One try. It can't yet tell what helped.</div></div>
+<div class="src">Live product capture · the same recorded smile both times; the difference here is measurement noise.</div>
+</div>
+
+<div class="scene" id="s-clinic">
+<div class="h" id="cl-h1">The clinic gets numbers. Never video or sound.</div>
+<div class="h" id="cl-h2">Go quiet or run low, and your name moves up.</div>
+<div class="h" id="cl-h3">The latest ping, second by second.</div>
+<div class="h" id="cl-h4">One tap asks them back in.</div>
+<div class="pill" id="cl-sim">Simulated patients</div>
+<div class="crop" id="cl-list" style="left:96px;top:214px;width:1728px;height:690px"><div class="zoom" id="cl-list-z"><video class="clip" id="cl-list-v" muted playsinline src="assets/capture/clinic-list.mp4" data-start="90.8" data-duration="6.31" data-media-start="0.3" data-track-index="29" style="left:-320.91px;top:-88.87px;width:2369.83px;height:1333.03px"></video></div></div>
+<div class="crop" id="cl-chart" style="left:96px;top:216px;width:1728px;height:686px"><div class="zoom" id="cl-chart-z"><video class="clip" id="cl-chart-v" muted playsinline src="assets/capture/clinic-patient.mp4" data-start="98.88" data-duration="3.51" data-media-start="1.2" data-track-index="30" style="left:-338.09px;top:-453.29px;width:2404.17px;height:1352.35px"></video></div></div>
+<div class="crop" id="cl-boost" style="left:96px;top:403px;width:1728px;height:313px"><div class="zoom" id="cl-boost-z"><video class="clip" id="cl-boost-v" muted playsinline src="assets/capture/clinic-booster.mp4" data-start="102.39" data-duration="2.79" data-media-start="0" data-track-index="31" style="left:-327.72px;top:-135.31px;width:2383.45px;height:1340.69px"></video></div></div>
+<div class="src">Who needs a call today · 24 simulated patients, made to show what the list would look like</div>
+</div>
+
+<div class="scene" id="s-proof">
+<div class="h" id="pf-h">What's checked so far.</div>
+<div class="card" id="pf-1"><div class="q">Pulse from the phone's camera, against a finger sensor</div><div class="num huge heart"><span id="pf-n1">0.0</span><span class="u"> beats a minute off</span></div><div class="lab wide">on average, over 16 people sitting still. It shows a number 71.9% of the time, and nothing when the signal is weak.</div><div class="fine">UBFC-rPPG, dataset 2 (Bobbia et al. 2017)</div></div>
+<div class="card" id="pf-2"><div class="q">Smiles, in 72 clips of 62 people</div><div class="two"><div><div class="num huge smile"><span id="pf-n2">0</span><span class="u"> of 100</span></div><div class="lab wide">clear smiles found</div></div><div><div class="num huge ember"><span id="pf-n3">0</span><span class="u"> of 100</span></div><div class="lab wide">neutral faces wrongly called a smile</div></div></div><div class="fine">Stock video, labelled by eye</div></div>
+<div class="card" id="pf-3"><div class="q">Patients who have used it</div><div class="num huge" id="pf-n4">0</div><div class="lab wide strong" id="pf-next">Next: one clinic, 20 patients, next to the questionnaire.</div><div class="fine">Not tested yet: whether these readings follow depression. The AirPods' head and heart readings are not checked against a reference.</div></div>
+<div class="src">web/public/validation.json · the app shows the full table</div>
+</div>
+
+<div class="scene" id="s-close">
+<div class="petals" id="end-p"><i class="smile" style="transform:rotate(0deg)"></i><i class="voice" style="transform:rotate(90deg)"></i><i class="heart" style="transform:rotate(180deg)"></i><i class="move" style="transform:rotate(270deg)"></i></div>
+<div class="wordmark end" id="end-w">Vire</div>
+<div class="endline" id="end-1">One minute a day, so your clinic knows when to call.</div>
+<div class="endmeta" id="end-2">Junction 2026 · Beyond the Clinic · table A157</div>
+</div>
+
+<div id="caps" data-track-kind="captions">
+<div class="cap" id="cap-0"><span>This phone just played a</span></div>
+<div class="cap" id="cap-1"><span>laugh.</span></div>
+<div class="cap" id="cap-2"><span>Then it timed the smile that</span></div>
+<div class="cap" id="cap-3"><span>came back.</span></div>
+<div class="cap" id="cap-4"><span>This is Vire.</span></div>
+<div class="cap" id="cap-5"><span>TMS is magnetic brain</span></div>
+<div class="cap" id="cap-6"><span>stimulation for depression:</span></div>
+<div class="cap" id="cap-7"><span>20 to 30 clinic visits.</span></div>
+<div class="cap" id="cap-8"><span>Vire checks you for one minute</span></div>
+<div class="cap" id="cap-9"><span>a day at home.</span></div>
+<div class="cap" id="cap-10"><span>Within a year,</span></div>
+<div class="cap" id="cap-11"><span>TMS stops working for about</span></div>
+<div class="cap" id="cap-12"><span>half the people it helped.</span></div>
+<div class="cap" id="cap-13"><span>Vire shows the clinic who to</span></div>
+<div class="cap" id="cap-14"><span>call back.</span></div>
+<div class="cap" id="cap-15"><span>The minute is four small</span></div>
+<div class="cap" id="cap-16"><span>things.</span></div>
+<div class="cap" id="cap-17"><span>A nod:</span></div>
+<div class="cap" id="cap-18"><span>how big, how quick?</span></div>
+<div class="cap" id="cap-19"><span>The laugh:</span></div>
+<div class="cap" id="cap-20"><span>how fast does the smile come,</span></div>
+<div class="cap" id="cap-21"><span>and how long does it stay?</span></div>
+<div class="cap" id="cap-22"><span>One sentence out loud:</span></div>
+<div class="cap" id="cap-23"><span>how much does your voice rise</span></div>
+<div class="cap" id="cap-24"><span>and fall?</span></div>
+<div class="cap" id="cap-25"><span>Two slow breaths:</span></div>
+<div class="cap" id="cap-26"><span>how far does your heart rate</span></div>
+<div class="cap" id="cap-27"><span>swing?</span></div>
+<div class="cap" id="cap-28"><span>Then the echo.</span></div>
+<div class="cap" id="cap-29"><span>Each reading is scored against</span></div>
+<div class="cap" id="cap-30"><span>your own usual,</span></div>
+<div class="cap" id="cap-31"><span>so 50 is a normal day.</span></div>
+<div class="cap" id="cap-32"><span>It's a measurement,</span></div>
+<div class="cap" id="cap-33"><span>not a diagnosis.</span></div>
+<div class="cap" id="cap-34"><span>After the echo,</span></div>
+<div class="cap" id="cap-35"><span>Vire offers one small thing.</span></div>
+<div class="cap" id="cap-36"><span>Here, a forest in your ears:</span></div>
+<div class="cap" id="cap-37"><span>turn your head to find the</span></div>
+<div class="cap" id="cap-38"><span>birds.</span></div>
+<div class="cap" id="cap-39"><span>Then it plays the laugh again</span></div>
+<div class="cap" id="cap-40"><span>and measures again.</span></div>
+<div class="cap" id="cap-41"><span>It keeps count of what</span></div>
+<div class="cap" id="cap-42"><span>followed.</span></div>
+<div class="cap" id="cap-43"><span>It can't yet tell what helped.</span></div>
+<div class="cap" id="cap-44"><span>What's checked so far:</span></div>
+<div class="cap" id="cap-45"><span>the camera reads pulse about</span></div>
+<div class="cap" id="cap-46"><span>one beat a minute off a</span></div>
+<div class="cap" id="cap-47"><span>finger sensor, on 16 people</span></div>
+<div class="cap" id="cap-48"><span>sitting still.</span></div>
+<div class="cap" id="cap-49"><span>It finds 97 of 100 clear</span></div>
+<div class="cap" id="cap-50"><span>smiles, and wrongly sees a</span></div>
+<div class="cap" id="cap-51"><span>smile in 16 of 100 neutral</span></div>
+<div class="cap" id="cap-52"><span>faces.</span></div>
+<div class="cap" id="cap-53"><span>No patient has used it yet.</span></div>
+<div class="cap" id="cap-54"><span>Next:</span></div>
+<div class="cap" id="cap-55"><span>one clinic, 20 patients,</span></div>
+<div class="cap" id="cap-56"><span>next to the questionnaire.</span></div>
+<div class="cap" id="cap-57"><span>The clinic gets numbers,</span></div>
+<div class="cap" id="cap-58"><span>never video or sound.</span></div>
+<div class="cap" id="cap-59"><span>Three low days in a row,</span></div>
+<div class="cap" id="cap-60"><span>or you go quiet,</span></div>
+<div class="cap" id="cap-61"><span>and your name moves up.</span></div>
+<div class="cap" id="cap-62"><span>These patients are simulated.</span></div>
+<div class="cap" id="cap-63"><span>This is what slipping would</span></div>
+<div class="cap" id="cap-64"><span>look like.</span></div>
+<div class="cap" id="cap-65"><span>One tap asks them back in.</span></div>
+<div class="cap" id="cap-66"><span>Vire.</span></div>
+<div class="cap" id="cap-67"><span>One minute a day,</span></div>
+<div class="cap" id="cap-68"><span>so your clinic knows when to</span></div>
+<div class="cap" id="cap-69"><span>call.</span></div>
+</div>
+
+<audio id="snd-hook-a" src="assets/capture/snd-laugh.wav" data-start="0" data-duration="0.4" data-media-start="1.27" data-volume="0.9" data-fade-out="0.3" data-track-index="3"></audio>
+<audio id="snd-hook-b" src="assets/capture/snd-laugh.wav" data-start="0.1" data-duration="4.44" data-media-start="1.37" data-volume="0.18" data-fade-in="0.3" data-fade-out="0.4" data-track-index="4"></audio>
+<audio id="snd-min-laugh" src="assets/capture/snd-laugh.wav" data-start="27.61" data-duration="4.53" data-media-start="3.12" data-volume="0.2" data-fade-in="0.2" data-fade-out="0.4" data-track-index="17"></audio>
+<audio id="snd-echo" src="assets/capture/snd-echo.wav" data-start="40.76" data-duration="5" data-media-start="0.2" data-volume="0.5" data-fade-out="0.6" data-track-index="20"></audio>
+<audio id="snd-dose" src="assets/capture/snd-dose.wav" data-start="54.62" data-duration="4.83" data-media-start="2.42" data-volume="0.5" data-fade-in="0.4" data-fade-out="0.4" data-track-index="28"></audio>
+<audio id="vo-h1" src="assets/vo/h1.mp3" data-start="0.2" data-duration="4.49" data-volume="1" data-track-index="32"></audio>
+<audio id="vo-h2" src="assets/vo/h2.mp3" data-start="4.74" data-duration="9.87" data-volume="1" data-track-index="33"></audio>
+<audio id="vo-h3" src="assets/vo/h3.mp3" data-start="14.92" data-duration="6.77" data-volume="1" data-track-index="34"></audio>
+<audio id="vo-m1" src="assets/vo/m1.mp3" data-start="22.18" data-duration="5.2" data-volume="1" data-track-index="35"></audio>
+<audio id="vo-m2" src="assets/vo/m2.mp3" data-start="27.83" data-duration="4.08" data-volume="1" data-track-index="36"></audio>
+<audio id="vo-m3" src="assets/vo/m3.mp3" data-start="32.36" data-duration="4" data-volume="1" data-track-index="37"></audio>
+<audio id="vo-m4" src="assets/vo/m4.mp3" data-start="36.8" data-duration="3.66" data-volume="1" data-track-index="38"></audio>
+<audio id="vo-e1" src="assets/vo/e1.mp3" data-start="41.36" data-duration="6.17" data-volume="1" data-track-index="39"></audio>
+<audio id="vo-e2" src="assets/vo/e2.mp3" data-start="47.88" data-duration="2.77" data-volume="1" data-track-index="40"></audio>
+<audio id="vo-d1" src="assets/vo/d1.mp3" data-start="51.24" data-duration="7.6" data-volume="1" data-track-index="41"></audio>
+<audio id="vo-d2" src="assets/vo/d2.mp3" data-start="59.75" data-duration="6.71" data-volume="1" data-track-index="42"></audio>
+<audio id="vo-p1" src="assets/vo/p1.mp3" data-start="67.16" data-duration="7.89" data-volume="1" data-track-index="43"></audio>
+<audio id="vo-p2" src="assets/vo/p2.mp3" data-start="75.45" data-duration="7.97" data-volume="1" data-track-index="44"></audio>
+<audio id="vo-p3" src="assets/vo/p3.mp3" data-start="83.82" data-duration="6.58" data-volume="1" data-track-index="45"></audio>
+<audio id="vo-c1" src="assets/vo/c1.mp3" data-start="91.2" data-duration="3.16" data-volume="1" data-track-index="46"></audio>
+<audio id="vo-c2" src="assets/vo/c2.mp3" data-start="94.71" data-duration="4.02" data-volume="1" data-track-index="47"></audio>
+<audio id="vo-c3" src="assets/vo/c3.mp3" data-start="99.13" data-duration="5.8" data-volume="1" data-track-index="48"></audio>
+<audio id="vo-z1" src="assets/vo/z1.mp3" data-start="105.53" data-duration="3.66" data-volume="1" data-track-index="49"></audio>
+<audio id="music" src="assets/vire-score.mp3" data-start="0" data-duration="111.59" data-volume="0.13" data-fade-in="0.6" data-fade-out="2.2" data-track-index="50"></audio>
+</div>
+<script>
+window.__timelines = window.__timelines || {}
+const tl = gsap.timeline({ paused: true })
+tl.set("#s-hook",{autoAlpha:0},4.54)
+tl.fromTo("#hook-h",{opacity:0,x:0,y:24,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.6,ease:"expo.out"},0.1)
+tl.fromTo("#hook-h2",{opacity:0},{opacity:1,duration:0.5,ease:"power2.out"},1.97)
+tl.fromTo("#hook-read",{opacity:0,x:-24,y:0,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.5,ease:"expo.out"},0.15)
+{const el=document.querySelector("#hook-n"),o={v:0};tl.to(o,{v:2.8,duration:2.8,ease:"none",onUpdate:()=>{el.textContent=""+o.v.toFixed(1)+" s"}},0.35)}
+tl.fromTo("#hook-n",{scale:1},{scale:1.12,duration:0.16,ease:"power2.out",yoyo:true,repeat:1,transformOrigin:"0% 60%",immediateRender:false},3.15)
+tl.fromTo("#hook-l",{opacity:0},{opacity:1,duration:0.4,ease:"power2.out"},3.25)
+tl.fromTo("#hook-note",{opacity:0,x:0,y:16,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.7,ease:"expo.out"},2.72)
+tl.fromTo("#hook-face-z",{scale:1},{scale:1.05,duration:4.54,ease:"none",transformOrigin:"50% 50%"},0)
+tl.set("#s-name",{autoAlpha:1},4.54)
+tl.set("#s-name",{autoAlpha:0},14.72)
+tl.fromTo("#name-phone",{opacity:0,x:0,y:60,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.9,ease:"expo.out"},4.54)
+tl.fromTo("#name-w",{opacity:0,x:0,y:40,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.8,ease:"expo.out"},4.64)
+tl.fromTo("#name-1",{opacity:0,x:0,y:26,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.7,ease:"expo.out"},5.87)
+tl.fromTo("#name-2",{opacity:0,x:0,y:26,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.7,ease:"expo.out"},5.08)
+tl.fromTo("#name-3",{opacity:0,x:0,y:16,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.7,ease:"expo.out"},6.13)
+tl.set("#s-why",{autoAlpha:1},14.72)
+tl.set("#s-why",{autoAlpha:0},21.88)
+tl.fromTo("#why-h",{opacity:0,x:0,y:24,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.6,ease:"expo.out"},14.77)
+tl.fromTo("#why-n",{opacity:0,x:0,y:50,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.8,ease:"expo.out"},14.87)
+{const el=document.querySelector("#why-n"),o={v:0};tl.to(o,{v:46.3,duration:1.5,ease:"power2.out",onUpdate:()=>{el.textContent=""+o.v.toFixed(1)+"%"}},14.92)}
+tl.fromTo("#why-l",{opacity:0,x:0,y:20,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.7,ease:"expo.out"},15.42)
+tl.fromTo("#why-t",{opacity:0,x:40,y:0,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.7,ease:"expo.out"},18.81)
+tl.fromTo("#why-list",{opacity:0,x:60,y:0,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.8,ease:"expo.out"},18.96)
+tl.fromTo("#why-sim",{opacity:0},{opacity:1,duration:0.4,ease:"power2.out"},19.36)
+tl.fromTo("#why-list-z",{scale:1},{scale:1.05,duration:3.02,ease:"none",transformOrigin:"0% 0%"},18.86)
+tl.set("#min-wide",{autoAlpha:0},24.34)
+tl.fromTo("#min-p1",{autoAlpha:0,x:50,y:0},{autoAlpha:1,x:0,y:0,duration:0.5,ease:"expo.out"},24.34)
+tl.fromTo("#min-r1",{autoAlpha:0,x:0,y:24},{autoAlpha:1,x:0,y:0,duration:0.5,ease:"expo.out"},24.59)
+{const el=document.querySelector("#min-n1"),o={v:0};tl.to(o,{v:34,duration:1,ease:"power2.out",onUpdate:()=>{el.textContent=""+o.v.toFixed(0)+""}},25.48)}
+tl.to("#min-c1",{color:"#14110d",backgroundColor:"var(--move)",borderColor:"var(--move)",duration:0.25},24.39)
+tl.to("#min-c1",{color:"#a79f90",backgroundColor:"rgba(0,0,0,0)",borderColor:"#3a3229",duration:0.25},27.61)
+tl.fromTo("#min-p1-z",{scale:1},{scale:1.04,duration:3.27,ease:"none",transformOrigin:"50% 50%"},24.34)
+tl.set("#min-p1,#min-r1",{autoAlpha:0},27.61)
+tl.fromTo("#min-p2",{autoAlpha:0,x:50,y:0},{autoAlpha:1,x:0,y:0,duration:0.5,ease:"expo.out"},27.61)
+tl.fromTo("#min-r2",{autoAlpha:0,x:0,y:24},{autoAlpha:1,x:0,y:0,duration:0.5,ease:"expo.out"},27.86)
+{const el=document.querySelector("#min-n2"),o={v:0};tl.to(o,{v:2.8,duration:1,ease:"power2.out",onUpdate:()=>{el.textContent=""+o.v.toFixed(1)+""}},30.01)}
+tl.to("#min-c2",{color:"#14110d",backgroundColor:"var(--smile)",borderColor:"var(--smile)",duration:0.25},27.66)
+tl.to("#min-c2",{color:"#a79f90",backgroundColor:"rgba(0,0,0,0)",borderColor:"#3a3229",duration:0.25},32.14)
+tl.fromTo("#min-p2-z",{scale:1},{scale:1.04,duration:4.53,ease:"none",transformOrigin:"50% 50%"},27.61)
+tl.set("#min-p2,#min-r2",{autoAlpha:0},32.14)
+tl.fromTo("#min-p3",{autoAlpha:0,x:50,y:0},{autoAlpha:1,x:0,y:0,duration:0.5,ease:"expo.out"},32.14)
+tl.fromTo("#min-r3",{autoAlpha:0,x:0,y:24},{autoAlpha:1,x:0,y:0,duration:0.5,ease:"expo.out"},32.39)
+{const el=document.querySelector("#min-n3"),o={v:0};tl.to(o,{v:3.669,duration:1,ease:"power2.out",onUpdate:()=>{el.textContent=""+o.v.toFixed(1)+""}},34.45)}
+tl.to("#min-c3",{color:"#14110d",backgroundColor:"var(--voice)",borderColor:"var(--voice)",duration:0.25},32.19)
+tl.to("#min-c3",{color:"#a79f90",backgroundColor:"rgba(0,0,0,0)",borderColor:"#3a3229",duration:0.25},36.58)
+tl.fromTo("#min-p3-z",{scale:1},{scale:1.04,duration:4.44,ease:"none",transformOrigin:"50% 50%"},32.14)
+tl.set("#min-p3,#min-r3",{autoAlpha:0},36.58)
+tl.fromTo("#min-p4",{autoAlpha:0,x:50,y:0},{autoAlpha:1,x:0,y:0,duration:0.5,ease:"expo.out"},36.58)
+tl.fromTo("#min-r4",{autoAlpha:0,x:0,y:24},{autoAlpha:1,x:0,y:0,duration:0.5,ease:"expo.out"},36.83)
+{const el=document.querySelector("#min-n4"),o={v:0};tl.to(o,{v:9,duration:1,ease:"power2.out",onUpdate:()=>{el.textContent=""+o.v.toFixed(0)+""}},38.56)}
+tl.to("#min-c4",{color:"#14110d",backgroundColor:"var(--heart)",borderColor:"var(--heart)",duration:0.25},36.63)
+tl.fromTo("#min-p4-z",{scale:1},{scale:1.04,duration:4.18,ease:"none",transformOrigin:"50% 50%"},36.58)
+tl.set("#s-min",{autoAlpha:1},21.88)
+tl.set("#s-min",{autoAlpha:0},40.76)
+tl.fromTo("#min-phone",{opacity:0,x:0,y:50,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.8,ease:"expo.out"},21.88)
+tl.fromTo("#min-h",{opacity:0,x:0,y:24,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.6,ease:"expo.out"},21.93)
+tl.fromTo("#min-rail .chip",{opacity:0,x:0,y:14,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.5,ease:"expo.out",stagger:0.07},22.13)
+tl.fromTo("#min-wide",{opacity:0,x:50,y:0,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.7,ease:"expo.out"},21.93)
+tl.fromTo("#min-wide-z",{scale:1},{scale:1.03,duration:2.46,ease:"none",transformOrigin:"50% 50%"},21.88)
+tl.set("#s-echo",{autoAlpha:1},40.76)
+tl.set("#s-echo",{autoAlpha:0},50.89)
+tl.fromTo("#echo-phone",{opacity:0,x:0,y:50,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.8,ease:"expo.out"},40.76)
+tl.fromTo("#echo-h",{opacity:0,x:0,y:24,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.6,ease:"expo.out"},40.81)
+tl.fromTo("#echo-fig",{opacity:0,x:50,y:0,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.7,ease:"expo.out"},40.81)
+tl.fromTo("#echo-fig-z",{scale:1},{scale:1.05,duration:10.13,ease:"none",transformOrigin:"50% 50%"},40.76)
+tl.fromTo("#echo-q",{opacity:0,x:0,y:16,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.7,ease:"expo.out"},42.26)
+tl.fromTo(".bar",{opacity:0,x:30,y:0,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.6,ease:"expo.out",stagger:0.09},42.36)
+tl.fromTo("#echo-u",{opacity:0},{opacity:1,duration:0.5,ease:"power2.out"},43.73)
+tl.fromTo("#echo-f1",{scaleX:0.5},{scaleX:0.46,duration:1.1,ease:"power3.out",transformOrigin:"0% 50%"},43.69)
+{const el=document.querySelector("#echo-v1"),o={v:50};tl.to(o,{v:46,duration:1.1,ease:"power2.out",onUpdate:()=>{el.textContent=""+o.v.toFixed(0)+""}},43.69)}
+tl.fromTo("#echo-f2",{scaleX:0.5},{scaleX:0.53,duration:1.1,ease:"power3.out",transformOrigin:"0% 50%"},43.85)
+{const el=document.querySelector("#echo-v2"),o={v:50};tl.to(o,{v:53,duration:1.1,ease:"power2.out",onUpdate:()=>{el.textContent=""+o.v.toFixed(0)+""}},43.85)}
+tl.fromTo("#echo-f3",{scaleX:0.5},{scaleX:0.41,duration:1.1,ease:"power3.out",transformOrigin:"0% 50%"},44.01)
+{const el=document.querySelector("#echo-v3"),o={v:50};tl.to(o,{v:41,duration:1.1,ease:"power2.out",onUpdate:()=>{el.textContent=""+o.v.toFixed(0)+""}},44.01)}
+tl.fromTo("#echo-f4",{scaleX:0.5},{scaleX:0,duration:1.1,ease:"power3.out",transformOrigin:"0% 50%"},44.17)
+{const el=document.querySelector("#echo-v4"),o={v:50};tl.to(o,{v:0,duration:1.1,ease:"power2.out",onUpdate:()=>{el.textContent=""+o.v.toFixed(0)+""}},44.17)}
+tl.fromTo("#echo-t",{opacity:0,x:0,y:18,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.7,ease:"expo.out"},45.22)
+{const el=document.querySelector("#echo-tn"),o={v:50};tl.to(o,{v:35,duration:0.9,ease:"power2.out",onUpdate:()=>{el.textContent=""+o.v.toFixed(0)+""}},45.42)}
+tl.to("#echo-t",{opacity:0,y:-14,duration:0.28,ease:"power2.in"},47.53)
+tl.fromTo("#echo-d",{opacity:0,x:0,y:22,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.6,ease:"expo.out"},47.83)
+tl.set("#s-dose",{autoAlpha:1},50.89)
+tl.set("#s-dose",{autoAlpha:0},66.66)
+tl.fromTo("#dose-phone",{opacity:0,x:0,y:50,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.8,ease:"expo.out"},50.89)
+tl.fromTo("#dose-h1",{opacity:0,x:0,y:24,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.6,ease:"expo.out"},50.94)
+tl.fromTo("#dose-r0",{opacity:0,x:0,y:22,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.7,ease:"expo.out"},51.19)
+tl.set("#dose-r0",{autoAlpha:0},54.62)
+tl.fromTo("#dose-turn",{autoAlpha:0,x:50,y:0},{autoAlpha:1,x:0,y:0,duration:0.5,ease:"expo.out"},54.62)
+tl.fromTo("#dose-r1",{autoAlpha:0,x:0,y:24},{autoAlpha:1,x:0,y:0,duration:0.5,ease:"expo.out"},54.92)
+tl.set("#dose-turn,#dose-r1,#dose-h1",{autoAlpha:0},59.45)
+tl.fromTo("#dose-h2",{autoAlpha:0,x:0,y:24},{autoAlpha:1,x:0,y:0,duration:0.6,ease:"expo.out"},59.45)
+tl.fromTo("#dose-face",{autoAlpha:0,x:50,y:0},{autoAlpha:1,x:0,y:0,duration:0.5,ease:"expo.out"},59.45)
+tl.fromTo("#dose-r2",{autoAlpha:0,x:0,y:24},{autoAlpha:1,x:0,y:0,duration:0.5,ease:"expo.out"},59.7)
+tl.set("#dose-face,#dose-r2",{autoAlpha:0},59.72)
+tl.fromTo("#dose-pair",{autoAlpha:0,x:50,y:0},{autoAlpha:1,x:0,y:0,duration:0.5,ease:"expo.out"},59.72)
+tl.fromTo("#dose-r3",{autoAlpha:0,x:0,y:24},{autoAlpha:1,x:0,y:0,duration:0.5,ease:"expo.out"},59.97)
+tl.fromTo("#dose-turn-z",{scale:1},{scale:1.05,duration:4.83,ease:"none",transformOrigin:"50% 50%"},54.62)
+tl.fromTo("#dose-face-z",{scale:1},{scale:1.05,duration:0.27,ease:"none",transformOrigin:"50% 50%"},59.45)
+tl.fromTo("#dose-pair-z",{scale:1},{scale:1.04,duration:6.94,ease:"none",transformOrigin:"50% 50%"},59.72)
+tl.set("#s-clinic",{autoAlpha:1},90.8)
+tl.set("#s-clinic",{autoAlpha:0},105.18)
+tl.fromTo("#cl-h1",{opacity:0,x:0,y:24,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.6,ease:"expo.out"},90.85)
+tl.fromTo("#cl-list",{opacity:0,x:0,y:40,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.8,ease:"expo.out"},90.8)
+tl.fromTo("#cl-sim",{opacity:0},{opacity:1,duration:0.4,ease:"power2.out"},91.2)
+tl.set("#cl-h1",{autoAlpha:0},94.46)
+tl.fromTo("#cl-h2",{autoAlpha:0,x:0,y:24},{autoAlpha:1,x:0,y:0,duration:0.6,ease:"expo.out"},94.46)
+tl.fromTo("#cl-list-z",{scale:1},{scale:1.32,duration:1.4,ease:"power3.inOut",transformOrigin:"1.43% 53.24%"},94.46)
+tl.set("#cl-list,#cl-h2",{autoAlpha:0},98.88)
+tl.fromTo("#cl-chart",{autoAlpha:0,x:0,y:0},{autoAlpha:1,x:0,y:0,duration:0.35,ease:"expo.out"},98.88)
+tl.fromTo("#cl-h3",{autoAlpha:0,x:0,y:24},{autoAlpha:1,x:0,y:0,duration:0.6,ease:"expo.out"},98.88)
+tl.fromTo("#cl-sim",{scale:1},{scale:1.18,duration:0.16,ease:"power2.out",yoyo:true,repeat:1,transformOrigin:"100% 50%",immediateRender:false},100.02)
+tl.fromTo("#cl-chart-z",{scale:1},{scale:1.04,duration:3.51,ease:"none",transformOrigin:"50% 50%"},98.88)
+tl.set("#cl-chart,#cl-h3",{autoAlpha:0},102.39)
+tl.fromTo("#cl-boost",{autoAlpha:0,x:0,y:0},{autoAlpha:1,x:0,y:0,duration:0.3,ease:"expo.out"},102.39)
+tl.fromTo("#cl-h4",{autoAlpha:0,x:0,y:24},{autoAlpha:1,x:0,y:0,duration:0.6,ease:"expo.out"},102.39)
+tl.fromTo("#cl-boost-z",{scale:1},{scale:1.5,duration:1.2,ease:"power3.inOut",transformOrigin:"89.87% 15.87%"},102.49)
+tl.set("#s-proof",{autoAlpha:1},66.66)
+tl.set("#s-proof",{autoAlpha:0},90.8)
+tl.fromTo("#pf-h",{opacity:0,x:0,y:24,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.6,ease:"expo.out"},66.71)
+tl.fromTo("#pf-1",{opacity:0,x:0,y:40,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.8,ease:"expo.out"},66.86)
+{const el=document.querySelector("#pf-n1"),o={v:0};tl.to(o,{v:1.2,duration:1.2,ease:"power2.out",onUpdate:()=>{el.textContent=""+o.v.toFixed(1)+""}},69.83)}
+tl.to("#pf-1",{autoAlpha:0,x:-60,duration:0.3,ease:"power2.in"},74.85)
+tl.fromTo("#pf-2",{autoAlpha:0,x:80,y:0},{autoAlpha:1,x:0,y:0,duration:0.7,ease:"expo.out"},75.15)
+{const el=document.querySelector("#pf-n2"),o={v:0};tl.to(o,{v:97,duration:1,ease:"power2.out",onUpdate:()=>{el.textContent=""+o.v.toFixed(0)+""}},75.94)}
+{const el=document.querySelector("#pf-n3"),o={v:0};tl.to(o,{v:16,duration:1,ease:"power2.out",onUpdate:()=>{el.textContent=""+o.v.toFixed(0)+""}},80.33)}
+tl.to("#pf-2",{autoAlpha:0,x:-60,duration:0.3,ease:"power2.in"},83.22)
+tl.fromTo("#pf-3",{autoAlpha:0,x:80,y:0},{autoAlpha:1,x:0,y:0,duration:0.7,ease:"expo.out"},83.52)
+tl.fromTo("#pf-next",{opacity:0,x:0,y:22,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.7,ease:"expo.out"},85.69)
+tl.set("#s-close",{autoAlpha:1},105.18)
+tl.fromTo("#end-p",{opacity:0,x:0,y:0,scale:0.5},{opacity:1,x:0,y:0,scale:1,duration:1,ease:"expo.out"},105.28)
+tl.fromTo("#end-w",{opacity:0,x:0,y:40,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.9,ease:"expo.out"},105.28)
+tl.fromTo("#end-1",{opacity:0,x:0,y:24,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.7,ease:"expo.out"},106.14)
+tl.fromTo("#end-2",{opacity:0,x:0,y:14,scale:1},{opacity:1,x:0,y:0,scale:1,duration:0.7,ease:"expo.out"},108.79)
+tl.to("#s-close",{opacity:0,duration:0.7,ease:"power2.in"},110.84)
+tl.fromTo("#s-name",{opacity:0},{opacity:1,duration:0.25,ease:"power1.out"},4.54)
+tl.fromTo("#s-why",{opacity:0},{opacity:1,duration:0.25,ease:"power1.out"},14.72)
+tl.fromTo("#s-min",{opacity:0},{opacity:1,duration:0.25,ease:"power1.out"},21.88)
+tl.fromTo("#s-echo",{opacity:0},{opacity:1,duration:0.25,ease:"power1.out"},40.76)
+tl.fromTo("#s-dose",{opacity:0},{opacity:1,duration:0.25,ease:"power1.out"},50.89)
+tl.fromTo("#s-clinic",{opacity:0},{opacity:1,duration:0.25,ease:"power1.out"},90.8)
+tl.fromTo("#s-proof",{opacity:0},{opacity:1,duration:0.25,ease:"power1.out"},66.66)
+tl.fromTo("#s-close",{opacity:0},{opacity:1,duration:0.25,ease:"power1.out"},105.18)
+tl.set("#cap-0",{autoAlpha:1},0.14)
+tl.set("#cap-0",{autoAlpha:0},1.38)
+tl.set("#cap-1",{autoAlpha:1},1.38)
+tl.set("#cap-1",{autoAlpha:0},2.16)
+tl.set("#cap-2",{autoAlpha:1},2.16)
+tl.set("#cap-2",{autoAlpha:0},3.6)
+tl.set("#cap-3",{autoAlpha:1},3.6)
+tl.set("#cap-3",{autoAlpha:0},4.96)
+tl.set("#cap-4",{autoAlpha:1},4.68)
+tl.set("#cap-4",{autoAlpha:0},5.96)
+tl.set("#cap-5",{autoAlpha:1},5.96)
+tl.set("#cap-5",{autoAlpha:0},7.59)
+tl.set("#cap-6",{autoAlpha:1},7.59)
+tl.set("#cap-6",{autoAlpha:0},9.4)
+tl.set("#cap-7",{autoAlpha:1},9.4)
+tl.set("#cap-7",{autoAlpha:0},11.65)
+tl.set("#cap-8",{autoAlpha:1},11.65)
+tl.set("#cap-8",{autoAlpha:0},13.43)
+tl.set("#cap-9",{autoAlpha:1},13.43)
+tl.set("#cap-9",{autoAlpha:0},14.89)
+tl.set("#cap-10",{autoAlpha:1},14.86)
+tl.set("#cap-10",{autoAlpha:0},15.64)
+tl.set("#cap-11",{autoAlpha:1},15.64)
+tl.set("#cap-11",{autoAlpha:0},17.38)
+tl.set("#cap-12",{autoAlpha:1},17.38)
+tl.set("#cap-12",{autoAlpha:0},19.01)
+tl.set("#cap-13",{autoAlpha:1},19.01)
+tl.set("#cap-13",{autoAlpha:0},20.68)
+tl.set("#cap-14",{autoAlpha:1},20.68)
+tl.set("#cap-14",{autoAlpha:0},21.95)
+tl.set("#cap-15",{autoAlpha:1},22.12)
+tl.set("#cap-15",{autoAlpha:0},23.72)
+tl.set("#cap-16",{autoAlpha:1},23.72)
+tl.set("#cap-16",{autoAlpha:0},24.48)
+tl.set("#cap-17",{autoAlpha:1},24.48)
+tl.set("#cap-17",{autoAlpha:0},25.34)
+tl.set("#cap-18",{autoAlpha:1},25.34)
+tl.set("#cap-18",{autoAlpha:0},27.64)
+tl.set("#cap-19",{autoAlpha:1},27.77)
+tl.set("#cap-19",{autoAlpha:0},28.65)
+tl.set("#cap-20",{autoAlpha:1},28.65)
+tl.set("#cap-20",{autoAlpha:0},30.24)
+tl.set("#cap-21",{autoAlpha:1},30.24)
+tl.set("#cap-21",{autoAlpha:0},32.17)
+tl.set("#cap-22",{autoAlpha:1},32.3)
+tl.set("#cap-22",{autoAlpha:0},33.95)
+tl.set("#cap-23",{autoAlpha:1},33.95)
+tl.set("#cap-23",{autoAlpha:0},35.32)
+tl.set("#cap-24",{autoAlpha:1},35.32)
+tl.set("#cap-24",{autoAlpha:0},36.61)
+tl.set("#cap-25",{autoAlpha:1},36.74)
+tl.set("#cap-25",{autoAlpha:0},38.32)
+tl.set("#cap-26",{autoAlpha:1},38.32)
+tl.set("#cap-26",{autoAlpha:0},39.58)
+tl.set("#cap-27",{autoAlpha:1},39.58)
+tl.set("#cap-27",{autoAlpha:0},40.72)
+tl.set("#cap-28",{autoAlpha:1},41.3)
+tl.set("#cap-28",{autoAlpha:0},42.6)
+tl.set("#cap-29",{autoAlpha:1},42.6)
+tl.set("#cap-29",{autoAlpha:0},44.12)
+tl.set("#cap-30",{autoAlpha:1},44.12)
+tl.set("#cap-30",{autoAlpha:0},45.36)
+tl.set("#cap-31",{autoAlpha:1},45.36)
+tl.set("#cap-31",{autoAlpha:0},47.79)
+tl.set("#cap-32",{autoAlpha:1},47.82)
+tl.set("#cap-32",{autoAlpha:0},48.96)
+tl.set("#cap-33",{autoAlpha:1},48.96)
+tl.set("#cap-33",{autoAlpha:0},50.92)
+tl.set("#cap-34",{autoAlpha:1},51.18)
+tl.set("#cap-34",{autoAlpha:0},52.17)
+tl.set("#cap-35",{autoAlpha:1},52.17)
+tl.set("#cap-35",{autoAlpha:0},54.76)
+tl.set("#cap-36",{autoAlpha:1},54.76)
+tl.set("#cap-36",{autoAlpha:0},56.8)
+tl.set("#cap-37",{autoAlpha:1},56.8)
+tl.set("#cap-37",{autoAlpha:0},57.95)
+tl.set("#cap-38",{autoAlpha:1},57.95)
+tl.set("#cap-38",{autoAlpha:0},59.11)
+tl.set("#cap-39",{autoAlpha:1},59.69)
+tl.set("#cap-39",{autoAlpha:0},61.26)
+tl.set("#cap-40",{autoAlpha:1},61.26)
+tl.set("#cap-40",{autoAlpha:0},62.65)
+tl.set("#cap-41",{autoAlpha:1},62.65)
+tl.set("#cap-41",{autoAlpha:0},63.72)
+tl.set("#cap-42",{autoAlpha:1},63.72)
+tl.set("#cap-42",{autoAlpha:0},64.45)
+tl.set("#cap-43",{autoAlpha:1},64.45)
+tl.set("#cap-43",{autoAlpha:0},66.74)
+tl.set("#cap-44",{autoAlpha:1},67.1)
+tl.set("#cap-44",{autoAlpha:0},68.61)
+tl.set("#cap-45",{autoAlpha:1},68.61)
+tl.set("#cap-45",{autoAlpha:0},70.34)
+tl.set("#cap-46",{autoAlpha:1},70.34)
+tl.set("#cap-46",{autoAlpha:0},71.6)
+tl.set("#cap-47",{autoAlpha:1},71.6)
+tl.set("#cap-47",{autoAlpha:0},73.82)
+tl.set("#cap-48",{autoAlpha:1},73.82)
+tl.set("#cap-48",{autoAlpha:0},75.31)
+tl.set("#cap-49",{autoAlpha:1},75.39)
+tl.set("#cap-49",{autoAlpha:0},77.98)
+tl.set("#cap-50",{autoAlpha:1},77.98)
+tl.set("#cap-50",{autoAlpha:0},79.92)
+tl.set("#cap-51",{autoAlpha:1},79.92)
+tl.set("#cap-51",{autoAlpha:0},82.28)
+tl.set("#cap-52",{autoAlpha:1},82.28)
+tl.set("#cap-52",{autoAlpha:0},83.69)
+tl.set("#cap-53",{autoAlpha:1},83.76)
+tl.set("#cap-53",{autoAlpha:0},85.83)
+tl.set("#cap-54",{autoAlpha:1},85.83)
+tl.set("#cap-54",{autoAlpha:0},86.5)
+tl.set("#cap-55",{autoAlpha:1},86.5)
+tl.set("#cap-55",{autoAlpha:0},88.71)
+tl.set("#cap-56",{autoAlpha:1},88.71)
+tl.set("#cap-56",{autoAlpha:0},90.67)
+tl.set("#cap-57",{autoAlpha:1},91.14)
+tl.set("#cap-57",{autoAlpha:0},92.46)
+tl.set("#cap-58",{autoAlpha:1},92.46)
+tl.set("#cap-58",{autoAlpha:0},94.61)
+tl.set("#cap-59",{autoAlpha:1},94.65)
+tl.set("#cap-59",{autoAlpha:0},96.1)
+tl.set("#cap-60",{autoAlpha:1},96.1)
+tl.set("#cap-60",{autoAlpha:0},97.2)
+tl.set("#cap-61",{autoAlpha:1},97.2)
+tl.set("#cap-61",{autoAlpha:0},99)
+tl.set("#cap-62",{autoAlpha:1},99.07)
+tl.set("#cap-62",{autoAlpha:0},100.89)
+tl.set("#cap-63",{autoAlpha:1},100.89)
+tl.set("#cap-63",{autoAlpha:0},101.96)
+tl.set("#cap-64",{autoAlpha:1},101.96)
+tl.set("#cap-64",{autoAlpha:0},102.83)
+tl.set("#cap-65",{autoAlpha:1},102.83)
+tl.set("#cap-65",{autoAlpha:0},105.19)
+tl.set("#cap-66",{autoAlpha:1},105.47)
+tl.set("#cap-66",{autoAlpha:0},106.28)
+tl.set("#cap-67",{autoAlpha:1},106.28)
+tl.set("#cap-67",{autoAlpha:0},107.25)
+tl.set("#cap-68",{autoAlpha:1},107.25)
+tl.set("#cap-68",{autoAlpha:0},108.44)
+tl.set("#cap-69",{autoAlpha:1},108.44)
+tl.set("#cap-69",{autoAlpha:0},109.45)
+window.__timelines.main = tl
+</script>
+</body>
+</html>

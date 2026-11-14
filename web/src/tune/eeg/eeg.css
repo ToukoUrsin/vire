@@ -1,0 +1,30 @@
+.eeg {
+  min-height: 100dvh;
+  background: #171614;
+  color: #f5f0e8;
+  padding: 28px clamp(20px, 6vw, 96px);
+  font-family: var(--font-ui);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.eeg header { display: flex; gap: 14px; align-items: baseline; color: #aaa49a; font-size: .85rem; }
+.eeg-brand { font-family: var(--font-display); font-size: 1.8rem; color: #f5f0e8; }
+.eeg-card { max-width: 760px; margin: auto 0; padding-bottom: 8vh; position: relative; }
+.eeg-kicker { color: #d79164; text-transform: uppercase; letter-spacing: .12em; font-size: .75rem; }
+.eeg h1 { font-family: var(--font-display); font-size: clamp(2.4rem, 7vw, 6rem); font-weight: 500; line-height: 1.02; max-width: 12ch; margin: 18px 0; }
+.eeg-copy { font-size: 1.15rem; line-height: 1.55; color: #c4beb4; max-width: 38rem; }
+.eeg-start { border: 0; border-radius: 999px; background: #d79164; color: #171614; padding: 16px 24px; font: inherit; font-weight: 700; cursor: pointer; margin-top: 16px; }
+.eeg-count { font-size: clamp(3rem, 10vw, 8rem); font-variant-numeric: tabular-nums; color: #d79164; margin: 20px 0; }
+.eeg-sync { font-size: 1.25rem; color: #c4beb4; }
+.eeg-breath { width: min(48vw, 280px); aspect-ratio: 1; border-radius: 50%; background: #d79164; opacity: .8; animation: eeg-breathe 10s ease-in-out infinite; }
+.eeg-flash { position: fixed; inset: 0; background: #fff; pointer-events: none; opacity: 0; z-index: 10; }
+.eeg-flash:last-of-type { animation: eeg-flash .16s ease-out; }
+.eeg-result { border-top: 1px solid #4a4540; margin-top: 28px; padding-top: 20px; font-variant-numeric: tabular-nums; }
+.eeg-result strong { font-size: 2rem; letter-spacing: .18em; color: #d79164; }
+.eeg-result a { display: inline-block; color: #f5f0e8; border-bottom: 1px solid #d79164; padding-bottom: 3px; margin-top: 8px; }
+.eeg-small, .eeg-error { color: #aaa49a; font-size: .9rem; line-height: 1.5; }
+.eeg-error { color: #efaa8d; }
+@keyframes eeg-breathe { 0% { transform: scale(.72); } 40% { transform: scale(1); } 100% { transform: scale(.72); } }
+@keyframes eeg-flash { 0% { opacity: .92; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .eeg-breath { animation: none; } }

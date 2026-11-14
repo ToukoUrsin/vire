@@ -1,0 +1,20 @@
+name: ios-build
+on:
+  push:
+    paths: ['ios/**', '.github/workflows/ios.yml']
+  workflow_dispatch: {}
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build (no signing)
+        run: |
+          xcodebuild -version
+          brew list xcodegen >/dev/null 2>&1 || brew install xcodegen
+          cd ios
+          xcodegen generate
+          set -o pipefail
+          xcodebuild -project Vire.xcodeproj -scheme Vire -sdk iphoneos -configuration Debug \
+            -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build 2>&1 | grep -E "error|warning: unre|BUILD|\.swift:" | tail -60

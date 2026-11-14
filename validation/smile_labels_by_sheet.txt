@@ -1,0 +1,85 @@
+# Hand labels for the face clips, made from the contact sheets (make_label_sheets.py) BEFORE any smile score was looked at.
+# One line per clip: sheet.row | person | six frame labels | skin | age | glasses | beard | pose | light | note
+# Frame labels (six frames spread over the clip, see sheets.json for the frame numbers):
+#   S  clear smile or laugh
+#   s  subtle or ambiguous smile (soft closed-mouth smile, smiling while talking): reported separately
+#   N  no smile: neutral, serious, talking, thinking
+#   X  not usable: face out of frame, turned away, covered, or an expression I could not call
+# skin: light / medium / dark, a coarse call by eye from the frames (not a measured skin type). age: child / adult / older (about 60+).
+# pose: front / turned (three-quarter or more) / down (looking down) / up / tilt (head rolled or lying). light: normal / dim / colour / backlit / hazy.
+1.1 | P01 | NNNNNN | light | adult | no | yes | turned | normal | talking into a studio microphone
+1.2 | P01 | NNNNNN | light | adult | no | yes | turned | normal | talking, headphones
+1.3 | P01 | NNNNNN | light | adult | no | yes | turned | normal | talking, headphones
+1.4 | P02 | NNNNNN | dark | adult | no | no | down | dim | eyes closed, very dark scene
+1.5 | P03 | SSSSSS | dark | adult | no | yes | front | normal |
+1.6 | P04 | NNNNSS | light | adult | yes | yes | front | normal | talks, then smiles
+1.7 | P05 | sssSSS | light | adult | no | no | front | backlit | sun behind the head
+1.8 | P06 | SSSSSS | light | adult | no | no | front | normal |
+2.1 | P07 | SSSSSS | dark | adult | no | no | front | normal |
+2.2 | P08 | XXXXXX | light | adult | yes | yes | turned | normal | profile with safety goggles, not facing the camera
+2.3 | P09 | NNNNNN | light | adult | yes | yes | front | normal | thinking, hand on head
+2.4 | P10 | NNsSSS | light | adult | no | no | front | normal | neutral, then smiles
+2.5 | P11 | NNNNNN | light | adult | no | no | front | normal | serious
+2.6 | P12 | NsNNSs | light | adult | no | no | down | normal |
+2.7 | P12 | NNXNNS | light | adult | no | no | front | normal | talks, smiles at the end
+2.8 | P13 | ssssss | light | adult | no | no | front | normal | soft closed-mouth expression throughout
+3.1 | P14 | SSSSSS | light | adult | no | no | front | normal |
+3.2 | P12 | NNNNsS | light | adult | no | no | front | normal | talks, smiles at the end
+3.3 | P15 | ssssss | light | older | yes | no | front | normal | gentle closed-mouth smile
+3.4 | P16 | NNSXNs | light | adult | no | no | turned | normal |
+3.5 | P17 | SSSSSS | light | adult | no | no | tilt | normal | laughing
+3.6 | P18 | XSXXSS | dark | adult | no | no | tilt | normal | lying down, phone in front of the face
+3.7 | P17 | SSsNSs | light | adult | no | no | down | normal | turned and looking down
+3.8 | P19 | NNsSSs | light | older | yes | no | turned | normal | a child's face is also in the frame
+4.1 | P20 | NsNNNN | light | older | yes | yes | down | normal | looking down at a tablet
+4.2 | P21 | XXSsNs | dark | adult | no | no | down | normal | video call, wired earbuds
+4.3 | P21 | NsSssX | dark | adult | no | no | down | normal |
+4.4 | P21 | NXNXNN | dark | adult | no | no | turned | normal | winces and grimaces (teeth showing, not called)
+4.5 | P22 | SSXssS | light | adult | no | no | tilt | normal | selfie, head rolled far over
+4.6 | P21 | sNNssN | dark | adult | no | no | front | normal |
+4.7 | P23 | sSsSSs | light | child | no | no | front | normal | closed-mouth smile
+4.8 | P24 | SSSSSS | light | adult | no | no | front | normal | headphones
+5.1 | P25 | NNNNXN | light | older | yes | no | down | normal |
+5.2 | P26 | XXXXXX | light | older | no | no | front | normal | extreme close-up, mouth outside the frame
+5.3 | P27 | NNNsNN | light | adult | no | no | down | normal | video call
+5.4 | P28 | NNNNNN | light | adult | no | no | down | normal | finger on the chin, eyes closed
+5.5 | P29 | sssSSs | medium | adult | no | yes | tilt | normal | hand-held selfie, moving
+5.6 | P30 | XXXNNN | light | adult | no | no | turned | normal | mostly in profile
+5.7 | P31 | NNNNXN | light | older | yes | no | down | normal | reading
+5.8 | P32 | NXNNNN | light | child | no | no | down | normal |
+6.1 | P33 | XXXXXX | light | child | yes | no | turned | normal | not facing the camera
+6.2 | P34 | NNNNNN | light | older | yes | no | front | normal | a bicycle pedal covers part of the lower face; moustache
+6.3 | P35 | NNNNNN | dark | adult | yes | no | front | dim | cold dim light
+6.4 | P36 | sNNNNN | dark | adult | no | yes | front | normal | talking, green screen
+6.5 | P37 | NNNNNN | medium | adult | no | no | front | normal | finger on the chin, lips pursed
+6.6 | P38 | NNNNNN | light | older | yes | yes | down | hazy | washed-out low contrast
+6.7 | P39 | sssSSs | light | adult | no | no | front | normal | thumbs up
+6.8 | P40 | ssssSs | light | older | no | yes | front | normal |
+7.1 | P41 | NNNNNN | light | adult | no | no | tilt | normal | camera rolls
+7.2 | P42 | SSSSSS | light | adult | no | no | tilt | normal | laughing, hand on the cheek
+7.3 | P43 | NNNNNN | light | adult | no | no | turned | normal | hand on the chin
+7.4 | P44 | NNNNNN | medium | older | no | yes | tilt | dim | lying on a pillow, face sideways
+7.5 | P45 | SSSSSs | light | adult | no | yes | front | normal |
+7.6 | P46 | XNNNNN | light | adult | no | yes | up | normal | chin far up, long beard
+7.7 | P40 | NNNNNN | light | older | no | yes | front | dim | side light, eyes mostly closed
+7.8 | P48 | ssSSSs | light | older | no | no | front | normal |
+8.1 | P49 | sSssXs | light | adult | no | no | turned | normal |
+8.2 | P50 | sNsNsN | medium | adult | no | yes | turned | colour | blue monitor light
+8.3 | P51 | XXXXXX | light | adult | no | no | front | colour | eyes outside the frame
+8.4 | P52 | ssNsNN | light | adult | no | no | turned | colour | blue and purple neon
+8.5 | P53 | NNNNNN | unknown | adult | no | no | front | backlit | dark face against a bright haze
+8.6 | P54 | SXSSSS | light | adult | no | no | front | normal | laughing
+8.7 | P55 | XXNNNN | light | adult | yes | yes | turned | normal | sunglasses, low camera angle
+8.8 | P56 | NNNNNN | light | adult | no | no | front | normal | serious
+9.1 | P57 | NNNNNN | light | child | no | no | front | normal | small child, close-up
+9.2 | P58 | XNNNNN | light | child | no | no | front | normal |
+9.3 | P59 | NNNNNN | light | adult | no | yes | turned | normal | hand on the chin, green screen
+9.4 | P60 | XXNNNN | light | adult | no | no | front | normal | behind bars, half the face covered
+9.5 | P61 | ssNNNN | light | older | no | no | down | normal | looking down at a tablet
+9.6 | P62 | NNNNNN | light | adult | no | no | turned | normal |
+9.7 | P63 | NNNNNN | light | older | yes | yes | tilt | normal | over-the-shoulder shot, a second head in the foreground
+9.8 | P64 | XNNXXN | medium | adult | no | no | front | normal | jewellery over the nose and mouth, hand over the mouth
+10.1 | P65 | XXXNNN | light | adult | yes | no | down | dim | glowing visor over the eyes
+10.2 | P66 | XNNSXX | light | adult | no | no | turned | normal |
+10.3 | P67 | SSSXSS | dark | adult | no | no | front | dim | laughing, dark room
+10.4 | P67 | NNNNNN | dark | adult | no | no | front | dim | frowning
