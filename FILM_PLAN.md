@@ -1,5 +1,7 @@
 # Vire film plan
 
+**Not the plan any more.** The film is shot from `mobile/FILM.md` (1:58: teach, the live proof, the phone app, the paper, the link). This file is the earlier loop and clinic shot list, kept for its set-up notes.
+
 ## SHOT LIST (max 2:00, aim 1:56 with the opening and the end card)
 
 **Setup:** Laptop full screen, three tabs open: 1 `vire.fly.dev/#/clinic/live?practice=1`, 2 `vire.fly.dev/#/clinic`, 3 `vire.fly.dev/#/clinic/live?cohort=1`. iPhone with the Vire app on Today, AirPods out of the case, in your hand. Second phone on a stand, filming.

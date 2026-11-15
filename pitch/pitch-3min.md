@@ -83,7 +83,7 @@ Mics are cut at 3:00 sharp, then 3 minutes of questions. About 399 spoken words 
 
 ## The 2-minute video
 
-See `FILM_PLAN.md`.
+See `mobile/FILM.md` (the film Touko shoots; `FILM_PLAN.md` is the earlier shot list).
 
 ## Sources
 

@@ -19,7 +19,7 @@ A signal for the clinic, not a diagnosis. No patient or clinic has used Vire; th
 
 **Setup, once** ([/#/ears](https://vire.fly.dev/#/ears)): the camera labels 65 seconds of smiles, nods and head shakes while the AirPods feel them, and a Modal Sandbox of your own, network blocked, tries 366 models on all your minutes, each chosen without the minute it is scored on. On the founder's three minutes: 46 seconds; on a whole minute the models never saw, nod 0.97, head shake 0.97, smile 0.64 (1.00 is never wrong, 0.50 is luck). So nods and head shakes are read from the AirPods alone, and the camera keeps smiles.
 
-**The whole clinic** re-learns at once on Modal: the 50 simulated patients on the clinic list, one network-blocked Sandbox each, a shorter search each (12 s against 40 s for a real person), over 9,000 models in all in about half a minute, and each Sandbox re-learns which practice helps that patient ("Re-train the whole clinic" on the big screen).
+**The whole clinic** re-learns at once on Modal: the 50 simulated patients on the clinic list, one network-blocked Sandbox each, a shorter search each (12 s against 40 s for a real person), around 9,000 models in all in about half a minute, and each Sandbox re-learns which practice helps that patient ("Re-train the whole clinic" on the big screen).
 
 Without AirPods: breathe with the sea for a minute with a phone on your chest ([/#/try](https://vire.fly.dev/#/try)), or the camera visit, one minute on any phone ([/#/visit](https://vire.fly.dev/#/visit)). The evidence behind the loop, and what it does not show: [pitch/evidence-loop.md](pitch/evidence-loop.md), [pitch/evidence-tms.md](pitch/evidence-tms.md), [pitch/evidence-airpods.md](pitch/evidence-airpods.md).
 
@@ -30,6 +30,7 @@ Built at Junction 2026 (13 to 15 November, Espoo) for Aalto University's challen
 | Page | What it is |
 |---|---|
 | [/](https://vire.fly.dev/) | the first screen: what Vire is, then the replay, Today and the clinic |
+| [/app/](https://vire.fly.dev/app/) | the phone app (add it to your home screen): teach your AirPods in a minute, your own model found in a locked Modal Sandbox, nods and head shakes read live with the camera off. Its day, calls, music, sleep, programme and clinic screens are sample data. Source in `mobile/`, the film plan in `mobile/FILM.md` |
 | [/#/watch](https://vire.fly.dev/#/watch) | a Today run played back in about 40 seconds, no AirPods needed (a scripted run with stand-in AirPods, labelled so, until a real run is picked) |
 | [/#/heard](https://vire.fly.dev/#/heard) | a real check played back in 22 seconds: the founder's own check-in, camera off, four hours after setup, with what his AirPods felt and what his model heard (3 of 3 asked nods, 3 of 3 head shakes, none unasked; one check, one person) |
 | [/#/today](https://vire.fly.dev/#/today) | the loop: check-in, still check, practice in the ears, re-check, what was learned (AirPods, camera off) |
