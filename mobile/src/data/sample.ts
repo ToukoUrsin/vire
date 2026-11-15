@@ -81,19 +81,35 @@ export interface Person {
   calls: number
   /** per ten minutes of call. Nods only: the AirPods alone did not pass their check for smiles */
   nods: number
+  /** smiles per ten minutes of call, and the average heart rate on these calls */
+  smiles: number
+  heart: number
   /** share of the call you were the one talking */
   talk: number
   note: string
   week: number[]
 }
 export const PEOPLE: Person[] = [
-  { name: 'Mum', who: 'Family', minutes: 64, calls: 4, nods: 14, talk: 0.52, note: 'You nod most on these calls.', week: [0, 0, 9, 14, 0, 20, 21] },
-  { name: 'Liisa', who: 'Work', minutes: 118, calls: 5, nods: 12.9, talk: 0.41, note: 'Steady. Close to your usual.', week: [28, 0, 0, 22, 24, 24, 20] },
-  { name: 'Jussi', who: 'Work', minutes: 47, calls: 2, nods: 4.2, talk: 0.24, note: 'You go quiet and still here.', week: [24, 0, 0, 0, 23, 0, 0] },
-  { name: 'Sanna', who: 'TMS nurse', minutes: 12, calls: 1, nods: 10, talk: 0.58, note: 'Check-in call on Tuesday.', week: [0, 12, 0, 0, 0, 0, 0] },
+  { name: 'Mum', who: 'Family', minutes: 64, calls: 4, nods: 14, smiles: 9, heart: 70, talk: 0.52, note: 'You nod most on these calls.', week: [0, 0, 9, 14, 0, 20, 21] },
+  { name: 'Liisa', who: 'Work', minutes: 118, calls: 5, nods: 12.9, smiles: 7, heart: 73, talk: 0.41, note: 'Steady. Close to your usual.', week: [28, 0, 0, 22, 24, 24, 20] },
+  { name: 'Jussi', who: 'Work', minutes: 47, calls: 2, nods: 4.2, smiles: 2, heart: 79, talk: 0.24, note: 'You go quiet and still here.', week: [24, 0, 0, 0, 23, 0, 0] },
+  { name: 'Sanna', who: 'TMS nurse', minutes: 12, calls: 1, nods: 10, smiles: 5, heart: 74, talk: 0.58, note: 'Check-in call on Tuesday.', week: [0, 12, 0, 0, 0, 0, 0] },
 ]
 // minutes on calls a day, Monday first: the sum of the people above. Tuesday and Wednesday are the quiet days the nurse writes about.
 export const CALL_WEEK = { days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], minutes: [52, 12, 9, 36, 47, 44, 41], lo: 34, hi: 62 }
+// what the AirPods read while you are on calls, a day, Monday first: nods and smiles every ten minutes of call, and the
+// average heart rate on them. This is the signal, not how long you talked.
+export const CALL_SIGNS = {
+  nods: [12, 6, 5, 13, 11, 14, 13],
+  lo: 10,
+  hi: 15,
+  smiles: [7, 3, 2, 7, 6, 9, 8],
+  slo: 5,
+  shi: 9,
+  heart: [73, 79, 80, 72, 74, 70, 71],
+  hlo: 68,
+  hhi: 76,
+}
 
 export interface Song {
   title: string

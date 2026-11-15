@@ -1,6 +1,6 @@
 import { useState, type CSSProperties } from 'react'
 import { go } from '../router'
-import { CALL_WEEK, DAY, NOW_H, NURSE, CHAT, PRACTICES, PROGRAMME, RING, STEPS_WEEK, TODAY, type RingKey } from '../data/sample'
+import { CALL_SIGNS, DAY, NOW_H, NURSE, CHAT, PRACTICES, PROGRAMME, RING, STEPS_WEEK, TODAY, type RingKey } from '../data/sample'
 import { usePods, useModel } from '../live/pods'
 import { DayRing } from '../ui/charts'
 import { I, type IconName } from '../ui/icons'
@@ -15,7 +15,7 @@ const SAY: Record<RingKey, { head: string; sub: string }> = {
   talk: { head: 'Talking again', sub: 'two quiet hours after lunch' },
   heart: { head: 'Settled again', sub: '79 before the breathing, 71 after' },
 }
-/** the three numbers under the ring. Steps and calls are the day so far against your usual day, the same number
+/** the three numbers under the ring. Steps are the day so far against your usual day and calls are your nods every ten minutes on them, the same number
  *  and the same verdict as on Signals; heart rate is now, against your usual for this hour. */
 interface Sig {
   id: RingKey
@@ -37,7 +37,7 @@ const NOW = HEART.today.length - 1
 const k1 = (n: number) => (n / 1000).toFixed(1)
 const SIG: Sig[] = [
   { id: 'move', label: 'Steps', icon: 'walk', tone: 'move', v: STEPS_WEEK.steps[TODAY], lo: STEPS_WEEK.lo, hi: STEPS_WEEK.hi, min: Math.min(...STEPS_WEEK.steps), max: Math.max(...STEPS_WEEK.steps, STEPS_WEEK.hi), say: (n) => n.toLocaleString('en-GB'), usual: `usual ${k1(STEPS_WEEK.lo)}–${k1(STEPS_WEEK.hi)}k` },
-  { id: 'talk', label: 'Calls', icon: 'call', tone: 'voice', unit: 'min', v: CALL_WEEK.minutes[TODAY], lo: CALL_WEEK.lo, hi: CALL_WEEK.hi, min: Math.min(...CALL_WEEK.minutes), max: Math.max(...CALL_WEEK.minutes, CALL_WEEK.hi), say: (n) => n.toFixed(0), usual: `usual ${CALL_WEEK.lo}–${CALL_WEEK.hi}` },
+  { id: 'talk', label: 'Calls', icon: 'call', tone: 'voice', unit: 'nods', v: CALL_SIGNS.nods[TODAY], lo: CALL_SIGNS.lo, hi: CALL_SIGNS.hi, min: Math.min(...CALL_SIGNS.nods), max: Math.max(...CALL_SIGNS.nods, CALL_SIGNS.hi), say: (n) => n.toFixed(0), usual: `usual ${CALL_SIGNS.lo}–${CALL_SIGNS.hi}` },
   { id: 'heart', label: 'Heart', icon: 'heart', tone: 'heart', unit: 'bpm', v: HEART.today[NOW], lo: HEART.lo[NOW], hi: HEART.hi[NOW], min: Math.min(...HEART.lo, ...HEART.today), max: Math.max(...HEART.hi, ...HEART.today), say: (n) => n.toFixed(0), usual: `usual ${HEART.lo[NOW].toFixed(0)}–${HEART.hi[NOW].toFixed(0)}` },
 ]
 const rise = (i: number) => ({ '--i': i }) as CSSProperties

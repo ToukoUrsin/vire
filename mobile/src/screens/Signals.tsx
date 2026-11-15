@@ -2,7 +2,7 @@
 // not built; movement is felt today on the main site. Each screen says so at the top and again at the end.
 import { useState, type CSSProperties, type ReactNode } from 'react'
 import { go } from '../router'
-import { CALL_WEEK, DAY, DAYS, HEAD_DOWN_WEEK, NIGHT, NIGHT_WEEK, PEOPLE, PRACTICES, SONGS, STEPS_WEEK, TODAY, week, type Song } from '../data/sample'
+import { CALL_SIGNS, DAY, DAYS, HEAD_DOWN_WEEK, NIGHT, NIGHT_WEEK, PEOPLE, PRACTICES, SONGS, STEPS_WEEK, TODAY, week, type Song } from '../data/sample'
 import { BandBars, BandDots, BandLine, Strip } from '../ui/charts'
 import { I, type IconName } from '../ui/icons'
 import { Art, Btn, Chip, Delta, Head, Research, Row, SampleNote, Screen, Section, Stat, type ArtKind } from '../ui/kit'
@@ -28,7 +28,7 @@ type Versus = { tone?: 'off' | 'ok'; text: string }
 const versus = (v: number, lo: number, hi: number): Versus => (v < lo ? { tone: 'off', text: 'Under your usual' } : v > hi ? { tone: 'off', text: 'Over your usual' } : { tone: 'ok', text: 'In your usual' })
 
 /** the top of a detail screen: one number said large, how it sits against your usual, and the chart it comes from */
-function Hero({ value, unit, versus: v, cap, children, i }: { value: ReactNode; unit: ReactNode; versus?: Versus; cap: ReactNode; children: ReactNode; i: number }) {
+function Hero({ value, unit, versus: v, cap, also, children, i }: { value: ReactNode; unit: ReactNode; versus?: Versus; cap: ReactNode; also?: ReactNode; children: ReactNode; i: number }) {
   return (
     <div className="sg-hero pad rise" style={rise(i)}>
       <div className="sg-hero-top">
@@ -39,6 +39,7 @@ function Hero({ value, unit, versus: v, cap, children, i }: { value: ReactNode; 
         {v && <Delta tone={v.tone}>{v.text}</Delta>}
       </div>
       <p className="sg-hero-cap num">{cap}</p>
+      {also && <div className="pills sg-hero-also">{also}</div>}
       <div className="sg-hero-chart">{children}</div>
     </div>
   )
@@ -144,8 +145,7 @@ function Cover({ kind, icon, label, to, value, unit, sub, i }: { kind: ArtKind; 
 }
 
 export function Signals(_: { id?: string; topic?: string }) {
-  const calls = DAY.filter((m) => m.icon === 'call').length
-  const mins = CALL_WEEK.minutes[TODAY]
+  const nods = CALL_SIGNS.nods[TODAY]
   const beat = /(\d+) of (\d+) songs/.exec(DAY.find((m) => m.icon === 'music')?.sub ?? '')
   const steps = STEPS_WEEK.steps[TODAY]
   const pods = usePods()
@@ -186,7 +186,7 @@ export function Signals(_: { id?: string; topic?: string }) {
           <Chip>Sample day</Chip>
         </div>
         <div className="pad sg-covers">
-          <Cover kind="call" icon="call" label="Calls" to="/signals/calls" value={mins} unit="min" sub={`${calls} calls. ${versus(mins, CALL_WEEK.lo, CALL_WEEK.hi).text}.`} i={2} />
+          <Cover kind="call" icon="call" label="Calls" to="/signals/calls" value={nods} unit="nods" sub={`Every ten minutes on calls. ${versus(nods, CALL_SIGNS.lo, CALL_SIGNS.hi).text}.`} i={2} />
           <Cover kind="music" icon="music" label="Music" to="/signals/music" value={beat ? beat[1] : SONGS.filter((s) => s.beat > 0.5).length} unit={`of ${beat ? beat[2] : SONGS.length} songs`} sub="Your head moved with the beat." i={3} />
           <Cover kind="sleep" icon="sleep" label="Sleep" to="/signals/sleep" value={NIGHT.rest} unit="bpm" sub={`Resting heart rate. ${NIGHT.rest - NIGHT.usual} above your usual.`} i={4} />
           <Cover kind="walk" icon="move" label="Movement" to="/signals/movement" value={thousands(steps)} unit="steps" sub={`${versus(steps, STEPS_WEEK.lo, STEPS_WEEK.hi).text}.`} i={5} />
@@ -212,18 +212,36 @@ export function Signals(_: { id?: string; topic?: string }) {
 const FACE = ['linear-gradient(140deg, #d5efe9, #b5e0d7)', 'linear-gradient(140deg, #fbe9c4, #f4d391)', 'linear-gradient(140deg, #e3e6fb, #c5caf3)', 'linear-gradient(140deg, #fbdfe5, #f3bfca)']
 
 export function Calls(_: { id?: string; topic?: string }) {
-  const mins = week(CALL_WEEK.minutes)
+  // what the AirPods read while you are on a call: nods, smiles and heart rate. Never how long you talked.
+  const nods = week(CALL_SIGNS.nods)
+  const smiles = week(CALL_SIGNS.smiles)
+  const heart = week(CALL_SIGNS.heart)
   const [sel, setSel] = useState(LAST)
-  // nods, because that is what the AirPods read on their own; smiles still need the camera
   const people = [...PEOPLE].sort((a, b) => b.nods - a.nods)
   const top = people[0]
   const low = people[people.length - 1]
-  const quiet = [...PEOPLE].sort((a, b) => a.talk - b.talk)[0]
+  const calm = [...PEOPLE].sort((a, b) => a.heart - b.heart)[0]
   return (
     <Screen nav="Calls" backTo="/signals" glow="voice">
       <Head chip={<Chip>Sample week</Chip>} title="Calls" />
-      <Hero i={1} value={mins[sel]} unit="min" versus={versus(mins[sel], CALL_WEEK.lo, CALL_WEEK.hi)} cap={`On calls ${when(sel)}`}>
-        <BandBars bare sel={sel} onSel={setSel} values={mins} labels={DAYS} lo={CALL_WEEK.lo} hi={CALL_WEEK.hi} tone="voice" fmt={(v) => `${v} min`} height={190} />
+      <Hero
+        i={1}
+        value={nods[sel]}
+        unit="nods"
+        versus={versus(nods[sel], CALL_SIGNS.lo, CALL_SIGNS.hi)}
+        cap={`Every ten minutes on calls ${when(sel)}`}
+        also={
+          <>
+            <span className="pill num">
+              <I.smile size={15} /> {smiles[sel]} smiles
+            </span>
+            <span className="pill num">
+              <I.heart size={15} /> {heart[sel]} bpm
+            </span>
+          </>
+        }
+      >
+        <BandBars bare sel={sel} onSel={setSel} values={nods} labels={DAYS} lo={CALL_SIGNS.lo} hi={CALL_SIGNS.hi} tone="voice" fmt={(v) => `${v} nods`} height={160} />
       </Hero>
 
       <Say i={2}>
@@ -232,10 +250,8 @@ export function Calls(_: { id?: string; topic?: string }) {
 
       <div className="pad rise" style={{ ...rise(3), marginTop: 12 }}>
         <div className="stat-grid">
-          <Stat icon="call" tone="voice" label="This week" value={sum(CALL_WEEK.minutes)} unit="min" sub={`${sum(PEOPLE.map((p) => p.calls))} calls`} />
-          <Stat icon="clock" label="Your usual" value={`${CALL_WEEK.lo}–${CALL_WEEK.hi}`} unit="min" sub="a day" />
           <Stat icon="nod" tone="face" label="Most nods" value={top.name} sub={`${top.nods} every ten minutes`} />
-          <Stat icon="voice" tone="voice" label="Quietest with" value={quiet.name} sub={`You talk ${Math.round(quiet.talk * 100)}% of the call`} />
+          <Stat icon="heart" tone="heart" label="Calmest with" value={calm.name} sub={`Heart rate ${calm.heart} on these calls`} />
         </div>
       </div>
 
@@ -252,13 +268,16 @@ export function Calls(_: { id?: string; topic?: string }) {
                   <div className="row-sub">{p.note}</div>
                 </div>
                 <div className="sg-person-min num">
-                  {p.minutes}
-                  <small>min</small>
+                  {p.nods.toFixed(0)}
+                  <small>nods</small>
                 </div>
               </div>
               <div className="pills">
                 <span className="pill num">
-                  <I.nod size={15} /> {p.nods.toFixed(0)}
+                  <I.smile size={15} /> {p.smiles}
+                </span>
+                <span className="pill num">
+                  <I.heart size={15} /> {p.heart} bpm
                 </span>
                 <span className="pill num">
                   <I.voice size={15} /> {Math.round(p.talk * 100)}%
@@ -267,7 +286,7 @@ export function Calls(_: { id?: string; topic?: string }) {
             </div>
           ))}
         </div>
-        <p className="small sg-cap">Nods every ten minutes, and your share of the talking.</p>
+        <p className="small sg-cap">Nods and smiles every ten minutes of call, your heart rate on them, and your share of the talking.</p>
       </Section>
 
       <Section i={5}>
@@ -312,7 +331,6 @@ export function Music(_: { id?: string; topic?: string }) {
   const down = [...SONGS].sort((a, b) => a.hr - b.hr)[0]
   const day = DAY.find((m) => m.icon === 'music')?.sub ?? ''
   const beat = /(\d+) of (\d+) songs/.exec(day)
-  const long = /^(.*) min$/.exec(day.split(' · ')[0])
   return (
     <Screen nav="Music" backTo="/signals" glow="face">
       <Head chip={<Chip>Sample day</Chip>} title="Music" />
@@ -323,7 +341,7 @@ export function Music(_: { id?: string; topic?: string }) {
         versus={{ tone: MOOD[s.mood].tone, text: MOOD[s.mood].word }}
         cap={
           <>
-            How much of <b>{s.title}</b> by {s.by}, {s.bpm} bpm, your head moved with the beat.
+            How much of <b>{s.title}</b> by {s.by}, {s.bpm} bpm, your head moved with the beat. Heart rate {signed(s.hr)}.
           </>
         }
       >
@@ -337,7 +355,7 @@ export function Music(_: { id?: string; topic?: string }) {
       <div className="pad rise" style={{ ...rise(3), marginTop: 12 }}>
         <div className="stat-grid">
           <Stat icon="music" tone="face" label="Songs that moved you" value={beat ? beat[1] : '0'} unit={`of ${beat ? beat[2] : SONGS.length}`} sub="With the beat for over half the song" />
-          <Stat icon="clock" label="Listening" value={long ? long[1] : day.split(' · ')[0]} unit={long ? 'min' : undefined} />
+          <Stat icon="heart" tone="heart" label="Heart rate, this song" value={signed(s.hr)} unit="bpm" sub={MOOD[s.mood].word} />
           <Stat icon="heart" tone="heart" label="Heart up most" value={signed(up.hr)} unit="bpm" sub={up.title} />
           <Stat icon="heart" tone="heart" label="Heart down most" value={signed(down.hr)} unit="bpm" sub={down.title} />
         </div>

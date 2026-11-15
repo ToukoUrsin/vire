@@ -274,3 +274,6 @@
     opacity: 0;
   }
 }
+
+/* what else the AirPods read then, under the hero's caption */
+.sg-hero-also { margin-top: 10px; }
