@@ -84,7 +84,7 @@ function TabBar() {
 
 function Aside() {
   const url = `${location.origin}/app/`
-  const qr = useMemo(() => renderSVG(url, { border: 2, blackColor: '#0e0c0a', whiteColor: '#f6efe4' }), [url])
+  const qr = useMemo(() => renderSVG(url, { border: 2, blackColor: '#12302b', whiteColor: '#ffffff' }), [url])
   return (
     <>
       <div className="aside aside-left">

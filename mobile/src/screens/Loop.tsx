@@ -35,11 +35,11 @@ function word(i: number, x: number, y: number): { x: number; y: number; anchor: 
 // the dot goes under each stop as it arrives, and the stop lights up: the delay is when the dot gets there
 const WHEEL_CSS = `
 .lw-stop { --at: calc(var(--k) * ${TURN_S / STOPS.length}s - 0.5s); }
-.lw-disc { fill: #2b2621; animation: lw-disc ${TURN_S}s linear var(--at) infinite backwards; }
+.lw-disc { fill: #ffffff; stroke: rgba(18, 48, 43, 0.14); stroke-width: 1px; animation: lw-disc ${TURN_S}s linear var(--at) infinite backwards; }
 .lw-icon { color: var(--ink); animation: lw-icon ${TURN_S}s linear var(--at) infinite backwards; }
 .lw-word { fill: var(--ink-2); animation: lw-word ${TURN_S}s linear var(--at) infinite backwards; }
-@keyframes lw-disc { 0%, 27%, 100% { fill: #2b2621; } 4%, 12% { fill: #e4572e; } }
-@keyframes lw-icon { 0%, 27%, 100% { color: var(--ink); } 4%, 12% { color: #fff8f0; } }
+@keyframes lw-disc { 0%, 27%, 100% { fill: #ffffff; } 4%, 12% { fill: #e4572e; } }
+@keyframes lw-icon { 0%, 27%, 100% { color: var(--ink); } 4%, 12% { color: #ffffff; } }
 @keyframes lw-word { 0%, 27%, 100% { fill: var(--ink-2); } 4%, 14% { fill: var(--ink); } }
 @media (prefers-reduced-motion: reduce) {
   .lp-orbit, .lw-disc, .lw-icon, .lw-word { animation: none !important; }
@@ -54,21 +54,21 @@ function Wheel() {
       <svg viewBox="0 0 320 320" role="img" aria-label="The loop: sense, notice, practice, measure, learn, and round again">
         <defs>
           <radialGradient id="lp-core" cx="0.5" cy="0.5" r="0.5">
-            <stop offset="0" stopColor="#e4572e" stopOpacity="0.2" />
-            <stop offset="1" stopColor="#e4572e" stopOpacity="0" />
+            <stop offset="0" stopColor="#d9eee7" stopOpacity="0.95" />
+            <stop offset="1" stopColor="#d9eee7" stopOpacity="0" />
           </radialGradient>
         </defs>
         <circle cx={C} cy={C} r={R - 6} fill="url(#lp-core)" />
-        <circle cx={C} cy={C} r={R} fill="none" stroke="rgba(255, 240, 220, 0.16)" strokeWidth={1.5} />
+        <circle cx={C} cy={C} r={R} fill="none" stroke="rgba(18, 48, 43, 0.16)" strokeWidth={1.5} />
         {STOPS.map((_, i) => {
           const deg = stopDeg(i) + 180 / STOPS.length
           const [x, y] = on(deg)
           return <path key={i} d="M-2.6 -3.6L2.2 0L-2.6 3.6" transform={`translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${deg + 90})`} fill="none" stroke="var(--ink-3)" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
         })}
         <g className="lp-orbit">
-          <path d={`M${tx.toFixed(1)} ${ty.toFixed(1)}A${R} ${R} 0 0 1 ${hx} ${hy}`} fill="none" stroke="#ff7d55" strokeOpacity={0.55} strokeWidth={2.5} strokeLinecap="round" />
+          <path d={`M${tx.toFixed(1)} ${ty.toFixed(1)}A${R} ${R} 0 0 1 ${hx} ${hy}`} fill="none" stroke="#e4572e" strokeOpacity={0.7} strokeWidth={2.5} strokeLinecap="round" />
           <circle cx={hx} cy={hy} r={13} fill="#e4572e" opacity={0.22} />
-          <circle cx={hx} cy={hy} r={6} fill="#ff7d55" />
+          <circle cx={hx} cy={hy} r={6} fill="#e4572e" />
         </g>
         {STOPS.map((s, i) => {
           const [x, y] = on(stopDeg(i))

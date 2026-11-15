@@ -4,7 +4,7 @@ import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'rea
 import type { RingSeries } from '../data/sample'
 import type { Tone } from './kit'
 
-const TONE: Record<Tone, string> = { face: 'var(--face)', voice: 'var(--voice)', move: 'var(--move)', heart: 'var(--heart)', ember: 'var(--ember)', plain: 'var(--ink-2)' }
+const TONE: Record<Tone, string> = { face: 'var(--face-fill)', voice: 'var(--voice)', move: 'var(--move)', heart: 'var(--heart)', ember: 'var(--ember)', plain: 'var(--ink-2)' }
 const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v))
 /** value at a fractional index, eased between the points so a ring of hourly values reads as one curve */
 function at(v: number[], x: number): number {
@@ -118,15 +118,15 @@ export function DayRing({ s, nowH, mark, children, onPick }: { s: RingSeries; no
         })}
         <defs>
           <radialGradient id="ring-band" gradientUnits="userSpaceOnUse" cx={C} cy={C} r={R1 + 4}>
-            <stop offset={R0 / (R1 + 4) - 0.06} stopColor="#f6efe4" stopOpacity="0.05" />
-            <stop offset="1" stopColor="#f6efe4" stopOpacity="0.2" />
+            <stop offset={R0 / (R1 + 4) - 0.06} stopColor="#12302b" stopOpacity="0.04" />
+            <stop offset="1" stopColor="#12302b" stopOpacity="0.1" />
           </radialGradient>
           <filter id="ring-glow" x="-30%" y="-30%" width="160%" height="160%">
             <feGaussianBlur stdDeviation="7" />
           </filter>
           <linearGradient id="ring-ink" gradientUnits="userSpaceOnUse" x1={C - R1} y1={C + R1} x2={C + R1} y2={C - R1}>
-            <stop offset="0" stopColor="#ff9a5c" />
-            <stop offset="1" stopColor="#e4572e" />
+            <stop offset="0" stopColor="#1b7a68" />
+            <stop offset="1" stopColor="#0f5c4e" />
           </linearGradient>
         </defs>
         <circle cx={C} cy={C} r={R0 - 14} fill="none" stroke="var(--ink)" strokeOpacity={0.07} strokeWidth={1} />
@@ -134,10 +134,10 @@ export function DayRing({ s, nowH, mark, children, onPick }: { s: RingSeries; no
         <path d={`M${pt(g.hN + 0.7, (R0 + R1) / 2).map((v) => v.toFixed(1)).join(' ')}A${(R0 + R1) / 2} ${(R0 + R1) / 2} 0 0 1 ${pt(g.h0 - 0.7, (R0 + R1) / 2).map((v) => v.toFixed(1)).join(' ')}`} fill="none" stroke="var(--ink)" strokeOpacity={0.07} strokeWidth={12} strokeLinecap="round" />
         <path d={g.usual} fill="url(#ring-band)" />
         {g.wedges.map((w) => (
-          <path key={w} d={w} fill="var(--ember)" fillOpacity={0.34} className="ring-wedge" />
+          <path key={w} d={w} fill="var(--ember)" fillOpacity={0.3} className="ring-wedge" />
         ))}
-        <path d={g.today} fill="none" stroke="var(--ember)" strokeOpacity={0.75} strokeWidth={9} strokeLinecap="round" strokeLinejoin="round" pathLength={1} className="ring-line" filter="url(#ring-glow)" />
-        <path d={g.today} fill="none" stroke="url(#ring-ink)" strokeWidth={3.2} strokeLinecap="round" strokeLinejoin="round" pathLength={1} className="ring-line" />
+        <path d={g.today} fill="none" stroke="var(--ember)" strokeOpacity={0} strokeWidth={9} strokeLinecap="round" strokeLinejoin="round" pathLength={1} className="ring-line" filter="url(#ring-glow)" />
+        <path d={g.today} fill="none" stroke="url(#ring-ink)" strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" pathLength={1} className="ring-line" />
         {mark != null && mark <= g.end && (
           <g className="ring-pop" style={{ animationDelay: '1100ms' }}>
             <circle cx={g.where(mark)[0]} cy={g.where(mark)[1]} r={6.5} fill="var(--bg)" />
@@ -145,9 +145,9 @@ export function DayRing({ s, nowH, mark, children, onPick }: { s: RingSeries; no
           </g>
         )}
         <g className="ring-pop" style={{ animationDelay: '1500ms' }}>
-          <circle cx={nx} cy={ny} r={14} fill="var(--ember)" opacity={0.3} className="ring-halo" style={{ transformOrigin: `${nx}px ${ny}px` }} />
+          <circle cx={nx} cy={ny} r={14} fill="var(--ember)" opacity={0.22} className="ring-halo" style={{ transformOrigin: `${nx}px ${ny}px` }} />
           <circle cx={nx} cy={ny} r={8} fill="var(--bg)" />
-          <circle cx={nx} cy={ny} r={6} fill="#ff8a5c" />
+          <circle cx={nx} cy={ny} r={6} fill="#e4572e" />
         </g>
         {picked && pick != null && (
           <g>
@@ -231,13 +231,13 @@ export function BandBars({ values, labels, lo, hi, tone, fmt, usual = 'your usua
         <defs>
           <linearGradient id={`${id}f`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor={TONE[tone]} />
-            <stop offset="1" stopColor={TONE[tone]} stopOpacity="0.55" />
+            <stop offset="1" stopColor={TONE[tone]} stopOpacity="1" />
           </linearGradient>
           <filter id={`${id}g`} x="-120%" y="-30%" width="340%" height="160%">
             <feGaussianBlur stdDeviation="8" />
           </filter>
         </defs>
-        {band && <rect x={0} y={y(hi)} width={W} height={y(lo) - y(hi)} fill="var(--ink)" fillOpacity={0.09} rx={9} />}
+        {band && <rect x={0} y={y(hi)} width={W} height={y(lo) - y(hi)} fill="var(--ink)" fillOpacity={0.07} rx={9} />}
         {band && side && (
           <text x={side === 'right' ? W - 4 : 4} y={y(hi) - 7} textAnchor={side === 'right' ? 'end' : 'start'} fontSize="11" fontWeight={500} fill="var(--ink-3)" fontFamily="var(--font-ui)">
             {usual}
@@ -250,8 +250,8 @@ export function BandBars({ values, labels, lo, hi, tone, fmt, usual = 'your usua
           return (
             <g key={i} onPointerDown={() => pick(i)} style={{ cursor: 'pointer' }}>
               <rect x={i * slot} y={0} width={slot} height={height} fill="transparent" />
-              {on && <rect x={x - bw / 2} y={base - h} width={bw} height={h} rx={bw / 2} fill={TONE[tone]} opacity={0.5} filter={`url(#${id}g)`} />}
-              <rect x={x - bw / 2} y={base - h} width={bw} height={h} rx={bw / 2} fill={`url(#${id}f)`} opacity={on ? 1 : 0.46} style={{ transition: 'opacity 220ms' }} />
+              {on && <rect x={x - bw / 2} y={base - h} width={bw} height={h} rx={bw / 2} fill={TONE[tone]} opacity={0} filter={`url(#${id}g)`} />}
+              <rect x={x - bw / 2} y={base - h} width={bw} height={h} rx={bw / 2} fill={`url(#${id}f)`} opacity={on ? 1 : 0.34} style={{ transition: 'opacity 220ms' }} />
               <text x={x} y={height - 6} textAnchor="middle" fontSize="11.5" fontWeight={on ? 650 : 500} fill={on ? 'var(--ink)' : 'var(--ink-3)'} fontFamily="var(--font-ui)" className="num">
                 {labels[i]}
               </text>
@@ -315,7 +315,7 @@ export function BandLine({ x, y, lo, hi, tone, fmtX, fmtY, height = 170, usual =
       <svg viewBox={`0 0 ${W} ${height}`} width="100%" style={{ display: 'block', touchAction: 'pan-y', overflow: 'visible' }} onPointerDown={pickAt} onPointerMove={(e) => (e.buttons || e.pointerType !== 'mouse') && pickAt(e)} role="img" aria-label="Line against your usual">
         <defs>
           <linearGradient id={`${id}a`} gradientUnits="userSpaceOnUse" x1="0" y1={top} x2="0" y2={base}>
-            <stop offset="0" stopColor={TONE[tone]} stopOpacity="0.3" />
+            <stop offset="0" stopColor={TONE[tone]} stopOpacity="0.16" />
             <stop offset="1" stopColor={TONE[tone]} stopOpacity="0" />
           </linearGradient>
           <filter id={`${id}g`} x="-10%" y="-40%" width="120%" height="180%">
@@ -330,14 +330,14 @@ export function BandLine({ x, y, lo, hi, tone, fmtX, fmtY, height = 170, usual =
             </text>
           </g>
         ))}
-        {bandPath && <path d={bandPath} fill="var(--ink)" fillOpacity={0.1} />}
+        {bandPath && <path d={bandPath} fill="var(--ink)" fillOpacity={0.08} />}
         {bandPath && lo && usual && (
           <text x={clamp(px(x[low]), L + 34, W - 40)} y={py(lo[low]) + 18} textAnchor="middle" fontSize="11" fontWeight={500} fill="var(--ink-3)" fontFamily="var(--font-ui)">
             {usual}
           </text>
         )}
         {!bandPath && <path d={area} fill={`url(#${id}a)`} />}
-        <path d={line} fill="none" stroke={TONE[tone]} strokeOpacity={0.7} strokeWidth={7} strokeLinecap="round" strokeLinejoin="round" filter={`url(#${id}g)`} />
+        <path d={line} fill="none" stroke={TONE[tone]} strokeOpacity={0} strokeWidth={7} strokeLinecap="round" strokeLinejoin="round" filter={`url(#${id}g)`} />
         <path d={line} fill="none" stroke={TONE[tone]} strokeWidth={2.8} strokeLinecap="round" strokeLinejoin="round" />
         {dot && (
           <g>
@@ -387,7 +387,7 @@ export function BandDots({ values, labels, heads, lo, hi, tone, fmt, height = 17
         <text x={W - 6} y={y(lo) + 15} textAnchor="end" fontSize="11" fontWeight={500} fill="var(--ink-3)" fontFamily="var(--font-ui)" className="num">
           your usual, {lo} to {hi}
         </text>
-        <path d={line} fill="none" stroke={TONE[tone]} strokeOpacity={0.6} strokeWidth={7} strokeLinecap="round" strokeLinejoin="round" filter={`url(#${id}g)`} />
+        <path d={line} fill="none" stroke={TONE[tone]} strokeOpacity={0} strokeWidth={7} strokeLinecap="round" strokeLinejoin="round" filter={`url(#${id}g)`} />
         <path d={line} fill="none" stroke={TONE[tone]} strokeWidth={2.8} strokeLinecap="round" strokeLinejoin="round" />
         {values.map((v, i) => {
           const on = i === sel

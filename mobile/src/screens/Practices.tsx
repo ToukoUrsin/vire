@@ -50,8 +50,8 @@ function WeekRing({ size = 64 }: { size?: number }) {
   return (
     <span className="pr-ring" style={{ width: size, height: size }} role="img" aria-label={`Week ${PROGRAMME.week}, ${done} of ${PROGRAMME.lessons.length} done`}>
       <svg viewBox="0 0 64 64" aria-hidden="true">
-        <circle cx="32" cy="32" r="28" fill="none" stroke="rgba(255,240,220,0.12)" strokeWidth="5" />
-        <circle className="pr-ring-fill" cx="32" cy="32" r="28" fill="none" stroke="var(--ember-hi)" strokeWidth="5" strokeLinecap="round" pathLength={1} strokeDasharray="1" strokeDashoffset={1 - p} transform="rotate(-90 32 32)" />
+        <circle cx="32" cy="32" r="28" fill="none" stroke="rgba(18,48,43,0.1)" strokeWidth="5" />
+        <circle className="pr-ring-fill" cx="32" cy="32" r="28" fill="none" stroke="var(--primary)" strokeWidth="5" strokeLinecap="round" pathLength={1} strokeDasharray="1" strokeDashoffset={1 - p} transform="rotate(-90 32 32)" />
       </svg>
       <b className="num">{PROGRAMME.week}</b>
     </span>

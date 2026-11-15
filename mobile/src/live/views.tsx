@@ -41,7 +41,7 @@ export function HeadView({ pose, smile, drift = true, size = 264 }: { pose: Muta
       const { w, h, k } = fit(c)
       g.setTransform(k, 0, 0, k, 0, 0)
       g.clearRect(0, 0, w, h)
-      const ink = css(c, '--ink') || '#f3ece0'
+      const ink = css(c, '--ink') || '#12302b'
       const ember = css(c, '--ember') || '#e4572e'
       const p = pose.current
       const now = performance.now()
@@ -163,8 +163,8 @@ export function MotionStrip({ sub, height = 92 }: { sub: (cb: (s: { t: number; p
       const { w, h, k } = fit(c)
       g.setTransform(k, 0, 0, k, 0, 0)
       g.clearRect(0, 0, w, h)
-      const ink = css(c, '--ink') || '#f3ece0'
-      const line = css(c, '--move') || '#7d89e0'
+      const ink = css(c, '--ink') || '#12302b'
+      const line = css(c, '--move') || '#4f5bd5'
       const now = buf.length ? Math.max(buf[buf.length - 1][0], performance.now() - 80) : performance.now()
       const L = 86
       const rows = [

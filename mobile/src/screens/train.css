@@ -54,11 +54,9 @@
   top: 12px;
 }
 .train-round .chip {
-  background: rgba(20, 17, 13, 0.72);
+  background: rgba(255, 255, 255, 0.92);
   border-color: transparent;
   color: var(--ink);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
 }
 .train-live {
   overflow: hidden;
@@ -111,7 +109,7 @@
   margin-top: 14px;
   padding: 12px 14px;
   border-radius: 12px;
-  background: rgba(217, 164, 65, 0.12);
+  background: var(--warn-wash);
   color: var(--ink);
   font-size: 14px;
   line-height: 1.45;

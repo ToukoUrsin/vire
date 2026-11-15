@@ -27,12 +27,12 @@ const MODE: Record<string, { mode: Mode; bed: SoundKind }> = {
 }
 /** the cover, the colour of the light in the player, and the glow behind the result */
 const LOOK: Record<string, { art: ArtKind; hue: string; hi: string; glow: Tone }> = {
-  breathing: { art: 'breath', hue: '#2fa596', hi: '#b4f7e8', glow: 'voice' },
-  bodyscan: { art: 'body', hue: '#7a74ee', hi: '#d6d2ff', glow: 'move' },
-  sit: { art: 'sit', hue: '#dc8438', hi: '#ffd9ad', glow: 'face' },
-  yoga: { art: 'stretch', hue: '#d45c8a', hi: '#ffc6dc', glow: 'heart' },
-  walk: { art: 'walk', hue: '#46a877', hi: '#c9f2da', glow: 'voice' },
-  winddown: { art: 'sleep', hue: '#6a80e4', hi: '#d6deff', glow: 'move' },
+  breathing: { art: 'breath', hue: '#0f7f74', hi: '#bfe8df', glow: 'voice' },
+  bodyscan: { art: 'body', hue: '#5b55d6', hi: '#d9d6fb', glow: 'move' },
+  sit: { art: 'sit', hue: '#ad5e15', hi: '#fbdcb8', glow: 'face' },
+  yoga: { art: 'stretch', hue: '#bd3f72', hi: '#fbd0e0', glow: 'heart' },
+  walk: { art: 'walk', hue: '#2c7a50', hi: '#cdeedb', glow: 'voice' },
+  winddown: { art: 'sleep', hue: '#4f5bd5', hi: '#d9defb', glow: 'move' },
 }
 const RING = 2 * Math.PI * 97
 const rise = (i: number) => ({ '--i': i }) as CSSProperties
@@ -462,7 +462,7 @@ export function Practice({ id }: { id?: string; topic?: string }) {
 
           <div className="pr-stage">
             <svg className="pr-prog" viewBox="0 0 200 200" aria-hidden="true">
-              <circle cx="100" cy="100" r="97" fill="none" stroke="rgba(255,240,220,0.09)" strokeWidth="2" />
+              <circle cx="100" cy="100" r="97" fill="none" stroke="rgba(18,48,43,0.1)" strokeWidth="2" />
               <circle className="pr-prog-fill" cx="100" cy="100" r="97" fill="none" strokeWidth="2.6" strokeLinecap="round" strokeDasharray={RING} strokeDashoffset={RING * (1 - gone)} transform="rotate(-90 100 100)" />
             </svg>
             {mode === 'moves' ? (

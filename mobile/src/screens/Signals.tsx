@@ -94,15 +94,15 @@ function Legend() {
           <feGaussianBlur stdDeviation="5" />
         </filter>
       </defs>
-      <rect x={0} y={24} width={320} height={34} rx={9} fill="var(--ink)" fillOpacity={0.1} />
+      <rect x={0} y={24} width={320} height={34} rx={9} fill="var(--ink)" fillOpacity={0.08} />
       <text x={314} y={16} textAnchor="end" {...t}>
         your usual
       </text>
-      <path className="sg-legend-line" pathLength={1} d={d} fill="none" stroke="var(--ember)" strokeOpacity={0.7} strokeWidth={8} strokeLinecap="round" filter="url(#sg-legend-glow)" />
-      <path className="sg-legend-line" pathLength={1} d={d} fill="none" stroke="#ff8a5c" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+      <path className="sg-legend-line" pathLength={1} d={d} fill="none" stroke="var(--ember)" strokeOpacity={0} strokeWidth={8} strokeLinecap="round" filter="url(#sg-legend-glow)" />
+      <path className="sg-legend-line" pathLength={1} d={d} fill="none" stroke="#0f5c4e" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
       <g className="sg-legend-dot">
-        <circle cx={294} cy={41} r={8.5} fill="var(--bg)" />
-        <circle cx={294} cy={41} r={6} fill="#ff8a5c" />
+        <circle cx={294} cy={41} r={8.5} fill="var(--bg-1)" />
+        <circle cx={294} cy={41} r={6} fill="#e4572e" />
       </g>
       <text x={188} y={95} textAnchor="middle" {...t}>
         under your usual
@@ -209,7 +209,7 @@ export function Signals(_: { id?: string; topic?: string }) {
 
 // ---------- calls ----------
 
-const FACE = ['linear-gradient(140deg, #3fb8a8, #1d6f66)', 'linear-gradient(140deg, #e0a04a, #8a5a1a)', 'linear-gradient(140deg, #8f99ea, #434c9c)', 'linear-gradient(140deg, #e07a8c, #8a3345)']
+const FACE = ['linear-gradient(140deg, #d5efe9, #b5e0d7)', 'linear-gradient(140deg, #fbe9c4, #f4d391)', 'linear-gradient(140deg, #e3e6fb, #c5caf3)', 'linear-gradient(140deg, #fbdfe5, #f3bfca)']
 
 export function Calls(_: { id?: string; topic?: string }) {
   const mins = week(CALL_WEEK.minutes)
@@ -287,10 +287,10 @@ export function Calls(_: { id?: string; topic?: string }) {
 // ---------- music ----------
 
 const MOOD: Record<Song['mood'], { word: string; d: string; tone?: 'off' | 'ok'; art: string }> = {
-  lifts: { word: 'Lifts', d: 'M12 19V5.5M6.5 11L12 5.5 17.5 11', tone: 'ok', art: 'linear-gradient(140deg, #d9952f, #6b4512)' },
-  calms: { word: 'Calms', d: 'M4 12c2.7-3.2 5.3-3.2 8 0s5.3 3.2 8 0', art: 'linear-gradient(140deg, #2fa596, #134a44)' },
-  sinks: { word: 'Still', d: 'M5 12h14', art: 'linear-gradient(140deg, #6b76d6, #262b5e)' },
-  flat: { word: 'Flat', d: 'M5 12h14', art: 'linear-gradient(140deg, #6f675b, #2f2a23)' },
+  lifts: { word: 'Lifts', d: 'M12 19V5.5M6.5 11L12 5.5 17.5 11', tone: 'ok', art: 'linear-gradient(140deg, #fbe9c4, #f2cc82)' },
+  calms: { word: 'Calms', d: 'M4 12c2.7-3.2 5.3-3.2 8 0s5.3 3.2 8 0', art: 'linear-gradient(140deg, #d5efe9, #a6d9ce)' },
+  sinks: { word: 'Still', d: 'M5 12h14', art: 'linear-gradient(140deg, #e3e6fb, #bcc2f1)' },
+  flat: { word: 'Flat', d: 'M5 12h14', art: 'linear-gradient(140deg, #f0ebe0, #dcd4c4)' },
 }
 function Mood({ mood }: { mood: Song['mood'] }) {
   return (

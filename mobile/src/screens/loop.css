@@ -68,7 +68,7 @@
   right: 18px;
   font: 300 30px/1 var(--font-ui);
   letter-spacing: -0.04em;
-  color: rgba(255, 240, 220, 0.26);
+  color: rgba(18, 48, 43, 0.52);
 }
 
 /* what runs today and what is a sample, as filled pills */
@@ -88,12 +88,12 @@
   margin-top: 12px;
 }
 .lp-tag.is-real {
-  background: rgba(116, 185, 140, 0.16);
-  color: #9ad6ae;
+  background: var(--ok-wash);
+  color: var(--ok);
 }
 .lp-tag.is-sample {
-  background: rgba(228, 87, 46, 0.2);
-  color: #ff9a78;
+  background: var(--ember-wash);
+  color: var(--ember-hi);
 }
 
 .lp-not {

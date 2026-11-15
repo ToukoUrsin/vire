@@ -7,9 +7,8 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: linear-gradient(140deg, #3fb8a8, #1d6f66);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
-  color: #f2fffb;
+  background: var(--primary);
+  color: #ffffff;
   font: 650 17px/1 var(--font-ui);
   flex: none;
 }
@@ -29,9 +28,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: rgba(16, 13, 11, 0.96);
-  -webkit-backdrop-filter: blur(26px) saturate(1.6);
-  backdrop-filter: blur(26px) saturate(1.6);
+  background: var(--bg-1);
   box-shadow: 0 1px 0 var(--line);
 }
 .care-who {
@@ -54,9 +51,8 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: var(--glass-2);
-  box-shadow: var(--edge);
-  color: var(--ink);
+  background: var(--primary-wash);
+  color: var(--primary);
   flex: none;
   transition:
     transform 140ms var(--ease),
@@ -67,8 +63,8 @@
   background: var(--glass-3);
 }
 .care-callbtn.is-booked {
-  background: rgba(116, 185, 140, 0.18);
-  color: #9ad6ae;
+  background: var(--ok-wash);
+  color: var(--ok);
 }
 .care-ok {
   color: var(--ok);
@@ -153,8 +149,8 @@
   height: 22px;
   padding: 0 10px;
   border-radius: 11px;
-  background: rgba(228, 87, 46, 0.2);
-  color: #ff9a78;
+  background: var(--ember-wash);
+  color: var(--ember-hi);
   font: 600 12px/1 var(--font-ui);
 }
 .chat-note {
@@ -197,15 +193,15 @@
   white-space: pre-wrap;
 }
 .msg.is-nurse .bubble {
-  background: var(--glass-2);
+  background: var(--bg-1);
   box-shadow: var(--edge);
 }
 .msg.is-nurse.is-last .bubble {
   border-bottom-left-radius: 7px;
 }
 .msg.is-you .bubble {
-  background: linear-gradient(180deg, #f9f1e5, #ebdecb);
-  color: #17130f;
+  background: var(--primary);
+  color: #ffffff;
 }
 .msg.is-you.is-last .bubble {
   border-bottom-right-radius: 7px;
@@ -281,7 +277,7 @@
   background: var(--glass);
   box-shadow:
     var(--edge),
-    0 12px 28px rgba(0, 0, 0, 0.28);
+    0 14px 28px -18px rgba(18, 48, 43, 0.28);
   text-align: left;
 }
 button.chat-card {
@@ -353,15 +349,14 @@ button.chat-card:active {
   bottom: calc(var(--tab-gap) + var(--tabbar));
   padding: 14px 12px 8px;
   /* the chat goes dark under the field and its line, so nothing is read between them */
-  background: linear-gradient(to bottom, rgba(14, 12, 10, 0), rgba(14, 12, 10, 0.96) 14px);
+  background: linear-gradient(to bottom, rgba(250, 246, 239, 0), rgba(250, 246, 239, 0.96) 14px);
 }
 /* the standing line over the field: this chat is a sample, and where help is */
 .composer-note {
   margin: 0 4px 6px;
   padding: 7px 12px 8px;
   border-radius: 14px;
-  background: rgba(24, 21, 18, 0.96);
-  box-shadow: inset 0 1px 0 rgba(255, 240, 220, 0.07);
+  background: var(--bg-2);
   font: 500 12px/1.4 var(--font-ui);
   color: var(--ink-2);
   text-align: center;
@@ -369,7 +364,7 @@ button.chat-card:active {
 }
 .composer-note a,
 .bubble a {
-  color: var(--ink);
+  color: var(--primary);
   font-weight: 600;
   white-space: nowrap;
 }
@@ -380,18 +375,16 @@ button.chat-card:active {
   min-height: 50px;
   padding: 4px 4px 4px 18px;
   border-radius: 27px;
-  background: rgba(34, 29, 25, 0.97);
-  -webkit-backdrop-filter: blur(28px) saturate(1.7);
-  backdrop-filter: blur(28px) saturate(1.7);
+  background: var(--bg-1);
   box-shadow:
-    inset 0 1px 0 rgba(255, 240, 220, 0.1),
-    0 10px 26px rgba(0, 0, 0, 0.45);
+    inset 0 0 0 1px var(--line-2),
+    0 10px 22px -14px rgba(18, 48, 43, 0.25);
   transition: box-shadow 200ms var(--ease);
 }
 .composer-field:focus-within {
   box-shadow:
-    inset 0 0 0 1.5px rgba(255, 240, 220, 0.28),
-    0 10px 26px rgba(0, 0, 0, 0.45);
+    inset 0 0 0 1.5px var(--primary),
+    0 10px 22px -14px rgba(18, 48, 43, 0.25);
 }
 .composer textarea {
   flex: 1;
@@ -417,8 +410,8 @@ button.chat-card:active {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: linear-gradient(180deg, #f2683f, #dc4d24);
-  color: #fff8f0;
+  background: var(--primary);
+  color: #ffffff;
   flex: none;
   transition:
     transform 160ms var(--ease),
@@ -446,7 +439,7 @@ button.chat-card:active {
   margin-top: 14px;
 }
 .care-slots .row[aria-pressed='true'] {
-  background: var(--glass);
+  background: var(--primary-wash);
 }
 .care-slots-note {
   margin-top: 12px;
@@ -479,7 +472,7 @@ button.chat-card:active {
   display: block;
   height: 100%;
   border-radius: 2px;
-  background: linear-gradient(90deg, #f2683f, #ff9a78);
+  background: var(--primary);
   transform-origin: 0 50%;
   transition: transform 520ms var(--ease);
 }
@@ -562,7 +555,7 @@ button.chat-card:active {
   min-height: 62px;
   padding: 10px 16px 10px 24px;
   border-radius: 31px;
-  background: var(--glass-2);
+  background: var(--bg-1);
   box-shadow: var(--edge);
   text-align: left;
   font: 600 17px/1.3 var(--font-ui);
@@ -574,7 +567,7 @@ button.chat-card:active {
 }
 .ci-option:active {
   transform: scale(0.975);
-  background: var(--glass-3);
+  background: var(--bg-2);
 }
 .ci-radio {
   display: grid;
@@ -582,7 +575,7 @@ button.chat-card:active {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: rgba(255, 240, 220, 0.1);
+  background: rgba(18, 48, 43, 0.08);
   color: transparent;
   flex: none;
   transition:
@@ -590,12 +583,13 @@ button.chat-card:active {
     color 200ms var(--ease);
 }
 .ci-option[aria-checked='true'] {
-  background: var(--ink);
-  color: #17130f;
+  background: var(--primary-wash);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1.5px var(--primary);
 }
 .ci-option[aria-checked='true'] .ci-radio {
-  background: #e4572e;
-  color: #fff8f0;
+  background: var(--primary);
+  color: #ffffff;
 }
 .ci-foot {
   display: flex;
@@ -623,7 +617,7 @@ button.chat-card:active {
 }
 .ci-back:active {
   color: var(--ink);
-  background: var(--glass);
+  background: var(--bg-2);
 }
 
 /* a short phone: the question and all four answers still fit without scrolling */
@@ -679,7 +673,7 @@ button.chat-card:active {
   background: var(--line);
 }
 .ci-sum-row:active {
-  background: var(--glass);
+  background: var(--bg-2);
 }
 .ci-sum-q {
   display: block;
@@ -710,11 +704,8 @@ button.chat-card:active {
   height: 84px;
   margin-bottom: 26px;
   border-radius: 50%;
-  background: linear-gradient(160deg, #f6734a, #d2441c);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.28),
-    0 0 0 12px rgba(228, 87, 46, 0.12),
-    0 18px 44px rgba(228, 87, 46, 0.34);
+  background: var(--primary);
+  box-shadow: 0 0 0 12px var(--primary-wash);
   animation: ci-seal 620ms var(--ease) both;
 }
 @keyframes ci-seal {
@@ -724,7 +715,7 @@ button.chat-card:active {
   }
 }
 .ci-tick path {
-  stroke: #fff8f0;
+  stroke: #ffffff;
   stroke-width: 3.4;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -786,15 +777,15 @@ button.chat-card:active {
   font: 650 15px/1 var(--font-ui);
 }
 .clinic-rank.is-top {
-  background: linear-gradient(180deg, #f2683f, #dc4d24);
-  color: #fff8f0;
+  background: var(--ember-fill);
+  color: #ffffff;
 }
 .booster {
   position: relative;
   overflow: hidden;
   padding: 20px 18px 18px;
   background:
-    radial-gradient(120% 90% at 100% 0%, rgba(228, 87, 46, 0.26), transparent 62%),
+    radial-gradient(120% 90% at 100% 0%, #fde3d5, rgba(253, 227, 213, 0) 62%),
     var(--glass);
 }
 .booster-sample {
@@ -821,7 +812,7 @@ button.chat-card:active {
   letter-spacing: -0.035em;
 }
 .booster-when span {
-  color: #ff9a78;
+  color: var(--ember-hi);
 }
 .booster-why {
   margin: 16px 0 18px;
@@ -832,8 +823,8 @@ button.chat-card:active {
     color 300ms var(--ease);
 }
 .booster.is-booked .badge {
-  background: rgba(116, 185, 140, 0.18);
-  color: #9ad6ae;
+  background: var(--ok-wash);
+  color: var(--ok);
 }
 .clinic-link {
   text-decoration: none;
