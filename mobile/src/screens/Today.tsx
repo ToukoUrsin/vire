@@ -1,6 +1,6 @@
 import { useState, type CSSProperties } from 'react'
 import { go } from '../router'
-import { DAY, NOW_H, NURSE, CHAT, PRACTICES, PROGRAMME, RING, type RingKey } from '../data/sample'
+import { CALL_WEEK, DAY, NOW_H, NURSE, CHAT, PRACTICES, PROGRAMME, RING, STEPS_WEEK, TODAY, type RingKey } from '../data/sample'
 import { usePods, useModel } from '../live/pods'
 import { DayRing } from '../ui/charts'
 import { I, type IconName } from '../ui/icons'
@@ -15,10 +15,30 @@ const SAY: Record<RingKey, { head: string; sub: string }> = {
   talk: { head: 'Talking again', sub: 'two quiet hours after lunch' },
   heart: { head: 'Settled again', sub: '79 before the breathing, 71 after' },
 }
-const SIG: Array<{ id: RingKey; label: string; icon: IconName; tone: Tone; unit: string }> = [
-  { id: 'move', label: 'Movement', icon: 'move', tone: 'move', unit: 'a min' },
-  { id: 'talk', label: 'Talking', icon: 'voice', tone: 'voice', unit: 'min' },
-  { id: 'heart', label: 'Heart', icon: 'heart', tone: 'heart', unit: 'bpm' },
+/** the three numbers under the ring. Steps and calls are the day so far against your usual day, the same number
+ *  and the same verdict as on Signals; heart rate is now, against your usual for this hour. */
+interface Sig {
+  id: RingKey
+  label: string
+  icon: IconName
+  tone: Tone
+  unit?: string
+  v: number
+  lo: number
+  hi: number
+  /** the ends of the small scale */
+  min: number
+  max: number
+  say: (n: number) => string
+  usual: string
+}
+const HEART = RING.heart
+const NOW = HEART.today.length - 1
+const k1 = (n: number) => (n / 1000).toFixed(1)
+const SIG: Sig[] = [
+  { id: 'move', label: 'Steps', icon: 'walk', tone: 'move', v: STEPS_WEEK.steps[TODAY], lo: STEPS_WEEK.lo, hi: STEPS_WEEK.hi, min: Math.min(...STEPS_WEEK.steps), max: Math.max(...STEPS_WEEK.steps, STEPS_WEEK.hi), say: (n) => n.toLocaleString('en-GB'), usual: `usual ${k1(STEPS_WEEK.lo)}–${k1(STEPS_WEEK.hi)}k` },
+  { id: 'talk', label: 'Calls', icon: 'call', tone: 'voice', unit: 'min', v: CALL_WEEK.minutes[TODAY], lo: CALL_WEEK.lo, hi: CALL_WEEK.hi, min: Math.min(...CALL_WEEK.minutes), max: Math.max(...CALL_WEEK.minutes, CALL_WEEK.hi), say: (n) => n.toFixed(0), usual: `usual ${CALL_WEEK.lo}–${CALL_WEEK.hi}` },
+  { id: 'heart', label: 'Heart', icon: 'heart', tone: 'heart', unit: 'bpm', v: HEART.today[NOW], lo: HEART.lo[NOW], hi: HEART.hi[NOW], min: Math.min(...HEART.lo, ...HEART.today), max: Math.max(...HEART.hi, ...HEART.today), say: (n) => n.toFixed(0), usual: `usual ${HEART.lo[NOW].toFixed(0)}–${HEART.hi[NOW].toFixed(0)}` },
 ]
 const rise = (i: number) => ({ '--i': i }) as CSSProperties
 
@@ -33,15 +53,8 @@ export function PodsChip() {
   )
 }
 
-/** one signal, now, on a small scale where the pale stretch is your own usual for this hour */
-function Signal({ id, label, icon, tone, unit, on, pick }: (typeof SIG)[number] & { on: boolean; pick: () => void }) {
-  const s = RING[id]
-  const k = s.today.length - 1
-  const v = s.today[k]
-  const lo = s.lo[k]
-  const hi = s.hi[k]
-  const min = Math.min(...s.lo, ...s.today)
-  const max = Math.max(...s.hi, ...s.today)
+/** one signal on a small scale where the pale stretch is your own usual */
+function Signal({ label, icon, tone, unit, v, lo, hi, min, max, say, usual, on, pick }: Sig & { on: boolean; pick: () => void }) {
   const x = (n: number) => `${(((n - min) / (max - min)) * 100).toFixed(1)}%`
   const C = I[icon]
   return (
@@ -51,16 +64,14 @@ function Signal({ id, label, icon, tone, unit, on, pick }: (typeof SIG)[number] 
         {label}
       </span>
       <span className="sig-v num">
-        {v.toFixed(0)}
-        <small>{unit}</small>
+        {say(v)}
+        {unit && <small>{unit}</small>}
       </span>
       <span className="sig-bar" aria-hidden="true">
         <i style={{ left: x(lo), right: `calc(100% - ${x(hi)})` }} />
         <b style={{ left: x(v) }} />
       </span>
-      <span className="sig-sub num">
-        usual {lo.toFixed(0)} to {hi.toFixed(0)}
-      </span>
+      <span className="sig-sub num">{usual}</span>
     </button>
   )
 }
@@ -68,6 +79,7 @@ function Signal({ id, label, icon, tone, unit, on, pick }: (typeof SIG)[number] 
 export function Today() {
   const [key, setKey] = useState<RingKey>('move')
   const model = useModel()
+  const pods = usePods()
   const ok = model ? (['nod', 'shake', 'smile'] as const).filter((e) => model.events[e]?.score.ok) : []
   const fresh = CHAT.filter((m) => m.fresh)
   const next = PRACTICES[0]
@@ -126,7 +138,7 @@ export function Today() {
           </div>
         ) : (
           <div className="group">
-            <Row icon="airpods" tone="ember" title="Teach your AirPods" sub="One minute with the camera. They learn your nod and head shake." to="/train" />
+            <Row icon="airpods" tone="ember" title="Teach your AirPods" sub={pods.on || pods.app ? '65 seconds with the camera. They learn your nod and head shake.' : 'Needs the Vire iPhone app. Here the camera shows the same reading live.'} to="/train" />
           </div>
         )}
       </Section>

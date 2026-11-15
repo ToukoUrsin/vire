@@ -2,7 +2,7 @@
 // and what the clinic sees. Everything here is a sample: no clinic uses Vire yet, nothing is sent or booked.
 import { Fragment, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent } from 'react'
 import { back, go } from '../router'
-import { CHAT, CHECKIN, HEAD_DOWN_WEEK, NIGHT_WEEK, NURSE, RING, STEPS_WEEK } from '../data/sample'
+import { CHAT, CHECKIN, DAYS, HEAD_DOWN_WEEK, NIGHT_WEEK, NURSE, RING, STEPS_WEEK, week } from '../data/sample'
 import { BandBars, Spark } from '../ui/charts'
 import { I } from '../ui/icons'
 import { Badge, Btn, Chip, Delta, Research, Row, SampleNote, Screen, Section, Sheet, Stat } from '../ui/kit'
@@ -64,8 +64,9 @@ interface Msg {
   /** the answer to anything typed here: this is a sample, nobody reads it, and where help is */
   auto?: boolean
 }
-/** sample times for the sample messages, in their order */
-const AT = ['09:12', '09:40', '09:44', '08:31', '08:32']
+/** sample times for the sample messages, in their order: Wednesday's after that afternoon, today's after the 15:40
+ *  breathing and the 16:20 call they are about */
+const AT = ['17:12', '17:40', '17:44', '16:45', '16:46']
 const SAMPLE: Msg[] = CHAT.map((m, i) => ({ ...m, id: `s${i}`, at: AT[i] }))
 const now = () => new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
 /** the sample message a shared reading hangs under: "Today looks better after the breathing" */
@@ -127,6 +128,12 @@ export function Care() {
     // above it and any more lines of writing push the chat up
     setGrow(Math.max(0, form.offsetHeight - 72))
   }, [draft])
+
+  // the chat opens at its newest message, without a move; the two tiles are a pull away at the top
+  useLayoutEffect(() => {
+    const el = scroller()
+    if (el) el.scrollTop = el.scrollHeight
+  }, [])
 
   // a new bubble comes into view
   useEffect(() => {
@@ -549,9 +556,12 @@ export function Clinic() {
   }, [booked])
   // the days well under the usual band: the two the nurse writes about
   const low = STEPS_WEEK.days.filter((_, i) => STEPS_WEEK.steps[i] < STEPS_WEEK.lo * 0.8)
-  const down = Math.max(...HEAD_DOWN_WEEK.hours)
-  const downDay = HEAD_DOWN_WEEK.days[HEAD_DOWN_WEEK.hours.indexOf(down)]
-  const rest = NIGHT_WEEK.rest[NIGHT_WEEK.rest.length - 1]
+  // the same seven days as every other week in the app, today last: the numbers here are today's and last night's
+  const stepsWeek = week(STEPS_WEEK.steps)
+  const downWeek = week(HEAD_DOWN_WEEK.hours)
+  const restWeek = week(NIGHT_WEEK.rest)
+  const down = downWeek[downWeek.length - 1]
+  const rest = restWeek[restWeek.length - 1]
   return (
     <Screen nav="Your clinic" backTo="/care" glow="move">
       <div className="pad rise" style={rise(0)}>
@@ -571,19 +581,19 @@ export function Clinic() {
             </span>
             <Delta tone="off">Low {low.join(' and ')}</Delta>
           </div>
-          <BandBars values={STEPS_WEEK.steps} labels={STEPS_WEEK.days} lo={STEPS_WEEK.lo} hi={STEPS_WEEK.hi} tone="move" fmt={steps} />
+          <BandBars values={stepsWeek} labels={DAYS} lo={STEPS_WEEK.lo} hi={STEPS_WEEK.hi} tone="move" fmt={steps} />
         </div>
       </div>
 
       <div className="pad rise clinic-block" style={rise(2)}>
         <div className="stat-grid">
-          <Stat icon="move" tone="move" label="Head down" value={down.toFixed(1)} unit="h" sub={`${downDay} · usual ${HEAD_DOWN_WEEK.lo} to ${HEAD_DOWN_WEEK.hi.toFixed(0)}`}>
-            <Spark values={HEAD_DOWN_WEEK.hours} tone="move" w={120} h={30} />
+          <Stat icon="move" tone="move" label="Head down" value={down.toFixed(1)} unit="h" sub={`Today · usual ${HEAD_DOWN_WEEK.lo} to ${HEAD_DOWN_WEEK.hi.toFixed(0)}`}>
+            <Spark values={downWeek} tone="move" w={120} h={30} />
           </Stat>
-          <Stat icon="heart" tone="heart" label="Night heart rate" value={rest} unit="bpm" sub={`usual ${NIGHT_WEEK.lo} to ${NIGHT_WEEK.hi}`}>
-            <Spark values={NIGHT_WEEK.rest} tone="heart" w={120} h={30} />
+          <Stat icon="heart" tone="heart" label="Night heart rate" value={rest} unit="bpm" sub={`Last night · usual ${NIGHT_WEEK.lo} to ${NIGHT_WEEK.hi}`}>
+            <Spark values={restWeek} tone="heart" w={120} h={30} />
           </Stat>
-          <Stat icon="breath" tone="ember" label="Practices" value="2 of 3" sub="calmer after" />
+          <Stat icon="breath" tone="ember" label="Practices" value="3 of 3" sub="Heart rate lower after" />
           {sent ? (
             <Stat label="Check-in" value="Sent" sub="Your two answers" />
           ) : (
@@ -599,6 +609,9 @@ export function Clinic() {
 
       <Section title="A booster session" i={3}>
         <div className={`card booster ${booked ? 'is-booked' : ''}`}>
+          <span className="booster-sample">
+            <Chip>Sample</Chip>
+          </span>
           <div className="booster-head">
             <Badge icon={booked ? 'check' : 'calendar'} tone="ember" size={46} />
             <div>
@@ -618,6 +631,7 @@ export function Clinic() {
               Book it
             </Btn>
           )}
+          <p className="small booster-note">Sample times. No clinic uses Vire yet, so nothing gets booked.</p>
         </div>
       </Section>
 

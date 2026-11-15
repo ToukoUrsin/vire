@@ -330,3 +330,23 @@ button.moment:active {
     opacity: 0;
   }
 }
+
+/* a 320 px phone: the three numbers keep one line each and one height */
+@media (max-width: 359px) {
+  .sigs {
+    gap: 8px;
+  }
+  .sig {
+    padding: 12px 9px 11px;
+  }
+  .sig-v {
+    font-size: 23px;
+  }
+  .sig-v small {
+    font-size: 11px;
+  }
+  .sig-sub {
+    font-size: 10.5px;
+    letter-spacing: -0.01em;
+  }
+}

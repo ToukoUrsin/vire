@@ -5,6 +5,12 @@ import type { Tone } from '../ui/kit'
 
 export const NOW_H = 17.5 // the sample day is looked at from 17:30
 
+// The sample day is a Thursday: the nurse wrote on Wednesday, and the night to Thursday is the sample night.
+// Every week in the app is drawn as the last seven days with today last, so each screen shows the same seven days.
+export const TODAY = 3
+export const week = <T,>(v: T[]): T[] => [...v.slice(TODAY + 1), ...v.slice(0, TODAY + 1)]
+export const DAYS = week(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']).map((d, i, a) => (i === a.length - 1 ? 'Today' : d))
+
 export type RingKey = 'move' | 'talk' | 'heart'
 export interface RingSeries {
   name: string
@@ -81,12 +87,13 @@ export interface Person {
   week: number[]
 }
 export const PEOPLE: Person[] = [
-  { name: 'Mum', who: 'Family', minutes: 64, calls: 4, nods: 14, talk: 0.52, note: 'You nod most on these calls.', week: [0, 18, 0, 14, 0, 14, 18] },
-  { name: 'Aino', who: 'Work', minutes: 118, calls: 5, nods: 12.9, talk: 0.41, note: 'Steady. Close to your usual.', week: [22, 24, 26, 22, 24, 0, 0] },
-  { name: 'Jussi', who: 'Work', minutes: 47, calls: 2, nods: 4.2, talk: 0.24, note: 'You go quiet and still here.', week: [0, 0, 31, 0, 16, 0, 0] },
+  { name: 'Mum', who: 'Family', minutes: 64, calls: 4, nods: 14, talk: 0.52, note: 'You nod most on these calls.', week: [0, 0, 9, 14, 0, 20, 21] },
+  { name: 'Aino', who: 'Work', minutes: 118, calls: 5, nods: 12.9, talk: 0.41, note: 'Steady. Close to your usual.', week: [28, 0, 0, 22, 24, 24, 20] },
+  { name: 'Jussi', who: 'Work', minutes: 47, calls: 2, nods: 4.2, talk: 0.24, note: 'You go quiet and still here.', week: [24, 0, 0, 0, 23, 0, 0] },
   { name: 'Sanna', who: 'TMS nurse', minutes: 12, calls: 1, nods: 10, talk: 0.58, note: 'Check-in call on Tuesday.', week: [0, 12, 0, 0, 0, 0, 0] },
 ]
-export const CALL_WEEK = { days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], minutes: [22, 54, 57, 36, 40, 14, 18], lo: 34, hi: 62 }
+// minutes on calls a day, Monday first: the sum of the people above. Tuesday and Wednesday are the quiet days the nurse writes about.
+export const CALL_WEEK = { days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], minutes: [52, 12, 9, 36, 47, 44, 41], lo: 34, hi: 62 }
 
 export interface Song {
   title: string
@@ -103,14 +110,14 @@ export const SONGS: Song[] = [
   { title: 'Kesäyö', by: 'Aava', bpm: 118, at: '10:14', beat: 0.81, hr: 3, mood: 'lifts' },
   { title: 'Northern Line', by: 'Oda Vale', bpm: 104, at: '10:31', beat: 0.64, hr: 1, mood: 'lifts' },
   { title: 'Glass Harbour', by: 'Mirel', bpm: 72, at: '11:02', beat: 0.08, hr: -4, mood: 'calms' },
-  { title: 'Hiljaa', by: 'Sointu & Kuu', bpm: 64, at: '23:40', beat: 0.03, hr: 2, mood: 'sinks' },
-  { title: 'Run Home', by: 'Lantern Club', bpm: 126, at: '12:34', beat: 0.72, hr: 6, mood: 'lifts' },
+  { title: 'Hiljaa', by: 'Sointu & Kuu', bpm: 64, at: '11:20', beat: 0.03, hr: 2, mood: 'sinks' },
+  { title: 'Run Home', by: 'Lantern Club', bpm: 126, at: '11:41', beat: 0.72, hr: 6, mood: 'lifts' },
 ]
 
 /** the sample night: heart rate every 20 minutes from 23:40, and the usual band for each point */
 export const NIGHT = {
   from: '23:40',
-  to: '06:50',
+  to: '06:40',
   t: Array.from({ length: 22 }, (_, i) => i / 3), // hours since sleep started
   bpm: [66, 63, 61, 60, 59, 58, 58, 57, 58, 60, 59, 58, 57, 57, 58, 58, 59, 61, 60, 59, 60, 62],
   lo: [60, 58, 56, 54, 53, 52, 52, 52, 52, 53, 53, 52, 52, 52, 52, 53, 53, 54, 54, 55, 56, 57],
@@ -122,8 +129,8 @@ export const NIGHT = {
 }
 export const NIGHT_WEEK = { days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], rest: [54, 55, 57, 58, 56, 54, 53], lo: 52, hi: 56 }
 
-export const STEPS_WEEK = { days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], steps: [6400, 3100, 2800, 4900, 6100, 8200, 7400], lo: 5200, hi: 7800 }
-export const HEAD_DOWN_WEEK = { days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], hours: [3.1, 5.4, 5.9, 4.2, 3.4, 1.8, 2.1], lo: 2.4, hi: 4.0 }
+export const STEPS_WEEK = { days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], steps: [6400, 3100, 2800, 5600, 6100, 8200, 7400], lo: 5200, hi: 7800 }
+export const HEAD_DOWN_WEEK = { days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], hours: [3.1, 5.4, 5.9, 3.6, 3.4, 1.8, 2.1], lo: 2.4, hi: 4.0 }
 
 export interface PracticeInfo {
   id: string
@@ -133,19 +140,19 @@ export interface PracticeInfo {
   line: string
   /** what Vire reads while you do it */
   reads: string
-  /** sample history: times done, average heart-rate change, share calmer after */
+  /** sample history: times done, average heart-rate change, share of the times the heart rate was lower after */
   done: number
   hr: number
   calmer: number
   steps: string[]
 }
 export const PRACTICES: PracticeInfo[] = [
-  { id: 'breathing', name: 'Slow breathing', icon: 'breath', minutes: 3, line: 'Six breaths a minute, over a slow sound made for it.', reads: 'Heart rate, and how still your head sits.', done: 9, hr: -6.2, calmer: 0.78, steps: ['Sit however you like.', 'Breathe in as the circle grows, out as it falls.', 'Vire reads your head before and after.'] },
-  { id: 'bodyscan', name: 'Body scan', icon: 'body', minutes: 5, line: 'Attention from your feet up to your face.', reads: 'How still your head sits, and heart rate.', done: 5, hr: -3.1, calmer: 0.6, steps: ['Sit or lie down.', 'A bell moves you on to the next part of the body.', 'Nothing to get right.'] },
+  { id: 'breathing', name: 'Slow breathing', icon: 'breath', minutes: 3, line: 'Six breaths a minute, over a slow sound made for it.', reads: 'Heart rate, and how still your head sits.', done: 12, hr: -6.2, calmer: 0.917, steps: ['Sit however you like.', 'Breathe in as the circle grows, out as it falls.', 'Vire reads your head before and after.'] },
+  { id: 'bodyscan', name: 'Body scan', icon: 'body', minutes: 5, line: 'Attention from your feet up to your face.', reads: 'How still your head sits, and heart rate.', done: 5, hr: -3.1, calmer: 0.4, steps: ['Sit or lie down.', 'A bell moves you on to the next part of the body.', 'Nothing to get right.'] },
   { id: 'sit', name: 'Sitting meditation', icon: 'sit', minutes: 10, line: 'Ten minutes with the breath. A bell at the start and the end.', reads: 'Stillness, minute by minute.', done: 2, hr: -1.4, calmer: 0.5, steps: ['Sit upright, eyes soft or closed.', 'When the mind wanders, come back to the breath.', 'The bell ends it.'] },
-  { id: 'yoga', name: 'Neck and shoulders', icon: 'stretch', minutes: 8, line: 'Slow yoga for people who sit all day.', reads: 'Each move, from how your head turns and tips.', done: 4, hr: -2.2, calmer: 0.75, steps: ['Stand or sit.', 'Follow the voice: tip, turn, roll.', 'Vire counts the moves from your AirPods.'] },
-  { id: 'walk', name: 'A walk', icon: 'walk', minutes: 10, line: 'Out the door, any pace.', reads: 'Steps, felt in the AirPods.', done: 7, hr: 4.8, calmer: 0.71, steps: ['AirPods in, phone in your pocket.', 'It counts once Vire has felt steps for a third of it.', 'Vire checks in when you are back.'] },
-  { id: 'winddown', name: 'Wind down', icon: 'sleep', minutes: 15, line: 'Sound that fades as your head goes still.', reads: 'Head stillness, then heart rate through the night.', done: 3, hr: -4.0, calmer: 0.67, steps: ['In bed, lights off.', 'The sound fades once you have been still a while.', 'Nothing to switch off.'] },
+  { id: 'yoga', name: 'Neck and shoulders', icon: 'stretch', minutes: 8, line: 'Slow yoga for people who sit all day.', reads: 'Each move, from how your head turns and tips.', done: 5, hr: -2.2, calmer: 0.4, steps: ['Stand or sit.', 'Follow the voice: tip, turn, roll.', 'Vire counts the moves from your AirPods.'] },
+  { id: 'walk', name: 'A walk', icon: 'walk', minutes: 10, line: 'Out the door, any pace.', reads: 'Steps, felt in the AirPods.', done: 8, hr: 4.8, calmer: 0.5, steps: ['AirPods in, phone in your pocket.', 'It counts once Vire has felt steps for a third of it.', 'Vire checks in when you are back.'] },
+  { id: 'winddown', name: 'Wind down', icon: 'sleep', minutes: 15, line: 'Sound that fades as your head goes still.', reads: 'Head stillness, then heart rate through the night.', done: 3, hr: -4.0, calmer: 0.33, steps: ['In bed, lights off.', 'The sound fades once you have been still a while.', 'Nothing to switch off.'] },
 ]
 
 export const PROGRAMME = {
@@ -166,7 +173,7 @@ export const CHAT: Array<{ from: 'nurse' | 'you'; text: string; day?: string; fr
   { from: 'nurse', day: 'Wednesday', text: 'Hi! I saw your week. Tuesday and Wednesday afternoons were quieter than your usual. How did they feel to you?' },
   { from: 'you', text: 'Tired mostly. Worked from home both days and barely talked to anyone.' },
   { from: 'nurse', text: 'Thanks, that fits what Vire saw. The breathing brought your heart rate down both times, so keep that one.' },
-  { from: 'nurse', day: 'Today', fresh: true, text: 'Today looks better after the breathing. Let’s look again on Friday. If it keeps dipping we book a booster then, no need to wait for the December visit.' },
+  { from: 'nurse', day: 'Today', fresh: true, text: 'Today looks better after the breathing. I have kept Friday 10:30 free for a booster session in case the dip comes back. It is in your Clinic view, yours to book. No need to wait for the December visit.' },
   { from: 'nurse', fresh: true, text: 'Your weekly check-in is open. Two questions, two taps.' },
 ]
 

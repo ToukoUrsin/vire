@@ -99,8 +99,13 @@
 }
 .train-go {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
   margin-top: 28px;
+}
+/* a 320 px phone: the long label keeps inside the screen */
+.train-go .btn {
+  padding-inline: 14px;
 }
 .train-error {
   margin-top: 14px;

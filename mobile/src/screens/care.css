@@ -46,6 +46,7 @@
   margin-top: 2px;
   font: 500 13px/1.3 var(--font-ui);
   color: var(--ink-2);
+  white-space: nowrap;
 }
 .care-callbtn {
   display: grid;
@@ -796,6 +797,15 @@ button.chat-card:active {
     radial-gradient(120% 90% at 100% 0%, rgba(228, 87, 46, 0.26), transparent 62%),
     var(--glass);
 }
+.booster-sample {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+}
+.booster-note {
+  margin-top: 12px;
+  text-align: center;
+}
 .booster-head {
   display: flex;
   align-items: center;
@@ -828,4 +838,14 @@ button.chat-card:active {
 .clinic-link {
   text-decoration: none;
   color: inherit;
+}
+
+/* a 320 px phone: the sample pill gets its own line over the offer instead of lying on its words */
+@media (max-width: 359px) {
+  .booster-sample {
+    position: static;
+    display: flex;
+    justify-content: flex-end;
+    margin: -6px -4px 8px 0;
+  }
 }

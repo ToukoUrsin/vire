@@ -105,7 +105,8 @@
   gap: 10px;
   margin-top: auto;
   padding: 26px var(--gutter) calc(var(--safe-b) + 20px);
-  background: linear-gradient(to bottom, rgba(14, 12, 10, 0), var(--bg) 30%);
+  /* opaque under the switch and the button, with a short fade above: text that scrolls under is not read through */
+  background: linear-gradient(to bottom, rgba(14, 12, 10, 0), var(--bg) 16px);
 }
 .pr-cta .btn {
   height: 58px;
@@ -125,7 +126,8 @@
     radial-gradient(86% 46% at 50% 41%, color-mix(in oklab, var(--hue) 30%, transparent), transparent 100%),
     radial-gradient(140% 60% at 50% 108%, color-mix(in oklab, var(--hue) 13%, transparent), transparent 70%),
     #0b0a09;
-  animation: pr-in 1200ms var(--ease) both;
+  /* the practice is on screen at once after Begin: a slow fade from black reads as a crash */
+  animation: pr-in 220ms var(--ease) both;
 }
 @keyframes pr-in {
   from {
@@ -326,6 +328,15 @@
   font: 600 13px/1 var(--font-ui);
   color: var(--ink-2);
 }
+.pr-big-label {
+  margin-top: 18px;
+  font: 600 13px/1 var(--font-ui);
+  letter-spacing: 0.01em;
+  color: var(--ink-2);
+}
+.pr-big-label + .pr-big {
+  margin-top: 8px;
+}
 .pr-big {
   margin-top: 16px;
   font-size: 84px;
@@ -387,4 +398,21 @@
   display: grid;
   gap: 8px;
   margin-top: 28px;
+}
+
+/* a short screen, as in Safari with its address bar: the cover gives way so the steps clear the pinned block */
+@media (max-height: 760px) {
+  .art.pr-hero {
+    height: 132px !important;
+  }
+  .pr-intro-body {
+    margin-top: -34px;
+  }
+  .pr-steps {
+    margin-top: 16px;
+  }
+  .pr-steps li {
+    min-height: 44px;
+    padding: 7px 0;
+  }
 }

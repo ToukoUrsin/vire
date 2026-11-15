@@ -87,16 +87,19 @@ interface View {
 /**
  * A believable result for a phone with no AirPods, clearly marked as a sample on the screen. Steady through the
  * first third, a fall through the middle, steady through the last third: compare() reads the two ends, so the line
- * drawn, the two tiles and the percent all say the same fall (4.5 to 1.8 is 60%).
+ * drawn, the two tiles and the percent all say the same fall (4.5 to 2.8 is 38%). It is the same sample result as
+ * the 15:40 breathing on Today and in Care: one sample result in the whole app.
  */
 const SAMPLE_START = 4.5
-const SAMPLE_END = 1.8
+const SAMPLE_END = 2.8
 function sampleMove(seconds: number): number[] {
   const third = Math.floor(seconds / 3)
   const out: number[] = []
   for (let i = 0; i < seconds; i++) {
     const level = SAMPLE_START + (SAMPLE_END - SAMPLE_START) * ease((i - third + 1) / (seconds - 2 * third + 1))
-    out.push(level + 0.2 * Math.sin(i * 1.7) + 0.1 * Math.sin(i * 0.61))
+    // the wobble dies away towards both ends, so the line starts and ends on the values the tiles say
+    const live = Math.sin((Math.PI * i) / (seconds - 1))
+    out.push(level + live * (0.2 * Math.sin(i * 1.7) + 0.1 * Math.sin(i * 0.61)))
   }
   // the small wobble must not pull either end off its value: set each end's mean, over the stretch compare() reads
   const n = Math.max(4, Math.min(20, third))
@@ -404,7 +407,7 @@ export function Practice({ id }: { id?: string; topic?: string }) {
                   </span>
                 ) : (
                   <span className="pill">
-                    <I.airpods size={14} /> No AirPods
+                    <I.airpods size={14} /> AirPods not connected
                   </span>
                 )}
               </div>
@@ -504,7 +507,7 @@ export function Practice({ id }: { id?: string; topic?: string }) {
               </span>
             ) : (
               <span className="pill">
-                <I.airpods size={14} /> No AirPods
+                <I.airpods size={14} /> AirPods not connected
               </span>
             )}
             {view.beat && (
@@ -543,7 +546,8 @@ export function Practice({ id }: { id?: string; topic?: string }) {
   const bins: number[] = []
   const size = Math.max(2, Math.round(r.move.length / 24))
   for (let i = 0; i + size <= r.move.length; i += size) bins.push(mean(r.move.slice(i, i + size)))
-  const xs = bins.map((_, i) => i * size)
+  // the line runs from the first second to the last, so its end is the practice's end
+  const xs = bins.map((_, i) => Math.round((i / Math.max(1, bins.length - 1)) * r.seconds))
   // a walk with no AirPods has nothing to show: no steps were felt, and a walk has no stillness to sample
   const blank = mode === 'walk' && !r.real
   const said = blank
@@ -577,7 +581,7 @@ export function Practice({ id }: { id?: string; topic?: string }) {
               From your AirPods
             </Chip>
           ) : (
-            <Chip>{blank ? 'No AirPods' : 'Sample result'}</Chip>
+            <Chip>{blank ? 'AirPods not connected' : 'Sample result'}</Chip>
           )}
           <span className="pr-done-what num">
             {p.name} · {clock(r.seconds)}
@@ -586,6 +590,11 @@ export function Practice({ id }: { id?: string; topic?: string }) {
         <h1 className="title-l rise" style={rise(1)}>
           {r.full ? 'Done.' : 'Stopped early.'}
         </h1>
+        {!r.real && !blank && (
+          <p className="pr-big-label rise" style={rise(1)}>
+            Sample result, not measured
+          </p>
+        )}
         <div className="big-num pr-big rise" style={rise(1)}>
           {big.v}
           <small>{big.u}</small>
@@ -596,7 +605,7 @@ export function Practice({ id }: { id?: string; topic?: string }) {
 
         {bins.length > 3 && mode !== 'walk' && (
           <div className="card pr-chart rise" style={rise(3)}>
-            <BandLine x={xs} y={bins} tone="move" fmtX={(s) => clock(s)} fmtY={(v) => `${v.toFixed(1)}° a second`} height={150} />
+            <BandLine x={xs} y={bins} tone="move" fmtX={(s) => clock(s)} fmtY={(v) => `${v.toFixed(1)}° a second`} height={150} rest={c ? { y: `${c.b.toFixed(1)}° a second`, x: 'at the end' } : undefined} />
             <p className="small" style={{ marginTop: 8 }}>
               How much your head moved, through the practice.
             </p>

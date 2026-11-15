@@ -52,7 +52,7 @@
 .lp-step {
   position: relative;
   display: grid;
-  grid-template-columns: 44px 1fr;
+  grid-template-columns: 44px minmax(0, 1fr);
   gap: 14px;
   padding: 18px 18px 18px 16px;
 }
@@ -107,4 +107,15 @@
 }
 .lp-not .body-2 {
   margin-top: 10px;
+}
+
+/* a 320 px phone: a long tag wraps inside its card instead of holding the card wider than the screen */
+@media (max-width: 359px) {
+  .lp-tag {
+    height: auto;
+    min-height: 26px;
+    padding: 5px 10px;
+    line-height: 1.25;
+    white-space: normal;
+  }
 }

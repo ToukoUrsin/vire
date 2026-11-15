@@ -265,7 +265,7 @@ export function BandBars({ values, labels, lo, hi, tone, fmt, usual = 'your usua
 
 // ---------- a line against a band, with a finger to read it ----------
 /** `bare` drops the reading above the chart; the screen then says it itself, from `onPick` (null once the finger is gone). */
-export function BandLine({ x, y, lo, hi, tone, fmtX, fmtY, height = 170, usual = 'your usual', bare, onPick }: { x: number[]; y: number[]; lo?: number[]; hi?: number[]; tone: Tone; fmtX: (x: number) => string; fmtY: (y: number) => string; height?: number; usual?: string; bare?: boolean; onPick?: (i: number | null) => void }) {
+export function BandLine({ x, y, lo, hi, tone, fmtX, fmtY, height = 170, usual = 'your usual', bare, onPick, rest }: { x: number[]; y: number[]; lo?: number[]; hi?: number[]; tone: Tone; fmtX: (x: number) => string; fmtY: (y: number) => string; height?: number; usual?: string; bare?: boolean; onPick?: (i: number | null) => void; /** what the headline says while no point is picked, when that is not the last point */ rest?: { y: string; x: string } }) {
   const id = uid(useId())
   const [sel, setSel] = useState<number | null>(null)
   const clear = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -308,8 +308,8 @@ export function BandLine({ x, y, lo, hi, tone, fmtX, fmtY, height = 170, usual =
     <div>
       {!bare && (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
-          <span className="title-m num">{fmtY(y[i])}</span>
-          <span className="small num">{fmtX(x[i])}</span>
+          <span className="title-m num">{sel == null && rest ? rest.y : fmtY(y[i])}</span>
+          <span className="small num">{sel == null && rest ? rest.x : fmtX(x[i])}</span>
         </div>
       )}
       <svg viewBox={`0 0 ${W} ${height}`} width="100%" style={{ display: 'block', touchAction: 'pan-y', overflow: 'visible' }} onPointerDown={pickAt} onPointerMove={(e) => (e.buttons || e.pointerType !== 'mouse') && pickAt(e)} role="img" aria-label="Line against your usual">

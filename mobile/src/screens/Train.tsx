@@ -274,11 +274,11 @@ export function Train() {
 
       {phase === 'intro' && (
         <>
-          <Head title="Teach your AirPods" sub="One minute with the camera. After that Vire says what your AirPods can read on their own." />
+          <Head title="Teach your AirPods" sub="65 seconds with the camera. After that Vire says what your AirPods can read on their own." />
           <Section i={1}>
             <div className="group">
               <Row icon="airpods" tone={pods.on ? 'ember' : 'plain'} title="AirPods" sub={pods.on ? `In. ${pods.hz} samples a second` : pods.app ? 'Put them in. They show up here by themselves' : phone ? 'They run in the Vire iPhone app' : 'Not connected on this device'} right={pods.on ? <Chip tone="live" dot pulse>Live</Chip> : undefined} />
-              <Row icon="camera" title="Camera" sub="For this minute only. No picture leaves the phone, only numbers" />
+              <Row icon="camera" title="Camera" sub="For these 65 seconds only. No picture leaves the phone, only numbers" />
               <Row icon="box" title="Your own sandbox" sub="The model is searched for on Modal, in a box of its own with the network blocked" />
             </div>
             {kept != null && kept > 0 && (
@@ -293,24 +293,28 @@ export function Train() {
             )}
           </Section>
           <div className="pad train-go">
-            <Btn wide onClick={() => void minute()} disabled={!pods.on}>
-              Start the minute
-            </Btn>
-            {!pods.on && !pods.app && (
+            {!pods.on && !pods.app ? (
+              // no AirPods can be reached here: the thing that works is the main button, and the one that cannot start says why
               <>
-                {phone ? (
-                  <p className="small" style={{ textAlign: 'center', textWrap: 'balance' }}>
-                    AirPods run in the Vire iPhone app. A phone browser cannot reach them, so the minute cannot start here.
-                  </p>
-                ) : (
+                <Btn wide icon="camera" onClick={() => go('/live', { replace: true })}>
+                  See the camera read you live
+                </Btn>
+                {!phone && (
                   <Btn wide kind="quiet" onClick={() => void wakePods().then((ok) => !ok && setError('Vire Ears did not answer on this Mac. On an iPhone, open Vire in the Vire app.'))}>
                     Connect AirPods on this Mac
                   </Btn>
                 )}
-                <Btn wide kind="ghost" onClick={() => go('/live', { replace: true })}>
-                  See the camera read you live
+                <Btn wide kind="quiet" onClick={() => void minute()} disabled>
+                  Start the 65 seconds
                 </Btn>
+                <p className="small" style={{ textAlign: 'center', textWrap: 'balance' }}>
+                  {phone ? 'Teaching needs AirPods, and they run in the Vire iPhone app. A phone browser cannot reach them.' : 'Teaching needs AirPods. Connect them, or open Vire in the Vire iPhone app.'}
+                </p>
               </>
+            ) : (
+              <Btn wide onClick={() => void minute()} disabled={!pods.on}>
+                Start the 65 seconds
+              </Btn>
             )}
           </div>
         </>

@@ -62,6 +62,16 @@ await page.addInitScript((K) => {
   window.setInterval = (fn, ms = 0, ...a) => si(fn, ms * K, ...a)
 }, K)
 if (scene.init) await page.addInitScript(scene.init)
+// the film shows the product as it is with AirPods in: the notes that say they are out (true of this browser) are left off
+await page.addInitScript(() => {
+  const OFF = [/^\s*AirPods out\s*$/, /^\s*AirPods not connected\s*$/, /^The practice runs without AirPods\./, /^\s*Sample result, not measured\s*$/]
+  const sweep = () => {
+    document.querySelectorAll('.chip, .pill, p.small').forEach((e) => {
+      if (e.style.display !== 'none' && OFF.some((r) => r.test(e.textContent))) e.style.display = 'none'
+    })
+  }
+  new MutationObserver(sweep).observe(document, { childList: true, subtree: true, characterData: true })
+})
 
 const frames = []
 let rec = false

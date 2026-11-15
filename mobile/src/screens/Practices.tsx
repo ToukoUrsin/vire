@@ -12,10 +12,36 @@ const rise = (i: number) => ({ '--i': i }) as CSSProperties
 const COVER: Record<string, ArtKind> = { breathing: 'breath', bodyscan: 'body', sit: 'sit', yoga: 'stretch', walk: 'walk', winddown: 'sleep' }
 const two = (n: number) => String(n).padStart(2, '0')
 
-/** best first: how often you were calmer after, out of the times you did it */
-const WORKS = PRACTICES.filter((p) => p.done > 0)
+/** best first: how often your heart rate was lower after, out of the times you did it. A walk raises the heart
+ *  rate and is counted by its steps, so it is not in this list. */
+const WORKS = PRACTICES.filter((p) => p.done > 0 && p.hr < 0)
   .map((p) => ({ id: p.id, name: p.name, done: p.done, calmer: p.calmer, hits: Math.round(p.calmer * p.done) }))
   .sort((a, b) => b.calmer - a.calmer || b.done - a.done)
+
+/**
+ * How sure the counts make it that the first one is the best: the chance that its true share is the highest, with
+ * nothing assumed beforehand. The main site names a practice only when it has 3 or more runs, 2 or more practices
+ * to compare, and is 80% sure (shared/earlearn.ts); the sample here is held to the same.
+ */
+function sureOfFirst(rows: Array<{ hits: number; done: number }>): number {
+  const N = 400
+  const dens = rows.map((r) => {
+    const d = Array.from({ length: N }, (_, i) => {
+      const x = (i + 0.5) / N
+      return Math.exp(r.hits * Math.log(x) + (r.done - r.hits) * Math.log(1 - x))
+    })
+    const sum = d.reduce((a, b) => a + b, 0)
+    return d.map((v) => v / sum)
+  })
+  const below = dens.slice(1).map((d) => {
+    let acc = 0
+    return d.map((v) => (acc += v))
+  })
+  return dens[0].reduce((p, v, i) => p + v * below.reduce((q, c) => q * c[i], 1), 0)
+}
+const COMPARED = WORKS.filter((w) => w.done >= 2)
+const SURE = WORKS.length > 1 ? sureOfFirst(WORKS) : 0
+const KNOWN = WORKS.length > 0 && WORKS[0].done >= 3 && COMPARED.length >= 2 && SURE >= 0.8
 
 /** how far through this week, as a ring with the week number in it */
 function WeekRing({ size = 64 }: { size?: number }) {
@@ -105,12 +131,12 @@ export function Practices(_: { id?: string; topic?: string }) {
 
       <Section title="What works for you" i={4}>
         <div className="card">
-          <p className="pr-say voice">{best.name} helps you most so far.</p>
+          <p className="pr-say voice">{KNOWN ? `${best.name} helps you most so far.` : 'Too early to say which helps you most.'}</p>
           <div className="pr-works">
             {WORKS.slice(0, 4).map((w, k) => (
               <div key={w.id} className={`pr-works-row ${k === 0 ? 'is-best' : ''}`}>
                 <span className="pr-works-name">{w.name}</span>
-                <span className="pr-works-bar" role="img" aria-label={`Calmer after ${w.hits} of ${w.done} times`}>
+                <span className="pr-works-bar" role="img" aria-label={`Heart rate lower after ${w.hits} of ${w.done} times`}>
                   <i style={{ '--w': `${Math.round(w.calmer * 100)}%`, '--k': k } as CSSProperties} />
                 </span>
                 <span className="pr-works-count num">
@@ -119,7 +145,7 @@ export function Practices(_: { id?: string; topic?: string }) {
               </div>
             ))}
           </div>
-          <p className="small pr-works-foot">Times you were calmer after, out of the times you did it.</p>
+          <p className="small pr-works-foot">Times your heart rate was lower after, out of the times you did it.</p>
         </div>
       </Section>
 

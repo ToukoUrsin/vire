@@ -2,7 +2,7 @@
 import { useState, type CSSProperties } from 'react'
 import type { EarEvent, EarModel2 } from '@shared/ear'
 import { ALL } from '../data/refs'
-import { inApp, useModel } from '../live/pods'
+import { inApp, useModel, usePods } from '../live/pods'
 import { I, type IconName } from '../ui/icons'
 import { Badge, Btn, Chip, Row, RunsOn, Screen, Section, Sheet, Stat } from '../ui/kit'
 import { PodsChip } from './Today'
@@ -95,11 +95,13 @@ function ModelCard({ m }: { m: EarModel2 }) {
 }
 
 function Teach() {
+  const pods = usePods()
+  const here = pods.on || pods.app
   return (
     <div className="card yu-model yu-teach">
       <Badge icon="airpods" tone="ember" size={52} />
       <h2 className="title-l yu-teach-title">Teach your AirPods</h2>
-      <p className="body-2 yu-teach-say">One minute with the camera. Then Vire says what it can read from the AirPods alone.</p>
+      <p className="body-2 yu-teach-say">{here ? '65 seconds with the camera. Then Vire says what it can read from the AirPods alone.' : 'Needs the Vire iPhone app. Here the camera shows the same reading live.'}</p>
       <div className="pills yu-teach-pills">
         {SHOWN.map((e) => {
           const C = I[e.icon]
@@ -110,8 +112,8 @@ function Teach() {
           )
         })}
       </div>
-      <Btn kind="ember" wide to="/train">
-        Teach them, 65 seconds
+      <Btn kind="ember" wide to={here ? '/train' : '/live'}>
+        {here ? 'Teach them, 65 seconds' : 'See the camera read you live'}
       </Btn>
       <div className="yu-model-made">
         <RunsOn />

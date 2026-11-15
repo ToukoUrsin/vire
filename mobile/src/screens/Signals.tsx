@@ -2,11 +2,11 @@
 // not built; movement is felt today on the main site. Each screen says so at the top and again at the end.
 import { useState, type CSSProperties, type ReactNode } from 'react'
 import { go } from '../router'
-import { CALL_WEEK, DAY, HEAD_DOWN_WEEK, NIGHT, NIGHT_WEEK, PEOPLE, PRACTICES, SONGS, STEPS_WEEK, type Song } from '../data/sample'
+import { CALL_WEEK, DAY, DAYS, HEAD_DOWN_WEEK, NIGHT, NIGHT_WEEK, PEOPLE, PRACTICES, SONGS, STEPS_WEEK, TODAY, week, type Song } from '../data/sample'
 import { BandBars, BandDots, BandLine, Strip } from '../ui/charts'
 import { I, type IconName } from '../ui/icons'
 import { Art, Btn, Chip, Delta, Head, Research, Row, SampleNote, Screen, Section, Stat, type ArtKind } from '../ui/kit'
-import { PodsChip } from './Today'
+import { usePods } from '../live/pods'
 import './signals.css'
 
 const rise = (i?: number): CSSProperties => ({ '--i': i ?? 0 }) as CSSProperties
@@ -16,13 +16,9 @@ const signed = (n: number) => (n > 0 ? `+${n}` : n < 0 ? `−${-n}` : '0')
 const sum = (v: number[]) => v.reduce((a, b) => a + b, 0)
 const thousands = (n: number) => n.toLocaleString('en-GB')
 
-// The sample day is a Thursday (the nurse wrote on Wednesday and looks again on Friday, and Thursday's night is the
-// sample night). So a week is drawn as the last seven days, and the last bar is today.
-const TODAY = 3
+// The sample day is a Thursday (see data/sample): a week is the last seven days, and the last bar is today.
 const TUE = 1
 const WED = 2
-const week = <T,>(v: T[]): T[] => [...v.slice(TODAY + 1), ...v.slice(0, TODAY + 1)]
-const DAYS = week(CALL_WEEK.days).map((d, i, a) => (i === a.length - 1 ? 'Today' : d))
 const FULL: Record<string, string> = { Mon: 'Monday', Tue: 'Tuesday', Wed: 'Wednesday', Thu: 'Thursday', Fri: 'Friday', Sat: 'Saturday', Sun: 'Sunday' }
 const LAST = DAYS.length - 1
 const when = (i: number) => (i === LAST ? 'today' : `on ${FULL[DAYS[i]]}`)
@@ -152,13 +148,10 @@ export function Signals(_: { id?: string; topic?: string }) {
   const mins = CALL_WEEK.minutes[TODAY]
   const beat = /(\d+) of (\d+) songs/.exec(DAY.find((m) => m.icon === 'music')?.sub ?? '')
   const steps = STEPS_WEEK.steps[TODAY]
+  const pods = usePods()
   return (
     <Screen glow="move">
       <div className="pad rise" style={rise(0)}>
-        <div className="sg-top">
-          <Chip>Sample day</Chip>
-          <PodsChip />
-        </div>
         <h1 className="title-xl">Signals</h1>
       </div>
 
@@ -166,7 +159,7 @@ export function Signals(_: { id?: string; topic?: string }) {
         <button className="sg-live" onClick={() => go('/live')}>
           <span className="sg-live-top">
             <Chip tone="live" dot pulse>
-              Real, on this phone
+              {pods.on ? 'Real, from your AirPods' : 'Real, with this camera'}
             </Chip>
             <span className="sg-go" aria-hidden="true">
               <I.right size={18} />
@@ -190,6 +183,7 @@ export function Signals(_: { id?: string; topic?: string }) {
       <section className="section">
         <div className="section-head rise" style={rise(2)}>
           <h2 className="title-m">Today</h2>
+          <Chip>Sample day</Chip>
         </div>
         <div className="pad sg-covers">
           <Cover kind="call" icon="call" label="Calls" to="/signals/calls" value={mins} unit="min" sub={`${calls} calls. ${versus(mins, CALL_WEEK.lo, CALL_WEEK.hi).text}.`} i={2} />
@@ -295,7 +289,7 @@ export function Calls(_: { id?: string; topic?: string }) {
 const MOOD: Record<Song['mood'], { word: string; d: string; tone?: 'off' | 'ok'; art: string }> = {
   lifts: { word: 'Lifts', d: 'M12 19V5.5M6.5 11L12 5.5 17.5 11', tone: 'ok', art: 'linear-gradient(140deg, #d9952f, #6b4512)' },
   calms: { word: 'Calms', d: 'M4 12c2.7-3.2 5.3-3.2 8 0s5.3 3.2 8 0', art: 'linear-gradient(140deg, #2fa596, #134a44)' },
-  sinks: { word: 'Sinks', d: 'M12 5v13.5M6.5 13L12 18.5 17.5 13', tone: 'off', art: 'linear-gradient(140deg, #6b76d6, #262b5e)' },
+  sinks: { word: 'Still', d: 'M5 12h14', art: 'linear-gradient(140deg, #6b76d6, #262b5e)' },
   flat: { word: 'Flat', d: 'M5 12h14', art: 'linear-gradient(140deg, #6f675b, #2f2a23)' },
 }
 function Mood({ mood }: { mood: Song['mood'] }) {
@@ -325,11 +319,11 @@ export function Music(_: { id?: string; topic?: string }) {
       <Hero
         i={1}
         value={Math.round(s.beat * 100)}
-        unit="% with the beat"
+        unit="% of this song"
         versus={{ tone: MOOD[s.mood].tone, text: MOOD[s.mood].word }}
         cap={
           <>
-            <b>{s.title}</b> by {s.by}, {s.bpm} bpm
+            How much of <b>{s.title}</b> by {s.by}, {s.bpm} bpm, your head moved with the beat.
           </>
         }
       >
@@ -342,7 +336,7 @@ export function Music(_: { id?: string; topic?: string }) {
 
       <div className="pad rise" style={{ ...rise(3), marginTop: 12 }}>
         <div className="stat-grid">
-          <Stat icon="music" tone="face" label="With the beat" value={beat ? beat[1] : '0'} unit={`of ${beat ? beat[2] : SONGS.length} songs`} />
+          <Stat icon="music" tone="face" label="Songs that moved you" value={beat ? beat[1] : '0'} unit={`of ${beat ? beat[2] : SONGS.length}`} sub="With the beat for over half the song" />
           <Stat icon="clock" label="Listening" value={long ? long[1] : day.split(' · ')[0]} unit={long ? 'min' : undefined} />
           <Stat icon="heart" tone="heart" label="Heart up most" value={signed(up.hr)} unit="bpm" sub={up.title} />
           <Stat icon="heart" tone="heart" label="Heart down most" value={signed(down.hr)} unit="bpm" sub={down.title} />
@@ -417,7 +411,7 @@ export function Sleep(_: { id?: string; topic?: string }) {
 
       <div className="pad rise" style={{ ...rise(2), marginTop: 22 }}>
         <div className="stat-grid">
-          <Stat icon="sleep" tone="move" label="Night" value={`${Math.floor(span / 60)} h ${span % 60}`} unit="min" sub={`${NIGHT.from} to ${NIGHT.to}`} />
+          <Stat icon="sleep" tone="move" label="Night" value={span % 60 ? `${Math.floor(span / 60)} h ${span % 60}` : Math.floor(span / 60)} unit={span % 60 ? 'min' : 'hours'} sub={`${NIGHT.from} to ${NIGHT.to}`} />
           <Stat icon="heart" tone="heart" label="Lowest" value={lowest} unit="bpm" sub={`at ${clock(NIGHT.t[NIGHT.bpm.indexOf(lowest)])}`} />
           <Stat wide icon="move" tone="move" label="Head moving" value={sum(NIGHT.stir)} unit="min" sub={`Most around ${clock(NIGHT.t[peak])}${rose ? ', when your heart rate rose too' : ''}`}>
             <Strip values={NIGHT.stir} tone="move" height={48} flush />
@@ -431,7 +425,7 @@ export function Sleep(_: { id?: string; topic?: string }) {
 
       <Section title="Seven nights" i={3}>
         <div className="card">
-          <BandDots values={rest} labels={nights} heads={nights.map((d, i) => (i === nights.length - 1 ? 'Last night' : `Night to ${FULL[d]}`))} lo={NIGHT_WEEK.lo} hi={NIGHT_WEEK.hi} tone="heart" fmt={(v) => `${v} bpm resting`} />
+          <BandDots values={rest} labels={DAYS} heads={nights.map((d, i) => (i === nights.length - 1 ? 'Last night' : `Night to ${FULL[d]}`))} lo={NIGHT_WEEK.lo} hi={NIGHT_WEEK.hi} tone="heart" fmt={(v) => `${v} bpm resting`} />
         </div>
       </Section>
 
@@ -459,6 +453,7 @@ export function Movement(_: { id?: string; topic?: string }) {
   const [sel, setSel] = useState(LAST)
   const part = (steps[TUE] + steps[WED]) / (STEPS_WEEK.lo + STEPS_WEEK.hi)
   const back = steps[TODAY] > Math.max(steps[TUE], steps[WED]) && down[TODAY] < Math.min(down[TUE], down[WED])
+  const inUsual = steps[TODAY] >= STEPS_WEEK.lo && steps[TODAY] <= STEPS_WEEK.hi
   const walk = (DAY.find((m) => m.icon === 'walk')?.sub ?? '').split(' · ')
   const still = /^(.*) min$/.exec((DAY.find((m) => m.icon === 'move')?.sub ?? '').split(' · ')[0])
   return (
@@ -470,7 +465,7 @@ export function Movement(_: { id?: string; topic?: string }) {
 
       <Say i={2}>
         On Tuesday and Wednesday you took <b>{part < 0.4 ? 'about a third of' : part < 0.62 ? 'about half' : 'fewer than'} your usual steps.</b>
-        {back ? ' Today is closer.' : ''}
+        {inUsual ? ' Today you are back in your usual.' : back ? ' Today is closer.' : ''}
       </Say>
 
       <div className="pad rise" style={{ ...rise(3), marginTop: 12 }}>

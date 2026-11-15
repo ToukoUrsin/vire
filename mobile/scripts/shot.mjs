@@ -7,7 +7,7 @@ const { chromium } = require('/home/ubuntu/.local/lib/node_modules/playwright')
 const [path = '/today', out = '/tmp/shot.png', h = '874', top = '0'] = process.argv.slice(2)
 const base = process.env.VIRE_BASE ?? 'http://127.0.0.1:5881/app/'
 const b = await chromium.launch({ headless: true })
-const ctx = await b.newContext({ viewport: { width: 402, height: +h }, deviceScaleFactor: 2, isMobile: true, hasTouch: true })
+const ctx = await b.newContext({ viewport: { width: +(process.env.VIRE_W ?? 402), height: +h }, deviceScaleFactor: 2, isMobile: true, hasTouch: true })
 const page = await ctx.newPage()
 page.on('pageerror', (e) => console.log('PAGE ERROR', String(e)))
 await page.goto(`${base}#${path}`)
