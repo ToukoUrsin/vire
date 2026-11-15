@@ -2,7 +2,7 @@
 // against the chest and its own motion sensor stands in for the AirPods: each breath tilts it a degree or two. The
 // sea starts at ten breaths a minute; every stretch long enough to read, the phone is asked whether the breath
 // went with it (flow.ts, with Today's own breath.ts and pace.ts), the sea steps down, holds or eases back, and the
-// screen says what was read. The slow tilt is drawn beside the sea's rise and fall as it happens.
+// screen says what was read. It slows only when a breath is read with it: a phone lying still holds it. The slow tilt is drawn beside the sea's rise and fall as it happens.
 // A try is not a practice: it goes to /api/try alone, as motion numbers, and to no person or clinic list.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { encode } from 'uqr'
@@ -28,6 +28,14 @@ const speed = () => {
 const newId = () => `try-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
 /** this page's address, to open on a phone */
 const address = () => `${location.origin}${location.pathname}#/try`
+/** a laptop has no chest to lie on: said on the first screen, before the tap, with the address as a code for a phone */
+const noPhoneHere = () => {
+  try {
+    return typeof DeviceMotionEvent === 'undefined' || !window.matchMedia('(pointer: coarse)').matches
+  } catch {
+    return false
+  }
+}
 const VIEW_MS = 24_000
 const W = 300
 const H = 96
@@ -327,7 +335,7 @@ export default function Try() {
           <>
             <h1>Try the breathing with your phone</h1>
             <p className="ty-lede">A little over a minute. Turn the sound on, with any headphones or the speaker. Tap the button, then hold your phone flat against your chest.</p>
-            <p className="ty-lede ty-quiet">A sea rises and falls. It slows when your phone reads your breath going with it, and it says what it read. Here the phone&rsquo;s motion sensor stands in for the AirPods.</p>
+            <p className="ty-lede ty-quiet">A sea rises and falls. It slows only when your phone reads your breath going with it, and it says what it read: a phone lying on a table does not slow it. Here the phone&rsquo;s motion sensor stands in for the AirPods.</p>
             <div className="ty-btns">
               <button type="button" className="lab-btn primary ty-go" data-start onClick={() => void begin()}>
                 Start the sea
@@ -336,6 +344,14 @@ export default function Try() {
                 Watch a run
               </a>
             </div>
+            {noPhoneHere() && (
+              <div className="ty-onphone" data-onphone>
+                <Qr text={address()} />
+                <p className="ty-fine">
+                  <b>Not on a phone?</b> This reads the way a phone tilts on your chest, so it needs one. Point your phone&rsquo;s camera at the code.
+                </p>
+              </div>
+            )}
             <p className="ty-fine">Motion numbers from this minute are saved. No sound, no video.</p>
             <p className="ty-fine">A signal, not a diagnosis.</p>
           </>

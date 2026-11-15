@@ -260,7 +260,8 @@ export function practiceLine(o: OuterRow, offered: number): string {
   const w = o.working
   const done = w.total
   // the days below usual have their own count on the list; said here next to the whole count, so the two are not read as one
-  const inRun = o.driftDays > 0 && o.inDrift.done > 0 && o.inDrift.done < done ? `, ${o.inDrift.done} of them in the ${o.driftDays} ${o.driftDays === 1 ? 'day' : 'days'} below usual` : ''
+  // (also when none were done in those days: the list says "0 of 3 practices done" for them, next to "6 were done" here)
+  const inRun = o.driftDays > 0 && o.inDrift.offered > 0 && o.inDrift.done < done ? `, ${o.inDrift.done || 'none'} of them in the ${o.driftDays} ${o.driftDays === 1 ? 'day' : 'days'} below usual` : ''
   const head = `So far the phone offered ${offered} ${offered === 1 ? 'practice' : 'practices'} and ${done} ${done === 1 ? 'was' : 'were'} done${inRun}`
   if (!done) return `${head}.`
   if (w.settled === 0 || w.said === 'early' || w.said === 'none' || !w.best) return `${head}; too early to say which one settles them.`

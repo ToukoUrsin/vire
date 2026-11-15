@@ -70,7 +70,7 @@ describe('the outer loop', () => {
 
   test('drift without practices done is not escalated by this rule, and neither is a person who went quiet', () => {
     const offered = [5, 4, 3, 2, 1, 0].map((d) => pr(d, 'breathe', null, false))
-    expect(outerOf({ now, days: days([0, -1, -1.2, -1.3, -1.4, -1.5, -1.6]), practices: offered, booking: null })).toMatchObject({ state: 'drifting', note: '6 days below usual; 0 of 6 practices done' })
+    expect(outerOf({ now, days: days([0, -1, -1.2, -1.3, -1.4, -1.5, -1.6]), practices: offered, booking: null })).toMatchObject({ state: 'drifting', note: '6 days below usual; in those days 0 of 6 practices done' })
     const quiet = days([0, -1, -1.2, -1.3, -1.4, -1.5, -1.6]).slice(0, 4) // nothing for the last three days
     const done = [6, 5, 4, 3].map((d) => pr(d, 'breathe', 20))
     expect(outerOf({ now, days: quiet, practices: done, booking: null })).toMatchObject({ state: 'drifting', note: 'Below usual when they went quiet, 3 days ago' })
@@ -214,7 +214,7 @@ describe('the simulated cohort tells the outer loop story', () => {
       checked++
       expect(o.sentence).toContain(`in spite of ${o.inDrift.done} practice`)
       if (o.state === 'escalated') expect(o.note).toContain(`in spite of ${o.inDrift.done} practice`)
-      if (o.inDrift.done < done.length) expect(line).toContain(`${o.inDrift.done} of them in the ${o.driftDays} day`)
+      if (o.inDrift.done < done.length) expect(line).toContain(`${o.inDrift.done || 'none'} of them in the ${o.driftDays} day`)
       for (const k of ['breathe', 'scan', 'walk'] as const) {
         const xs = scored.filter((x) => x.kind === k)
         if (!xs.length || !xs.some((x) => (x.settle ?? 0) >= SETTLED) && !scored.some((x) => (x.settle ?? 0) >= SETTLED)) continue

@@ -211,7 +211,9 @@ export function groupOf(row: PatientRow): Group {
   // real phones did the one-minute camera check at the event: not AirPods days, not in the loop with practices
   if (!row.synthetic) return 'camera'
   const st = row.outer?.state
-  if (st === 'escalated' || st === 'booked') return 'escalated'
+  // a booster the clinic booked for someone the practices had not failed (under five days, or under three practices done)
+  // does not make them "below in spite of the practices": they stay where their days put them, and the row says "Booster booked"
+  if (st === 'escalated' || (st === 'booked' && row.outer?.escalatedAt)) return 'escalated'
   if (st === 'after') return 'after'
   const vs = viewStatus(row)
   if (vs === 'calibrating') return 'new'

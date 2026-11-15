@@ -69,6 +69,12 @@ function One({ channel, detail, domain, hover, onHover }: Props & { channel: Cha
   const shown = hv ?? latest
   // z in the internal direction (below their usual is negative), for the words and the alert colour
   const z = shown && shown.v !== null && sig ? ((shown.v - sig.center) / (sig.spread || 1)) * (air ? AIR_FLIP[channel] : 1) : null
+  // Not pointing at a day: the words are the mean of the last three days, the same measure as the summary and the list's
+  // reason, so "fewer walks (1.1 SD)" there is never "in their usual" here. Pointing at a day says that day.
+  const z3s = pts.slice(-3).map((d) => d.p.components.find((k) => k.channel === channel)?.z).filter((v): v is number => typeof v === 'number')
+  const z3 = air && !hv && z3s.length ? Math.round((z3s.reduce((a, b) => a + b, 0) / z3s.length) * 10) / 10 : null
+  const zSaid = z3 ?? z
+  const zWhen = hv ? '' : z3 !== null && z3s.length > 1 ? ` over the last ${z3s.length} days` : ' on the last day'
   const courseEnd = detail.course ? Date.parse(detail.course.end) : null
 
   const move = (clientX: number, rect: DOMRect) => {
@@ -95,7 +101,7 @@ function One({ channel, detail, domain, hover, onHover }: Props & { channel: Cha
         </div>
         <div className="cl-multi-val">
           {shown && shown.v !== null && air ? (
-            z !== null && <span className={z < -0.75 ? 'is-under' : ''}>{Math.abs(z) < 0.75 ? (detail.status === 'calibrating' ? 'in the typical range' : 'in their usual') : `${AIR_DIR[channel][z < 0 ? 0 : 1]}, ${Math.abs(z).toFixed(1)} SD${hv ? '' : ' on the last day'}`}</span>
+            zSaid !== null && <span className={zSaid <= -0.75 ? 'is-under' : ''} data-said={hv ? 'day' : 'last3'}>{Math.abs(zSaid) < 0.75 ? (detail.status === 'calibrating' ? 'in the typical range' : 'in their usual') : `${AIR_DIR[channel][zSaid < 0 ? 0 : 1]}, ${Math.abs(zSaid).toFixed(1)} SD${zWhen}`}</span>
           ) : shown && shown.v !== null ? (
             <>
               <b>{fmt(shown.v, span)}</b> {sig?.unit}

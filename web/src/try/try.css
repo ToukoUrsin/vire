@@ -251,3 +251,20 @@
     display: none;
   }
 }
+
+/* the first screen on a laptop: the code beside the words that say why */
+.ty-onphone {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 6px 0 2px;
+}
+.ty-onphone .ty-qr {
+  flex: none;
+  width: 104px;
+  height: 104px;
+  margin: 0;
+}
+.ty-onphone .ty-fine {
+  margin: 0;
+}

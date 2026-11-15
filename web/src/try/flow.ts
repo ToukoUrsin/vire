@@ -1,7 +1,8 @@
 // The minute on /#/try, as plain steps with no screen and no clock of its own: which breath the sea plays next,
 // when a stretch is long enough to read, what was read in it, what the sea does then, and the words for it. The
-// reading and the deciding are Today's own (breath.ts, pace.ts); only the sensor differs. Pure, so the same code
-// runs under the page and under the tests.
+// reading and the deciding are Today's own (breath.ts, pace.ts); only the sensor differs, and one rule: a phone
+// that lies still with no breath in it does not slow the sea here (a phone on a table would pass). Pure, so the
+// same code runs under the page and under the tests.
 import type { BreathRead, PaceFollow } from '@shared/earsession'
 import { breathRate, followsPace, gapsOf, stillness } from '../tune/session/breath'
 import { IN_SHARE, PACE_GOAL, breathsAt, decide, newPacer, startPace } from '../tune/session/pace'
@@ -68,11 +69,11 @@ export interface TryCounts {
   checks: number
   /** the breath was read following the sea */
   followed: number
-  /** no breath could be read and the phone was still */
+  /** no breath could be read and the phone was still: the sea stayed */
   byStill: number
   /** a breath was read, at another pace than the sea's */
   notFollowed: number
-  /** no breath could be read and the phone was moving, or its readings stopped for a moment */
+  /** no breath could be read and the phone was moving, or its readings stopped for a moment: the sea stayed */
   moving: number
 }
 
@@ -99,18 +100,20 @@ export function seaAt(breaths: TryBreath[], t: number): number {
   return 0
 }
 
-export function lineFor(c: Pick<TryCheck, 'from' | 'to' | 'by' | 'readable' | 'gap'>): string {
+export function lineFor(c: Pick<TryCheck, 'from' | 'to' | 'by' | 'readable' | 'gap'> & { still?: boolean }): string {
   const to = paceWord(c.to)
   if (c.by === 'breath') return c.to < c.from ? `Your breath followed. Slower now: ${to} a minute.` : `Your breath followed. Staying at ${to}.`
   if (c.by === 'stillness') return c.to < c.from ? `No breath read. The phone was still, so slower anyway: ${to} a minute.` : `No breath read. The phone was still. Staying at ${to}.`
   if (c.to > c.from) return `Your breath did not follow twice. Back to ${to} a minute.`
   if (c.readable) return `Your breath did not follow. Staying at ${to}.`
-  return c.gap ? `No breath read: the phone's motion readings stopped for a moment. Staying at ${to}.` : `No breath read, the phone was moving. Staying at ${to}.`
+  if (c.gap) return `No breath read: the phone's motion readings stopped for a moment. Staying at ${to}.`
+  return c.still ? `No breath read: the phone lay still. Staying at ${to}. Hold it flat against your chest.` : `No breath read, the phone was moving. Staying at ${to}.`
 }
 
 /**
- * Read one stretch and decide. The rules are Today's: the breath follows when the slow tilt sits at the sea's
- * pace; when no breath can be read at all, a still phone counts instead; otherwise the sea holds.
+ * Read one stretch and decide. The breath follows when the slow tilt sits at the sea's pace; otherwise the sea
+ * holds. Today lets a still head count when no breath can be read from it; a phone does not get that: lying on a
+ * table it is perfectly still, and "the sea slows only if your breath follows" has to hold for it too.
  */
 export function readStretch(rows: number[][], t0: number, t1: number, pacer: Pacer): { check: TryCheck; next: Pacer } {
   const at: PaceFollow = followsPace(rows, t0, t1, pacer.pace, TRY.minTiltDeg)
@@ -126,8 +129,8 @@ export function readStretch(rows: number[][], t0: number, t1: number, pacer: Pac
   // a stretch in which the phone's readings stopped cannot be read, and is not called still either
   const gap = gapsOf(rows.filter((row) => row[0]! >= t0 && row[0]! <= t1)).length > 0
   const still = !gap && mv !== null && mv <= TRY.stillDegS
-  const d = decide(pacer, { follows: f.follows, readable, still })
-  const c = { from: pacer.pace, to: d.next.pace, by: d.by, readable, ...(gap ? { gap: true } : {}) }
+  const d = decide(pacer, { follows: f.follows, readable, still: false })
+  const c = { from: pacer.pace, to: d.next.pace, by: d.by, readable, still, ...(gap ? { gap: true } : {}) }
   return {
     next: d.next,
     check: {
@@ -180,9 +183,9 @@ export function countsOf(s: TryState): TryCounts {
     to: last ? last.perMin : s.pacer.start,
     checks: c.length,
     followed: c.filter((x) => x.by === 'breath').length,
-    byStill: c.filter((x) => x.by === 'stillness').length,
+    byStill: c.filter((x) => x.by === 'held' && !x.readable && x.still).length,
     notFollowed: c.filter((x) => x.by === 'held' && x.readable).length,
-    moving: c.filter((x) => x.by === 'held' && !x.readable).length,
+    moving: c.filter((x) => x.by === 'held' && !x.readable && !x.still).length,
   }
 }
 
@@ -197,10 +200,10 @@ export function resultLines(k: TryCounts): { head: string; lines: string[] } {
   if (!k.checks) return { head, lines: ['It stopped before the first stretch was long enough to read. Nothing was read.'] }
   const lines: string[] = [`Your phone was read ${times(k.checks)}.`]
   if (k.followed) lines.push(`${cap(times(k.followed))} your breath was read following the sea.`)
-  if (k.byStill) lines.push(`${cap(times(k.byStill))} no breath could be read and the phone was still, so the sea went by that.`)
+  if (k.byStill) lines.push(`${cap(times(k.byStill))} no breath could be read and the phone lay still, so the sea stayed.`)
   if (k.notFollowed) lines.push(`${cap(times(k.notFollowed))} a breath was read that did not follow.`)
   if (k.moving) lines.push(`${cap(times(k.moving))} no breath could be read, because the phone was moving or its readings stopped.`)
-  if (!k.followed && k.to >= k.from) lines.push('The sea only slows when the phone reads your breath with it, or reads nothing and lies still.')
+  if (!k.followed && k.to >= k.from) lines.push('The sea only slows when the phone reads your breath going with it.')
   if (k.to <= PACE_GOAL) lines.push('Six a minute is as slow as it goes.')
   return { head, lines }
 }

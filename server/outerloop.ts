@@ -182,7 +182,8 @@ export function outerOf({ now, days, practices, booking }: OuterInput): OuterRow
         silent > 2
           ? `Below usual when they went quiet, ${plural(silent, 'day')} ago`
           : t.offered
-            ? `${plural(driftDays, 'day')} below usual; ${t.done} of ${plural(t.offered, 'practice')} done`
+            ? // "0 of 3 practices done" next to "6 were done" on the person's page read as two counts of one thing: this one says its days
+              `${plural(driftDays, 'day')} below usual; in those days ${t.done} of ${plural(t.offered, 'practice')} done`
             : `${plural(driftDays, 'day')} below usual`,
     }
   }

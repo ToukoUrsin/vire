@@ -182,7 +182,7 @@ const BANNED = /AirPods (read|say|hear|sense|felt|feel)|EEG|HRV|brain|diagnos(e|
   await ctx.close()
 }
 
-// ---- 3. a phone lying still (no breath), fast: goes by stillness and says so ----
+// ---- 3. a phone lying still (no breath), fast: the sea stays and says so ----
 {
   const { ctx, page } = await open(320, 700, { reducedMotion: true })
   await page.goto(`${base}#/try?speed=4`)
@@ -191,13 +191,13 @@ const BANNED = /AirPods (read|say|hear|sense|felt|feel)|EEG|HRV|brain|diagnos(e|
   await page.click('[data-start]')
   await page.waitForFunction(() => Number(document.querySelector('main.ty')?.getAttribute('data-checks')) >= 1, null, { timeout: 30000 }).catch(() => fail('still phone: the check never came'))
   const got = await text(page, '.ty-read')
-  check(got === 'No breath read. The phone was still, so slower anyway: 8.5 a minute.', `a still phone: "${got}"`)
+  check(got === 'No breath read: the phone lay still. Staying at 10. Hold it flat against your chest.', `a still phone: "${got}"`)
   check(/The line is flat/.test(await text(page, '.ty-trace')), 'a still phone: the line is flat and the page says so')
   check((await page.locator('.ty-orb').evaluate((el) => getComputedStyle(el).transitionDuration)) === '0.01s', 'reduced motion: the circle changes in steps')
   await shot(page, '320-4-run-still-phone')
   await page.waitForSelector('main.ty[data-stage="result"]', { timeout: 40000 })
   const lines = await page.locator('.ty-lines').evaluate((el) => ({ ...el.dataset, text: el.innerText.replace(/\s+/g, ' ') }))
-  check(lines.followed === '0' && Number(lines.still) >= 1 && !/following/.test(lines.text), `still phone result: ${lines.text}`)
+  check(lines.followed === '0' && Number(lines.still) >= 1 && !/following/.test(lines.text) && /The sea stayed at 10/.test(await text(page, 'main.ty h1')), `still phone result: the sea stayed at 10. ${lines.text}`)
   await fits(page, 'still result 320')
   await shot(page, '320-5-result-still-phone')
   await ctx.close()

@@ -94,7 +94,7 @@ export default function Home() {
             The earlier one-minute camera check (#/visit) still opens by its address; it is not a way in any more. */}
         <a href="#/try" className="hm-way" data-try>
           <b>No AirPods?</b>
-          <span>Try the breathing on your phone, a minute</span>
+          <span>Try the breathing on your phone, just over a minute</span>
           <Arrow />
         </a>
         {/* same tab: the iPhone app has no address bar and drops links that open a new window */}

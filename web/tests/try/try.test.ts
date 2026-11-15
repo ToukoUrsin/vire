@@ -137,20 +137,27 @@ describe('the minute, with a made-up chest', () => {
       expect(resultLines(k).head).toBe('The sea stayed at 10 breaths a minute.')
     }
   })
-  test('(c) no breath and a phone lying still: goes by stillness, and says so', () => {
+  test('(c) no breath and a phone lying still (on a table, say): the sea stays, and says so', () => {
     for (const seed of [1, 2, 3]) {
       const { state } = runTry(chest({ swingDeg: 0, tremor: 0, driftDeg: 0, seed }))
       const k = countsOf(state)
-      expect(k).toEqual({ from: 10, to: 6, checks: 3, followed: 0, byStill: 3, notFollowed: 0, moving: 0 })
+      // "the sea slows only if your breath follows": a judge fed a flat phone and the sea went from 10 to 6
+      expect(k.to).toBe(10)
+      expect(k.checks).toBeGreaterThanOrEqual(3)
+      expect(k).toMatchObject({ from: 10, followed: 0, byStill: k.checks, notFollowed: 0, moving: 0 })
       for (const c of state.checks) {
         expect(c.follows).toBe(false)
         expect(c.readable).toBe(false)
         expect(c.still).toBe(true)
+        expect(c.by).toBe('held')
         expect(c.moveDegS!).toBeLessThan(0.5)
+        expect(c.line).toBe('No breath read: the phone lay still. Staying at 10. Hold it flat against your chest.')
       }
-      expect(state.checks[0]!.line).toBe('No breath read. The phone was still, so slower anyway: 8.5 a minute.')
-      expect(resultLines(k).lines.join(' ')).toContain('no breath could be read and the phone was still')
-      expect(resultLines(k).lines.join(' ')).not.toContain('following')
+      const said = resultLines(k)
+      expect(said.head).toBe('The sea stayed at 10 breaths a minute.')
+      expect(said.lines.join(' ')).toContain('no breath could be read and the phone lay still, so the sea stayed')
+      expect(said.lines.join(' ')).toContain('The sea only slows when the phone reads your breath going with it.')
+      expect(said.lines.join(' ')).not.toContain('following')
     }
   })
   test('(d) a phone being walked around is neither: nothing is read and the sea stays', () => {

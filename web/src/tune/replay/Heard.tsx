@@ -210,8 +210,9 @@ export default function Heard() {
             </li>
             <li>This check had no camera: the screen asked, the AirPods felt the head move, and the model said what it heard. {Math.round(b.ms / 1000)} seconds, played {SPEED} times faster.</li>
             <li>
-              Asked seconds told from the rest: nods {s.nod.auc.toFixed(2)}, head shakes {s.shake.auc.toFixed(2)} (1.00 is never wrong, 0.50 is luck). Smiles are asked too, but not read from the
-              AirPods: {b.model.held.smile.toFixed(2)} on the setup minutes, too weak to count.
+              Asked seconds told from the rest, in this check: nods {s.nod.auc.toFixed(2)}, head shakes {s.shake.auc.toFixed(2)} (1.00 is never wrong, 0.50 is luck). When it was taught, on a
+              setup minute it never saw: <span data-held>{b.model.held.nod.toFixed(2)} and {b.model.held.shake.toFixed(2)}</span>. Smiles are asked too, but not read from the AirPods:{' '}
+              {b.model.held.smile.toFixed(2)} on the setup minutes, too weak to count.
             </li>
           </ul>
         </section>
