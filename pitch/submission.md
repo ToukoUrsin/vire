@@ -1,5 +1,49 @@
 # Junction submission form
 
+## What was submitted
+
+Submitted on Sunday 15.11.2026 at 08:37 EET: project 2079, "Vire", Beyond the Clinic, "Best use of Modal" ticked.
+
+- Film (1:57): https://youtu.be/tkMpyThcp5M
+- Demo: https://vire.fly.dev
+- Source: https://github.com/ToukoUrsin/vire
+- Other link, the paper: https://vire.fly.dev/app/vire-paper.pdf
+- Punchline: Your AirPods sense every step. After TMS for depression, when you move less than usual, Vire guides a walk or slow breathing in your ears and learns which helps. If neither does, your clinic knows.
+
+The description that went in is the short one below (2,162 characters). The longer text further down is the earlier draft. It was not submitted, and it stays here because `claims.md` points at its sentences.
+
+<!-- submitted description starts -->
+
+### Try it
+
+Open https://vire.fly.dev and tap "Watch a run". It plays one day's five-minute session in 40 seconds, scripted for now. No AirPods? Open https://vire.fly.dev/#/try on a phone and hold it on your chest. The sea you hear slows only if your breath follows.
+
+The phone app is at https://vire.fly.dev/app/ with sample data. Add it to your home screen. What I measured and what failed is in the paper: https://vire.fly.dev/app/vire-paper.pdf
+
+### The problem
+
+A TMS course for depression is 20 to 30 clinic visits. A year later only 46% of the people it worked for still respond (Senova 2019). And once you're home, the clinic doesn't see you.
+
+### What Vire does
+
+Vire senses all the time your AirPods are in. When you move less than your own usual, it plays a short practice in your ears, slow breathing or a walk. The breathing is a sea that rises as you breathe in, and it slows down only while the AirPods sense you keeping up. Then the AirPods check how still you sit and, on AirPods Pro 3, your heart rate. Vire learns which practice helps you.
+
+If nothing helps, you go to the top of your clinic's list, with what was tried. The clinic can then book a TMS booster when it's needed. It's a signal for the clinic, not a diagnosis.
+
+### What's real today
+
+I taught my own AirPods in three minutes in front of the camera. Four hours later, camera off, the model heard 3 of 3 asked nods and 3 of 3 head shakes, and nothing I didn't do. A nod is what Vire asks for when it checks in, camera off. Watch that check at https://vire.fly.dev/#/heard
+
+The daily loop is online, tested with a script in place of AirPods. Heart rate is built but not yet read on a real run. The clinic list runs on 50 simulated patients. No patient or clinic has used Vire, and nobody knows yet if moving less comes before relapse. A pilot with one TMS clinic is next.
+
+### Modal
+
+Each person's data gets its own Modal Sandbox with the network blocked. Mine tried 366 models in 46 seconds. The whole simulated clinic re-learns at once, one Sandbox per patient, around 10,000 models in about half a minute. Press the button yourself at https://vire.fly.dev/#/clinic/live?cohort=1
+
+<!-- submitted description ends -->
+
+## The earlier, longer draft (not submitted)
+
 Limits: name 30 characters, punchline 200, description 5000 (markdown). Fill the slots listed at the bottom, then recount. The form also wants a demo link (use `https://vire.fly.dev`, the first screen), a source link, a pitch deck PDF and a video of at most 2:00 (`mobile/FILM.md`). Every sentence below has a row in `claims.md` (rows 1 to 3, 30, 69, 104 to 136).
 
 ## Project name
