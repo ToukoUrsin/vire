@@ -871,6 +871,8 @@ const MIME: Record<string, string> = {
   mp4: 'video/mp4',
   webm: 'video/webm',
   txt: 'text/plain; charset=utf-8',
+  // the paper in the phone app opens in the browser instead of downloading
+  pdf: 'application/pdf',
 }
 const isFile = (p: string) => {
   try {

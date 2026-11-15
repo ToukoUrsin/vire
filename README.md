@@ -19,7 +19,7 @@ A signal for the clinic, not a diagnosis. No patient or clinic has used Vire; th
 
 **Setup, once** ([/#/ears](https://vire.fly.dev/#/ears)): the camera labels 65 seconds of smiles, nods and head shakes while the AirPods feel them, and a Modal Sandbox of your own, network blocked, tries 366 models on all your minutes, each chosen without the minute it is scored on. On the founder's three minutes: 46 seconds; on a whole minute the models never saw, nod 0.97, head shake 0.97, smile 0.64 (1.00 is never wrong, 0.50 is luck). So nods and head shakes are read from the AirPods alone, and the camera keeps smiles.
 
-**The whole clinic** re-learns at once on Modal: the 50 simulated patients on the clinic list, one network-blocked Sandbox each, a shorter search each (12 s against 40 s for a real person), around 9,000 models in all in about half a minute, and each Sandbox re-learns which practice helps that patient ("Re-train the whole clinic" on the big screen).
+**The whole clinic** re-learns at once on Modal: the 50 simulated patients on the clinic list, one network-blocked Sandbox each, a shorter search each (12 s against 40 s for a real person), around 10,000 models in all in about half a minute, and each Sandbox re-learns which practice helps that patient ("Re-train the whole clinic" on the big screen).
 
 Without AirPods: breathe with the sea for a minute with a phone on your chest ([/#/try](https://vire.fly.dev/#/try)). The evidence behind the loop, and what it does not show: [pitch/evidence-loop.md](pitch/evidence-loop.md), [pitch/evidence-tms.md](pitch/evidence-tms.md), [pitch/evidence-airpods.md](pitch/evidence-airpods.md).
 

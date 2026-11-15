@@ -59,6 +59,7 @@ export function breathRow(r: SessionRead, standIn = false): { main: string; own:
           ? `${standIn ? 'The breath' : 'Your breath'} could not be read from the AirPods in this run${r.byStillness ? `; the sound went by how still ${standIn ? 'the head' : 'you'} sat (${r.byStillness} of ${plural(r.checks, 'check')})` : ''}.`
           : ''
     }`,
-    own: r.paceOwn !== null ? `your own: ${r.paceOwn}` : '',
+    // "your own: 12.4" alone read as a number with no name: it is the breathing pace read before the practice
+    own: r.paceOwn !== null ? `${standIn ? 'pace read before' : 'your own pace before'}: ${r.paceOwn} a minute` : '',
   }
 }
