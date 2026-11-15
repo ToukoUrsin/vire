@@ -205,7 +205,7 @@ export default function Heard() {
           </div>
           <ul className="hd-facts">
             <li>
-              The model was taught {hours} hours earlier, from {b.model.minutes} setup minutes where the camera labelled the nods and head shakes. A locked Modal Sandbox tried {b.model.tried} models
+              The model was taught {hours} hours earlier, from the one-minute setup done {b.model.minutes} times, where the camera labelled the nods and head shakes. A locked Modal Sandbox tried {b.model.tried} models
               and kept the best.
             </li>
             <li>This check had no camera: the screen asked, the AirPods felt the head move, and the model said what it heard. {Math.round(b.ms / 1000)} seconds, played {SPEED} times faster.</li>

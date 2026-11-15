@@ -635,11 +635,11 @@ export default function Today() {
               Day {day} of your plan{doneToday ? ', done today' : ''}
             </p>
             <h1>Today, about five minutes.</h1>
-            <p className="el-lede">AirPods in, camera off. Your AirPods follow every step.</p>
+            <p className="el-lede">AirPods in, camera off. Your AirPods follow every step. Between these five minutes, Vire offers a practice when your day drifts from your usual.</p>
             <ol className="td-steps">
               <li>
                 <b>Check-in</b>
-                <span>a minute of asked smiles, nods and head shakes, set against your usual. Then 22 seconds sitting still: head movement and heart rate</span>
+                <span>a minute of asked nods and head shakes, set against your usual (smiles are asked too, shown but not counted). Then 22 seconds sitting still: head movement and heart rate</span>
               </li>
               <li data-next={next}>
                 <b>{NAME[next]}</b>

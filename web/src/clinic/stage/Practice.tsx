@@ -11,7 +11,8 @@ const WHY = { 'not tried yet': 'not tried yet', 'helped most so far': 'it has he
 const times = (n: number) => (n === 1 ? 'once' : `${n} times`)
 const num = (v: number | null, digits = 0) => (v === null ? '–' : v.toFixed(digits))
 
-/** calmer after than before, said to the clinic: only from what was measured in the two still checks */
+/** calmer after than before, said to the clinic: only from what was measured in the two still checks.
+ *  "Calmer" needs the heart rate to have come down: a head that only sat stiller is "Stiller after". */
 export function practiceVerdict(seen: PracticeSeen): { h: string; p: string } {
   const r = seen.read
   if (!r.happened) return { h: 'The walk was not felt.', p: 'The AirPods felt too few steps, so this practice is not counted towards what helps this person.' }
@@ -23,7 +24,7 @@ export function practiceVerdict(seen: PracticeSeen): { h: string; p: string } {
   if (!parts.length) return { h: 'Done, but not scored.', p: 'The checks before and after had too few AirPods samples to compare.' }
   const good = (heart !== null && heart <= -1 ? 1 : 0) + (still !== null && still >= 5 ? 1 : 0)
   const bad = (heart !== null && heart >= 1 ? 1 : 0) + (still !== null && still <= -5 ? 1 : 0)
-  const h = good && !bad ? 'Calmer after.' : bad && !good ? 'Not calmer after.' : good && bad ? 'Mixed today.' : 'No change today.'
+  const h = good && !bad ? (heart !== null && heart <= -1 ? 'Calmer after.' : 'Stiller after.') : bad && !good ? 'Not calmer after.' : good && bad ? 'Mixed today.' : 'No change today.'
   return { h, p: `After the practice ${parts.join(' and ')}, against the same check just before it.` }
 }
 
@@ -78,7 +79,7 @@ export function PracticeBoard({ seen }: { seen: PracticeSeen }) {
               {r.checks === 0
                 ? 'The pace was not checked.'
                 : r.followed > 0
-                  ? `The AirPods read the breath following in ${r.followed} of ${r.checks} checks.`
+                  ? `${demo ? 'The script’s breath was read' : 'The AirPods read the breath'} following in ${r.followed} of ${r.checks} checks.`
                   : r.byStillness > 0
                     ? `No breath could be read from the head, so the pace went by stillness (${r.byStillness} of ${r.checks} checks).`
                     : `The breath was not read following in any of ${r.checks} checks.`}
@@ -99,7 +100,7 @@ export function PracticeBoard({ seen }: { seen: PracticeSeen }) {
           {seen.pieces.set + seen.pieces.live > 0 && (
             <li data-note="sound">
               Sound: this practice played {seen.pieces.set + seen.pieces.live} {seen.pieces.set + seen.pieces.live === 1 ? 'piece' : 'pieces'} made on a Modal GPU
-              {seen.pieces.live ? `, ${seen.pieces.live} of them during the practice from what the AirPods read` : ''}.
+              {seen.pieces.live ? `, ${seen.pieces.live} of them during the practice from what the ${demo ? 'stand-in' : 'AirPods'} read` : ''}.
             </li>
           )}
           <li data-note="why">{r.offered ? `Offered by Vire: ${r.offered.why}${r.offered.byDefault ? ' (a starting threshold, not yet this person’s own band)' : ''}` : 'Started from the day’s plan, not from a drift.'}</li>

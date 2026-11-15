@@ -168,7 +168,7 @@ for (const [w, h, block] of [[390, 844, true], [1440, 900, false]]) {
   await page.waitForSelector('[data-result]', { timeout: 30000 })
   const res = (await page.locator('[data-result]').innerText()).replace(/\n+/g, ' | ')
   console.log(`${tag} RESULT ${res}`)
-  if (!/(Calmer after\.|Not calmer today\.|Mixed today\.|No change today\.|Done for today\.)/.test(res)) fail(`${tag} no verdict in Today's words`)
+  if (!/(Calmer after\.|Stiller after\.|Not calmer today\.|Mixed today\.|No change today\.|Done for today\.)/.test(res)) fail(`${tag} no verdict in Today's words`)
   if (!/Stillness \| (your head moved [\d.]+° a second before, [\d.]+° after|not read)/.test(res)) fail(`${tag} stillness before and after is not shown`)
   if (!/Heart rate \| [\d.]+ before, [\d.]+ after/.test(res)) fail(`${tag} heart rate before and after is not shown`)
   if (/from your AirPods/.test(res)) fail(`${tag} the scripted run names the AirPods as what measured the heart`)

@@ -4,7 +4,8 @@ import type { SessionRead } from '@shared/earsessionread'
 
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`
 
-/** calmer after than before? Said only from what was measured in the two still checks; never that a practice treats anything */
+/** calmer after than before? Said only from what was measured in the two still checks; never that a practice treats anything.
+ *  "Calmer" needs the heart rate to have come down: a head that only sat stiller is "Stiller after". */
 export function verdict(r: SessionRead): { head: string; line: string } {
   if (!r.happened) return { head: 'The walk was not felt.', line: 'Your AirPods felt too few steps, so this run is not counted towards what helps you.' }
   const still = r.settle
@@ -15,7 +16,7 @@ export function verdict(r: SessionRead): { head: string; line: string } {
   if (!parts.length) return { head: 'Done for today.', line: 'The checks before and after had too few AirPods samples to compare.' }
   const good = (heart !== null && heart <= -1 ? 1 : 0) + (still !== null && still >= 5 ? 1 : 0)
   const bad = (heart !== null && heart >= 1 ? 1 : 0) + (still !== null && still <= -5 ? 1 : 0)
-  const head = good && !bad ? 'Calmer after.' : bad && !good ? 'Not calmer today.' : good && bad ? 'Mixed today.' : 'No change today.'
+  const head = good && !bad ? (heart !== null && heart <= -1 ? 'Calmer after.' : 'Stiller after.') : bad && !good ? 'Not calmer today.' : good && bad ? 'Mixed today.' : 'No change today.'
   const line = parts.join(' and ')
   return { head, line: `After the practice ${line}, against the same check just before it.` }
 }

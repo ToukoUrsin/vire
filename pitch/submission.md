@@ -38,7 +38,7 @@ A signal for the clinic, not a diagnosis.
 
 ### How it works
 
-- **The daily five minutes**, camera off: a quick check (asked nods and smiles, then sitting still), the practice, the same check again. "Calmer after" comes only from heart rate and stillness.
+- **The daily five minutes**, camera off: a check (asked nods and smiles, then sitting still), the practice, the check again. "Calmer after" needs a lower heart rate; stillness alone is "Stiller after".
 - **Breathing:** a sea in your ears rises as you breathe in and falls as you breathe out. It slows from your own pace to 6 a minute, but only while the AirPods sense you keeping up (or sitting still).
 - **The walk** counts only if the AirPods felt your steps.
 - **Learning**, from your own practices only: which one calmed your head movement most. "Vire learned" shows only when 80% sure, after 3 scored runs of the best one and 2 of another.
