@@ -326,6 +326,7 @@ export function VisitIntro({
 export function VisitEnd({
   id,
   echo,
+  demo,
   waiting,
   busy,
   error,
@@ -340,6 +341,8 @@ export function VisitEnd({
   id: Identity
   /** the echo they just made, when there is one */
   echo: Echo | null
+  /** the readings came from the script (camera refused), not from this person */
+  demo?: boolean
   /** pings not sent yet */
   waiting: number
   busy: boolean
@@ -365,8 +368,17 @@ export function VisitEnd({
           </div>
         )}
         <h1 className="va-h1">{echo?.hallGuest != null ? `You are person ${echo.hallGuest} today.` : 'Thank you for trying Vire today.'}</h1>
-        <p className="va-lede">This is what the clinic saw. {echo?.hallCount != null ? `${echo.hallCount} people have tried Vire on their own faces today.` : echo ? 'Your readings are above.' : ''}</p>
-        <p className="va-small">Your heart reading comes from one slow breath. Keep it on this phone to do the full daily minute as yourself.</p>
+        {demo ? (
+          <>
+            <p className="va-lede">Demo signals: a script made these readings, not you. This is what the clinic would see.</p>
+            <p className="va-small">With the camera allowed, the same minute reads your own face.</p>
+          </>
+        ) : (
+          <>
+            <p className="va-lede">This is what the clinic saw. {echo?.hallCount != null ? `${echo.hallCount} people have tried Vire on their own faces today.` : echo ? 'Your readings are above.' : ''}</p>
+            <p className="va-small">Your heart reading comes from one slow breath. Keep it on this phone to do the full daily minute as yourself.</p>
+          </>
+        )}
         {id.local || waiting > 0 ? (
           <p className="va-note">
             No network just now. Your ping is kept on this phone and goes up to the wall when the network is back.
@@ -376,7 +388,7 @@ export function VisitEnd({
             <a className="va-btn va-btn-primary va-btn-big" href={`#/wall?u=${encodeURIComponent(id.userId)}`}>
               See yourself on the wall
             </a>
-            {echo?.wallCounted === false && <p className="va-small va-visit-as">Your ping is saved. Test traffic is kept out of the hall wall.</p>}
+            {echo?.wallCounted === false && <p className="va-small va-visit-as">{demo ? 'The scripted ping is saved and kept out of the hall wall.' : 'Your ping is saved. Test traffic is kept out of the hall wall.'}</p>}
           </>
         )}
       </div>

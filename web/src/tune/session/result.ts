@@ -35,7 +35,8 @@ export function heartRow(r: SessionRead): { main: string; note: string; change: 
     // whole beats, as the verdict and the clinic's screen say them: a reading a second does not carry tenths
     main: `${r.before.heartBpm === null ? 'not read' : Math.round(r.before.heartBpm)} before, ${r.after.heartBpm === null ? 'not read' : Math.round(r.after.heartBpm)} after`,
     note: ` (${r.heartSamples} readings from your AirPods${r.heartEveryS ? `, one about every ${r.heartEveryS} s` : ''}${swing})`,
-    change: r.heartChange !== null ? `${Math.round(r.heartChange) > 0 ? '+' : ''}${Math.round(r.heartChange) || 0}` : '',
+    // a lone "0" reads as a missing number: no change is said in words
+    change: r.heartChange !== null ? (Math.round(r.heartChange) === 0 ? 'no change' : `${Math.round(r.heartChange) > 0 ? '+' : ''}${Math.round(r.heartChange)}`) : '',
   }
 }
 
@@ -46,13 +47,16 @@ export function stillRow(r: SessionRead): { main: string; change: string } {
   }
 }
 
-export function breathRow(r: SessionRead): { main: string; own: string } {
+/** `standIn`: the scripted replay, where a script moved the head: nobody's breath was felt, and the row says so */
+export function breathRow(r: SessionRead, standIn = false): { main: string; own: string } {
   return {
     main: `the sound led from ${r.paceFirst} to ${r.paceLast} breaths a minute. ${
       r.followed > 0
-        ? `Your AirPods felt your breath go with it in ${r.followed} of ${plural(r.checks, 'check')}, down to ${r.paceFollowed} a minute.`
+        ? standIn
+          ? `The script's breath was read going with it in ${r.followed} of ${plural(r.checks, 'check')}, down to ${r.paceFollowed} a minute.`
+          : `Your AirPods felt your breath go with it in ${r.followed} of ${plural(r.checks, 'check')}, down to ${r.paceFollowed} a minute.`
         : r.checks > 0
-          ? `Your breath could not be read from the AirPods in this run${r.byStillness ? `; the sound went by how still you sat (${r.byStillness} of ${plural(r.checks, 'check')})` : ''}.`
+          ? `${standIn ? 'The breath' : 'Your breath'} could not be read from the AirPods in this run${r.byStillness ? `; the sound went by how still ${standIn ? 'the head' : 'you'} sat (${r.byStillness} of ${plural(r.checks, 'check')})` : ''}.`
           : ''
     }`,
     own: r.paceOwn !== null ? `your own: ${r.paceOwn}` : '',

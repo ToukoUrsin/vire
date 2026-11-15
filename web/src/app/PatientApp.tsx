@@ -160,6 +160,8 @@ function Vire({ visitor }: { visitor: boolean }) {
   const stim = useRef('laugh-1')
   /** a hall guest's latest echo, for their last screen */
   const [guestEcho, setGuestEcho] = useState<Echo | null>(null)
+  /** the visitor's readings came from the script, not from their face */
+  const [guestDemo, setGuestDemo] = useState(false)
   const idRef = useRef(id)
   idRef.current = id
 
@@ -383,7 +385,10 @@ function Vire({ visitor }: { visitor: boolean }) {
     if (!visitor) {
       setToday(echo)
       setTodayMeta(meta)
-    } else setGuestEcho(echo)
+    } else {
+      setGuestEcho(echo)
+      setGuestDemo(!!meta.demo)
+    }
     setView((v) => (v.v === 'ping' ? { v: 'echo', echo, meta, fresh: true } : v))
   }
 
@@ -590,6 +595,7 @@ function Vire({ visitor }: { visitor: boolean }) {
         <VisitEnd
           id={id}
           echo={guestEcho}
+          demo={guestDemo}
           waiting={waiting}
           busy={busy}
           error={error}

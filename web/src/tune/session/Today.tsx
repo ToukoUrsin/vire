@@ -677,6 +677,12 @@ export default function Today() {
                 </a>
               )}
             </div>
+            {/* what a tap on Connect found, said next to the button: under the day card it sits below the fold on a phone */}
+            {error && (
+              <p className="el-err" role="alert" data-err="top">
+                {error}
+              </p>
+            )}
             <p className="el-fine" data-air={streaming ? hz : 0}>
               {streaming ? `AirPods: ${hz} samples a second.` : inApp() ? 'Waiting for your AirPods. Put both in.' : info.state === 'connecting' ? 'Looking for your AirPods.' : ''}{' '}
               {pick ? `You picked ${SHORT[next]}.` : mine && mine.learned.total > 0 ? `${NAME[next]} is today's practice: ${mine.learned.why}.` : 'The first practice is slow breathing.'} Or pick:{' '}
@@ -837,7 +843,7 @@ export default function Today() {
             </div>
           </>
         )}
-        {error && (
+        {error && stage !== 'idle' && (
           <p className="el-err" role="alert">
             {error}
           </p>
