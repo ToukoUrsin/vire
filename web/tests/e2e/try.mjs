@@ -127,6 +127,8 @@ const BANNED = /AirPods (read|say|hear|sense|felt|feel)|EEG|HRV|brain|diagnos(e|
   const lines = await page.locator('.ty-lines').evaluate((el) => ({ ...el.dataset, text: el.innerText.replace(/\s+/g, ' ') }))
   check(head === 'The sea went from 10 to 6 breaths a minute.', `result: "${head}"`)
   check(lines.checks === '3' && lines.followed === '3' && lines.still === '0' && lines.not === '0' && lines.moving === '0', `result counts: ${lines.text}`)
+  // the phone was on the chest during the minute: the result draws the whole of it, with a tick at each reading
+  check((await page.locator('.ty-whole').getAttribute('data-whole')) === '3' && (await page.locator('.ty-whole .ty-mark-breath').count()) === 3, 'result: the whole minute is drawn, with its three readings')
   const all = await text(page, 'main.ty')
   check(/With AirPods the same is read from your head, with your heart rate/.test(all) && /A signal, not a diagnosis\./.test(all), 'result: the AirPods line and "A signal, not a diagnosis."')
   check(!BANNED.test(all.replace('A signal, not a diagnosis.', '')), 'result: no banned words')

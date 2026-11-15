@@ -40,7 +40,7 @@ for (const [w, h] of [[390, 844], [1440, 900]]) {
     const box = await page.locator('.hm-watch').boundingBox()
     check(!!box && box.y >= 0 && box.y + box.height <= h && box.x >= 0 && box.x + box.width <= w, `${tag}: replay button inside the first view (${box && Math.round(box.y + box.height)}px of ${h})`)
     const hrefs = await page.locator('main a').evaluateAll((as) => as.map((a) => a.getAttribute('href')))
-    const order = ['#/watch', '#/heard', 'app/', '#/today', '#/clinic', '#/clinic/live', '#/try']
+    const order = ['#/watch', '#/heard', '#/try', 'app/', '#/today', '#/clinic', '#/clinic/live']
     check(JSON.stringify(hrefs.filter((x) => order.includes(x))) === JSON.stringify(order), `${tag}: ways in, in order (${hrefs.join(' ')})`)
     // the earlier camera check is one product too many on the first screen: it opens by its address only
     check(!hrefs.includes('#/visit') && !text.includes('one minute with the camera'), `${tag}: the camera check is not a way in`)

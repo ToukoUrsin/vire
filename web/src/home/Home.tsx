@@ -90,6 +90,13 @@ export default function Home() {
       </section>
 
       <nav className="hm-ways" aria-label="Ways in">
+        {/* first, because it is the one way in that senses the person reading this: most have no AirPods with them.
+            The earlier one-minute camera check (#/visit) still opens by its address; it is not a way in any more. */}
+        <a href="#/try" className="hm-way" data-try>
+          <b>No AirPods?</b>
+          <span>Try the breathing on your phone, a minute</span>
+          <Arrow />
+        </a>
         {/* same tab: the iPhone app has no address bar and drops links that open a new window */}
         <a href="app/" className="hm-way" data-app-link>
           <b>Open the phone app</b>
@@ -111,12 +118,6 @@ export default function Home() {
             The big screen
           </a>
         </div>
-        {/* the earlier one-minute camera check (#/visit) still opens by its address; it is not a way in any more */}
-        <a href="#/try" className="hm-way" data-try>
-          <b>No AirPods?</b>
-          <span>Try the breathing on your phone</span>
-          <Arrow />
-        </a>
       </nav>
 
       <section className="hm-loop" aria-label="How Vire works">

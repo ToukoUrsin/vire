@@ -44,6 +44,13 @@ interface Drawn {
   together: number
   points: number
 }
+/** the whole try, drawn once it is over: the phone was on the chest, so this is the first time the person sees it */
+interface Whole {
+  tilt: string
+  sea: string
+  marks: { x: number; by: 'breath' | 'stillness' | 'held' }[]
+  secs: number
+}
 interface Run {
   id: string
   at: string
@@ -71,6 +78,7 @@ export default function Try() {
   const [made, setMade] = useState<'tone' | 'modal'>('tone')
   const [audio, setAudio] = useState('off')
   const [counts, setCounts] = useState<TryCounts | null>(null)
+  const [whole, setWhole] = useState<Whole | null>(null)
   const swell = useRef(new Swell())
   const token = useRef(0)
   const run = useRef<Run | null>(null)
@@ -161,6 +169,7 @@ export default function Try() {
     setChecks(0)
     setDrawn(null)
     setCounts(null)
+    setWhole(null)
     setElapsed(0)
     setHz(0)
     setMade('tone')
@@ -182,6 +191,20 @@ export default function Try() {
       if (mine !== token.current) return
       send(r, ended)
       setCounts(countsOf(r.state))
+      // the whole minute as one line: the first seconds are left out while the slow filter settles
+      const end = now()
+      const from = Math.min(4000, end / 4)
+      const tr = breathTrace(stream.rows, r.state.breaths, from, end, 240)
+      if (to === 'result' && tr.tilt.length > 20) {
+        const scale = Math.max(TRY.minTiltDeg * 2, tr.swingDeg)
+        const pt = (x: number, y: number) => `${(x * W).toFixed(1)},${y.toFixed(1)}`
+        setWhole({
+          tilt: tr.tilt.map((v, i) => pt(tr.x[i]!, H * (0.5 - 0.72 * (v / scale)))).join(' '),
+          sea: tr.sea.map((v, i) => pt(tr.x[i]!, H * (0.86 - 0.72 * v))).join(' '),
+          marks: r.state.checks.map((c) => ({ x: (c.t - from) / (end - from), by: c.by })).filter((m) => m.x >= 0 && m.x <= 1),
+          secs: Math.round(end / 1000),
+        })
+      }
       setStage(to)
     }
     let drawing: ReturnType<typeof setInterval> | undefined
@@ -365,6 +388,23 @@ export default function Try() {
                 <li key={l}>{l}</li>
               ))}
             </ul>
+            {whole && (
+              <figure className="ty-trace ty-whole" data-whole={whole.marks.length}>
+                <svg viewBox={`0 0 ${W} ${H + 14}`} preserveAspectRatio="none" role="img" aria-label={`Your breath as your phone tilted, drawn over the sea for the whole ${whole.secs} seconds, with a mark at each reading`}>
+                  <line className="ty-mid" x1="0" x2={W} y1={H / 2} y2={H / 2} />
+                  <polyline className="ty-sea" points={whole.sea} />
+                  <polyline className="ty-tilt" points={whole.tilt} />
+                  {whole.marks.map((m) => (
+                    <line key={m.x} className={`ty-mark ty-mark-${m.by}`} x1={m.x * W} x2={m.x * W} y1={H + 4} y2={H + 14} />
+                  ))}
+                </svg>
+                <figcaption>
+                  <span className="ty-k-tilt">Your breath, as your phone tilted</span>
+                  <span className="ty-k-sea">The sea</span>
+                  <span className="ty-k-mark">Each reading, orange when your breath followed</span>
+                </figcaption>
+              </figure>
+            )}
             <p className="ty-lede ty-quiet">With AirPods the same is read from your head, with your heart rate, before and after the practice, and the clinic sees it. A signal, not a diagnosis.</p>
             <div className="ty-btns">
               <a className="lab-btn primary ty-go" href="#/watch">

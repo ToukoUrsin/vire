@@ -153,6 +153,33 @@
 .ty-k-sea::before {
   border-top: 2px dashed var(--stage-ink-2);
 }
+/* the whole minute on the result screen: the same two lines, and a tick where each reading was made */
+.ty-whole {
+  margin: 4px 0 2px;
+}
+.ty-whole svg {
+  height: 110px;
+}
+.ty-whole .ty-tilt {
+  stroke-width: 2;
+}
+.ty-mark {
+  stroke-width: 3;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  stroke: var(--stage-ink-2);
+}
+.ty-mark-breath {
+  stroke: var(--ember);
+}
+.ty-k-mark::before {
+  content: '';
+  display: inline-block;
+  height: 10px;
+  margin-right: 6px;
+  vertical-align: middle;
+  border-left: 3px solid var(--ember);
+}
 .ty-flat {
   margin: 8px 0 0;
   font-size: var(--text-body-s);
