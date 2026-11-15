@@ -127,6 +127,9 @@ export default function Heard() {
   const step = b?.steps.find((s) => pos >= s.t0 && pos < s.t1) ?? null
   const reading = b ? [...b.read].reverse().find((r) => r[0] <= pos) : undefined
   const hears = reading ? (reading[3] ? 'a nod' : reading[4] ? 'a head shake' : null) : null
+  // while a nod or a head shake is asked: has the model heard it yet in this ask? (it answers about a second after the head moves)
+  const asking = step && (step.ask === 'nod' || step.ask === 'shake') ? step : null
+  const heardIt = !!asking && !!b && b.read.some((r) => r[0] >= asking.t0 && r[0] <= pos && r[asking.ask === 'nod' ? 3 : 4])
   const hours = b ? hoursBetween(b.taughtAt, b.recordedAt) : 0
   const s = b?.score
   return (
@@ -171,7 +174,7 @@ export default function Heard() {
                 {step ? CHECK_ASK[step.ask] : ' '}
               </h1>
               <p className="hd-hears" data-hears={hears ?? ''}>
-                {hears ? `The AirPods heard ${hears}.` : 'The AirPods hear neither a nod nor a head shake.'}
+                {hears ? `The AirPods heard ${hears}.` : asking ? (heardIt ? 'The AirPods heard it.' : 'The AirPods are listening.') : 'The AirPods hear neither a nod nor a head shake.'}
               </p>
             </div>
           ) : (

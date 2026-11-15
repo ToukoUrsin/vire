@@ -29,7 +29,7 @@ function useReplay(): { real: boolean | null; kind: string | null } {
 const PRACTICE: Record<string, string> = { breathe: 'Slow breathing', scan: 'Body scan', walk: 'A short walk' }
 
 const LOOP: { k: string; t: string }[] = [
-  { k: 'Sense', t: 'All the time they’re in, your AirPods feel head movement, head-down time, walks, nods and, on AirPods Pro 3, heart rate.' },
+  { k: 'Sense', t: 'All the time they’re in, your AirPods feel head movement, head-down time, walks and nods. On AirPods Pro 3, during a practice, heart rate too.' },
   { k: 'Practice', t: 'When that drifts from your usual, a short practice plays in your ears.' },
   { k: 'Learn', t: 'Vire measures what it did and learns which practice helps you.' },
   { k: 'Tell', t: 'Drift the practices don’t fix goes to the top of your clinic’s list.' },
@@ -38,7 +38,9 @@ const LOOP: { k: string; t: string }[] = [
 export default function Home() {
   const { real, kind } = useReplay()
   // the four parts of the run, named as the replay names them
-  const parts = ['Check before', (kind && PRACTICE[kind]) || 'A practice', 'Check after', 'The clinic’s screen']
+  // until the server has said which run it is, the two lines that depend on it keep their room and stay unseen: no words change under the eye
+  const parts = ['Check before', (kind && PRACTICE[kind]) || (real === null ? 'Slow breathing' : 'A practice'), 'Check after', 'The clinic’s screen']
+  const wait = real === null ? ({ visibility: 'hidden' } as const) : undefined
   useEffect(() => {
     document.title = 'Vire'
   }, [])
@@ -61,15 +63,15 @@ export default function Home() {
           </svg>
           <span>
             <b>{real === true ? 'Watch a real run' : 'Watch a run'}</b>
-            <small>
-              {real === true ? 'The founder’s own AirPods, 40 seconds' : real === false ? 'A scripted run for now, 40 seconds' : '40 seconds, sound on'}
-            </small>
+            <small style={wait}>{real === true ? 'The founder’s own AirPods, 40 seconds' : 'A scripted run for now, 40 seconds'}</small>
           </span>
         </a>
         {/* what the 40 seconds hold, before the tap: the same four parts the replay counts off */}
         <ol className="run-parts hm-parts" aria-label="What the run shows">
-          {parts.map((x) => (
-            <li key={x}>{x}</li>
+          {parts.map((x, i) => (
+            <li key={x} style={i === 1 ? wait : undefined}>
+              {x}
+            </li>
           ))}
         </ol>
         {/* the one thing here that is not a script: a check from the founder's own AirPods, played back */}

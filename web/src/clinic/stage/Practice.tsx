@@ -103,7 +103,7 @@ export function PracticeBoard({ seen }: { seen: PracticeSeen }) {
               {seen.pieces.live ? `, ${seen.pieces.live} of them during the practice from what the ${demo ? 'stand-in' : 'AirPods'} read` : ''}.
             </li>
           )}
-          <li data-note="why">{r.offered ? `Offered by Vire: ${r.offered.why}${r.offered.byDefault ? ' (a starting threshold, not yet this person’s own band)' : ''}` : 'Started from the day’s plan, not from a drift.'}</li>
+          <li data-note="why">{r.offered ? `Offered by Vire: ${r.offered.why}${r.offered.byDefault ? ' (a starting threshold, not yet this person’s own band)' : ''}` : 'Part of the daily five minutes, not offered after a drift.'}</li>
           <li data-note="hz">Camera off. {r.hz} {demo ? 'stand-in' : 'AirPods'} samples a second.</li>
         </ul>
       </div>
