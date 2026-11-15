@@ -27,7 +27,9 @@ export function statusDetail(row: Pick<PatientRow, 'status' | 'lastPingAt' | 'dr
   const s = silentDays(row.lastPingAt)
   const days = row.outer?.driftDays ?? 0
   if (vs === 'quiet') return s === null ? words(row.synthetic).none : row.synthetic ? `${s} days without AirPods` : `${s} days silent`
-  if (vs === 'low' || vs === 'dipping') return `${days > 0 ? `${days} ${days === 1 ? 'day' : 'days'} below their usual` : 'Below their usual'} (${signed(row.drift)} SD)${s !== null && s >= 3 ? `, ${s} days silent` : ''}`
+  // Dipping at −1.8 SD reads as a mistake beside "Low: more than 1.5 SD below for three days": say that it is not three days yet
+  const soon = vs === 'dipping' && row.drift < -1.5 ? ', under three days past −1.5' : ''
+  if (vs === 'low' || vs === 'dipping') return `${days > 0 ? `${days} ${days === 1 ? 'day' : 'days'} below their usual` : 'Below their usual'} (${signed(row.drift)} SD${soon})${s !== null && s >= 3 ? `, ${s} days silent` : ''}`
   return ''
 }
 
@@ -58,7 +60,7 @@ export default function Today() {
     const list = (rows ?? []).map((row) => ({ row, vs: viewStatus(row), group: groupOf(row) }))
     const counts = Object.fromEntries(STATUS_ORDER.map((s) => [s, 0])) as Record<ViewStatus, number>
     for (const r of list) counts[r.vs]++
-    return { list, counts, nCall: list.filter((r) => r.group === 'call' || r.group === 'escalated').length, nSim: list.filter((r) => r.row.synthetic).length, nCam: list.filter((r) => r.group === 'camera').length }
+    return { list, counts, nCall: list.filter((r) => r.group === 'call' || r.group === 'escalated').length, nEsc: list.filter((r) => r.group === 'escalated').length, nSim: list.filter((r) => r.row.synthetic).length, nCam: list.filter((r) => r.group === 'camera').length }
   }, [rows])
 
   const total = model.list.length
@@ -98,7 +100,7 @@ export default function Today() {
                 <b>
                   {model.nCall} of {total}
                 </b>{' '}
-                people. The other {total - model.nCall} are inside their usual, {model.nCam > 0 ? 'being watched, still calibrating or tried the camera check' : 'being watched, or still calibrating'}.
+                people{model.nEsc > 0 && model.nEsc < model.nCall ? `: ${model.nEsc} still below their usual in spite of the practices, ${model.nCall - model.nEsc} worth a call today` : ''}. The other {total - model.nCall} are inside their usual, {model.nCam > 0 ? 'being watched, still calibrating or tried the camera check' : 'being watched, or still calibrating'}.
                 {stillToCall < model.nCall && <span className="cl-lede-done"> {model.nCall - stillToCall} called so far.</span>}
               </>
             )}

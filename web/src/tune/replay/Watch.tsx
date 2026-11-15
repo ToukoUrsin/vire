@@ -37,7 +37,7 @@ const ABOUT = {
   walk: 'Two and a half minutes of walking. The steps are felt.',
 } as const
 const WHAT: Record<'before' | 'after', string> = {
-  before: 'Heart rate and head movement, read before the practice.',
+  before: 'Heart rate and head movement, read before the practice. The minute of asked nods before it is left out of this replay.',
   after: 'The same check again, to see what changed.',
 }
 

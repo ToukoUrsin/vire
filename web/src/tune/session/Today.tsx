@@ -644,7 +644,7 @@ export default function Today() {
               <li data-next={next}>
                 <b>{NAME[next]}</b>
                 <span data-plan={Math.round(practiceMs(next, mine) / 1000)}>
-                  {ABOUT[next]} {next === 'walk' ? '' : `${mmss(Math.round(practiceMs(next, mine) / 1000))}${next === 'breathe' && learnLength(mine?.sessions ?? []).of ? ', set from your own practices' : ''}.`}
+                  {ABOUT[next]} {next === 'walk' ? '' : `About ${mmss(Math.round(practiceMs(next, mine) / 1000))}${next === 'breathe' && learnLength(mine?.sessions ?? []).of ? ', set from your own practices' : ''}.`}
                 </span>
               </li>
               <li>

@@ -111,16 +111,12 @@ export default function Home() {
             The big screen
           </a>
         </div>
-        <div className="hm-way hm-way-clinic">
-          <a href="#/try" className="hm-way-main" data-try>
-            <b>No AirPods?</b>
-            <span>Try the breathing on your phone</span>
-            <Arrow />
-          </a>
-          <a href="#/visit" className="hm-way-small">
-            Or one minute with the camera
-          </a>
-        </div>
+        {/* the earlier one-minute camera check (#/visit) still opens by its address; it is not a way in any more */}
+        <a href="#/try" className="hm-way" data-try>
+          <b>No AirPods?</b>
+          <span>Try the breathing on your phone</span>
+          <Arrow />
+        </a>
       </nav>
 
       <section className="hm-loop" aria-label="How Vire works">

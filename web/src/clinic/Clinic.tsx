@@ -42,7 +42,6 @@ function Shell() {
             Call list
           </NavLink>
           <NavLink to={href('/clinic/live')}>Big screen</NavLink>
-          <NavLink to={href('/clinic/hall')}>Hall visitors</NavLink>
         </div>
         <div className="cl-bar-right">
           {!hall && <span className="cl-simflag">Simulated patients</span>}

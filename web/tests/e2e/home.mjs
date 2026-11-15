@@ -40,9 +40,11 @@ for (const [w, h] of [[390, 844], [1440, 900]]) {
     const box = await page.locator('.hm-watch').boundingBox()
     check(!!box && box.y >= 0 && box.y + box.height <= h && box.x >= 0 && box.x + box.width <= w, `${tag}: replay button inside the first view (${box && Math.round(box.y + box.height)}px of ${h})`)
     const hrefs = await page.locator('main a').evaluateAll((as) => as.map((a) => a.getAttribute('href')))
-    const order = ['#/watch', '#/heard', 'app/', '#/today', '#/clinic', '#/clinic/live', '#/try', '#/visit']
+    const order = ['#/watch', '#/heard', 'app/', '#/today', '#/clinic', '#/clinic/live', '#/try']
     check(JSON.stringify(hrefs.filter((x) => order.includes(x))) === JSON.stringify(order), `${tag}: ways in, in order (${hrefs.join(' ')})`)
-    check(text.includes('Today') && text.includes('AirPods in, five minutes') && text.includes('The clinic') && text.includes('The big screen') && text.includes('No AirPods?') && text.includes('Try the breathing on your phone') && text.includes('Or one minute with the camera') && text.includes('stopped working for about half of the people it helped'), `${tag}: the four ways in are named`)
+    // the earlier camera check is one product too many on the first screen: it opens by its address only
+    check(!hrefs.includes('#/visit') && !text.includes('one minute with the camera'), `${tag}: the camera check is not a way in`)
+    check(text.includes('Today') && text.includes('AirPods in, five minutes') && text.includes('The clinic') && text.includes('The big screen') && text.includes('No AirPods?') && text.includes('Try the breathing on your phone') && text.includes('stopped working for about half of the people it helped'), `${tag}: the four ways in are named`)
     check(text.includes('Watch a real check') && text.includes('Open the phone app') && (await page.locator('[data-app-link]').getAttribute('target')) === null, `${tag}: the real check and the phone app are linked, same tab`)
     check(text.includes('A signal for the clinic, not a diagnosis.') && text.includes('No patient has used Vire yet. The clinic’s patients are simulated.'), `${tag}: the honest lines`)
     const scrollW = await page.evaluate(() => document.documentElement.scrollWidth)
@@ -80,7 +82,7 @@ for (const [w, h] of [[390, 844], [1440, 900]]) {
     await page.goto(`${base}#/clinic`, { waitUntil: 'domcontentloaded' })
     await page.waitForSelector('.cl-nav', { timeout: 15000 })
     const tabs = await page.locator('.cl-nav').innerText()
-    check(/Big screen/.test(tabs) && /Hall visitors/.test(tabs) && !/Live mirror|Hall today/.test(tabs), `${tag}: tabs renamed (${tabs.replace(/\s+/g, ' ')})`)
+    check(/Call list/.test(tabs) && /Big screen/.test(tabs) && !/Hall visitors|Live mirror|Hall today/.test(tabs), `${tag}: two tabs, no hall (${tabs.replace(/\s+/g, ' ')})`)
     check((await page.locator('a.cl-brand').getAttribute('href')) === '#/', `${tag}: clinic wordmark leads to #/`)
     await page.goto(`${base}#/clinic/hall`, { waitUntil: 'domcontentloaded' })
     await page.waitForSelector('.va-hall', { timeout: 15000 })

@@ -94,8 +94,24 @@ class CheekRaise {
   }
 }
 
+/**
+ * The face library posts its own usage log to Google (odml.pa.googleapis.com). Vire says only numbers leave the phone,
+ * and means it: that request is answered here and never goes out.
+ */
+let logKeptHome = false
+function keepLogHome() {
+  if (logKeptHome || typeof window === 'undefined') return
+  logKeptHome = true
+  const real = window.fetch.bind(window)
+  window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
+    const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
+    return url.startsWith('https://odml.pa.googleapis.com/') ? Promise.resolve(new Response('', { status: 200 })) : real(input, init)
+  }
+}
+
 async function create(delegate: FaceDelegate): Promise<FaceLandmarker> {
-  const wasm = new URL('wasm', document.baseURI).toString().replace(/\/$/, '')
+  keepLogHome()
+  const wasm =new URL('wasm', document.baseURI).toString().replace(/\/$/, '')
   const model = new URL('models/face_landmarker.task', document.baseURI).toString()
   const fileset = await FilesetResolver.forVisionTasks(wasm)
   return FaceLandmarker.createFromOptions(fileset, {
