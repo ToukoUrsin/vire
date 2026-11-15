@@ -66,6 +66,13 @@ export default function Today() {
 
   const total = model.list.length
   const shown = only ? model.list.filter((r) => r.vs === only) : model.list
+  // the people who need no call, in words: only the groups that have someone in them are named
+  const others = (() => {
+    const kinds = ['inside their usual', 'being watched']
+    if (model.list.some((r) => r.group === 'new')) kinds.push('still calibrating')
+    if (model.nCam > 0) kinds.push('tried the camera check')
+    return `${kinds.slice(0, -1).join(', ')} or ${kinds[kinds.length - 1]}`
+  })()
   const stillToCall = model.list.filter((r) => (r.group === 'call' || r.group === 'escalated') && !called.calledAt(r.row.id)).length
   const [focusCall, setFocusCall] = useState(true)
   // a long group of people who need nothing is folded to its first three on a phone (the stylesheet decides where)
@@ -101,7 +108,7 @@ export default function Today() {
                 <b>
                   {model.nCall} of {total}
                 </b>{' '}
-                people{model.nEsc > 0 && model.nEsc < model.nCall ? `: ${model.nEsc} still below their usual in spite of the practices, ${model.nCall - model.nEsc} worth a call today` : ''}. The other {total - model.nCall} are inside their usual, {model.nCam > 0 ? 'being watched, still calibrating or tried the camera check' : 'being watched, or still calibrating'}.
+                people{model.nEsc > 0 && model.nEsc < model.nCall ? `: ${model.nEsc} still below their usual in spite of the practices, ${model.nCall - model.nEsc} worth a call today` : ''}. The other {total - model.nCall} are {others}.
                 {stillToCall < model.nCall && <span className="cl-lede-done"> {model.nCall - stillToCall} called so far.</span>}
               </>
             )}
