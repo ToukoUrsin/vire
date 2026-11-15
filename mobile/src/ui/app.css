@@ -356,6 +356,12 @@ p {
   background: transparent;
   transition: background 200ms var(--ease);
 }
+/* as soon as anything scrolls under the bar, the bar frosts over it, so text never runs through "Back" */
+.navbar.is-under {
+  background: rgba(250, 246, 239, 0.82);
+  -webkit-backdrop-filter: saturate(1.5) blur(18px);
+  backdrop-filter: saturate(1.5) blur(18px);
+}
 .navbar.is-solid {
   background: var(--bg);
   box-shadow: 0 1px 0 var(--line);

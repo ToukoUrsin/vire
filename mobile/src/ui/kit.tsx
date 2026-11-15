@@ -15,11 +15,15 @@ const rise = (i?: number): CSSProperties | undefined => (i == null ? undefined :
 export function Screen({ nav, backTo, right, flow, children, className = '', glow }: { nav?: string; backTo?: string; right?: ReactNode; flow?: boolean; children: ReactNode; className?: string; glow?: Tone }) {
   const ref = useRef<HTMLDivElement>(null)
   const [solid, setSolid] = useState(false)
+  const [under, setUnder] = useState(false)
   useScrollMemory(ref)
   useEffect(() => {
     const el = ref.current
     if (!el || nav == null) return
-    const on = () => setSolid(el.scrollTop > 44)
+    const on = () => {
+      setSolid(el.scrollTop > 44)
+      setUnder(el.scrollTop > 2)
+    }
     on()
     el.addEventListener('scroll', on, { passive: true })
     return () => el.removeEventListener('scroll', on)
@@ -27,7 +31,7 @@ export function Screen({ nav, backTo, right, flow, children, className = '', glo
   return (
     <>
       {nav != null && (
-        <header className={`navbar ${solid ? 'is-solid' : ''}`}>
+        <header className={`navbar ${under ? 'is-under' : ''} ${solid ? 'is-solid' : ''}`}>
           <button className="navbar-back" onClick={() => back(backTo)} aria-label="Back">
             {flow ? <I.close size={22} /> : <I.left size={22} />}
             {!flow && <span>Back</span>}
