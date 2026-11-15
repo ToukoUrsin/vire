@@ -22,7 +22,8 @@ for (const [name, w, h] of [
   const page = await ctx.newPage()
   const errs = []
   page.on('pageerror', (e) => errs.push(String(e)))
-  if (body) await page.route('**/api/ear/check', (r) => r.fulfill({ status: 200, contentType: 'application/json', body }))
+  // the exact path: a doubled /api/api/ must not be answered here
+  if (body) await page.route((u) => u.pathname === '/api/ear/check', (r) => r.fulfill({ status: 200, contentType: 'application/json', body }))
   const t = Date.now()
   await page.goto(base + '#/heard', { waitUntil: 'domcontentloaded' })
   await page.waitForSelector('[data-label]', { timeout: 30000 })

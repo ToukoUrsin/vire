@@ -808,6 +808,10 @@ export default function EarsLab() {
                     Start the minute
                   </button>
                 )}
+                {/* same tab: the iPhone app has no address bar and drops links that open a new window */}
+                <a className="lab-btn" href="app/" data-app-link>
+                  Open the phone app
+                </a>
                 {have && (
                   <a className="lab-btn" href="#/today" data-today-link>
                     Today: five minutes, AirPods only

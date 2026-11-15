@@ -86,7 +86,7 @@ export default function Heard() {
   useEffect(() => {
     document.title = 'Vire: a real check'
     let alive = true
-    api<CheckBundle>('/api/ear/check')
+    api<CheckBundle>('/ear/check')
       .then((x) => alive && setB(x))
       .catch(() => alive && setErr(true))
     return () => {
