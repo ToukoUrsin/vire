@@ -37,8 +37,9 @@ function Shell() {
           Vire <span>clinic</span>
         </a>
         <div className="cl-nav">
+          {/* "Today" is the patient's screen on the first page; here the list is named for what it is */}
           <NavLink to={href('/clinic')} end>
-            Today
+            Call list
           </NavLink>
           <NavLink to={href('/clinic/live')}>Big screen</NavLink>
           <NavLink to={href('/clinic/hall')}>Hall visitors</NavLink>

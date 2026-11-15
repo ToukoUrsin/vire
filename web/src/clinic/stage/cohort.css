@@ -24,8 +24,6 @@
   color: var(--stage-ink);
   font-size: calc(var(--u) * 1.2);
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 .ch-dot {
   width: calc(var(--u) * 0.8);
@@ -132,7 +130,7 @@
   display: grid;
   grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
   grid-template-rows: repeat(var(--rows), minmax(0, 1fr));
-  gap: calc(var(--u) * 0.5);
+  gap: calc(var(--u) * 0.4);
   margin: calc(var(--u) * 1.2) 0 0;
   padding: 0;
 }
@@ -143,7 +141,7 @@
   flex-direction: column;
   justify-content: space-between;
   gap: calc(var(--u) * 0.3);
-  padding: calc(var(--u) * 0.55) calc(var(--u) * 0.5);
+  padding: calc(var(--u) * 0.55) calc(var(--u) * 0.35);
   border: 1px solid var(--line);
   border-radius: calc(var(--u) * 0.5);
   background: var(--panel);
@@ -151,10 +149,25 @@
   transition: border-color 400ms ease-out, background-color 400ms ease-out;
 }
 .ch-n {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: var(--stage-ink-2);
   font-size: calc(var(--u) * 1);
+  line-height: 1.25;
   letter-spacing: 0.04em;
 }
+/* a name is a way into that person's page: it reads as a name, and underlines only under the pointer */
+a.ch-n {
+  color: var(--stage-ink);
+  font-size: max(11.5px, calc(var(--u) * 0.86));
+  font-weight: 500;
+  letter-spacing: 0;
+  text-decoration: none;
+}
+a.ch-n:hover { text-decoration: underline; text-underline-offset: 2px; }
 .ch-word {
   display: inline-flex;
   align-items: center;
@@ -257,16 +270,22 @@
 /* what helps each patient most, re-learned in the same box from their simulated practices */
 .ch-top {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: calc(var(--u) * 0.3);
+  align-items: center;
+  gap: calc(var(--u) * 0.45);
   min-width: 0;
 }
-.ch-top .ch-auc { font-size: calc(var(--u) * 1.35); }
+.ch-top .ch-bar { flex: 1 1 0; min-width: 0; }
+.ch-top .ch-auc { flex: none; font-size: calc(var(--u) * 1.2); }
+.ch-tile[data-state='done'] { justify-content: flex-start; }
+/* with no words under it, the score is the tile */
+.ch-tile:not(:has(.ch-works)) .ch-top { margin-top: auto; }
+.ch-tile:not(:has(.ch-works)) .ch-auc { font-size: calc(var(--u) * 1.8); }
 .ch-works {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  /* the name and the score keep their place in every tile; the words sit on the floor */
+  margin-top: auto;
   line-height: 1.12;
 }
 .ch-works b,
@@ -285,6 +304,10 @@
   color: var(--stage-ink-2);
   font-size: max(10.5px, calc(var(--u) * 0.72));
   letter-spacing: -0.01em;
+}
+/* a 720p projector: the count line gives up half a pixel of size before it gives up a letter */
+@media (max-width: 1300px) and (min-aspect-ratio: 1/1) {
+  .ch-works small { font-size: 10px; }
 }
 .ch-works[data-said='learned'] small:first-of-type { color: var(--soft); }
 .ch-works[data-said='leaning'] b { color: var(--soft); font-weight: 500; }
@@ -354,8 +377,8 @@
     gap: calc(var(--u) * 0.6);
   }
   .ch-tile { gap: calc(var(--u) * 0.5); padding: calc(var(--u) * 0.6) calc(var(--u) * 0.5); border-radius: var(--radius-xs); }
-  .ch-n { font-size: calc(var(--u) * 1.05); }
-  .ch-top .ch-auc { font-size: calc(var(--u) * 1.5); }
+  .ch-n, a.ch-n { font-size: calc(var(--u) * 1.15); }
+  .ch-top .ch-auc { font-size: calc(var(--u) * 1.4); }
   .ch-works { line-height: 1.2; }
   .ch-works b { font-size: calc(var(--u) * 1.12); }
   .ch-works small { font-size: calc(var(--u) * 1.02); }

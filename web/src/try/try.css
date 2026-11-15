@@ -16,12 +16,12 @@
   margin: 0 auto;
   flex: 1;
 }
+/* the words start a little under the header, on its left edge, as on the replay: nothing floats in the middle */
 .ty[data-stage='start'] .ty-main,
 .ty[data-stage='result'] .ty-main,
 .ty[data-stage='refused'] .ty-main,
 .ty[data-stage='nophone'] .ty-main {
-  justify-content: center;
-  padding-bottom: 6vh;
+  padding-top: clamp(16px, 7vh, 80px);
 }
 .ty-main h1 {
   margin: 0;
@@ -32,22 +32,15 @@
   overflow-wrap: break-word;
   text-wrap: balance;
 }
-.ty-eyebrow {
-  margin: 0;
-  color: var(--stage-ink-2);
-  font-size: var(--text-label);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
 .ty-lede {
   margin: 0;
-  font-size: var(--text-lead);
+  font-size: var(--text-body-l);
   line-height: 1.45;
   max-width: 32em;
 }
 .ty-quiet {
   color: var(--stage-ink-2);
-  font-size: var(--text-body-l);
+  font-size: var(--text-body-s);
 }
 .ty-btns {
   display: flex;
@@ -61,23 +54,14 @@
   padding: 0 20px;
   border-radius: var(--radius);
   font-size: var(--text-body-l);
-  background: var(--stage-2);
-  color: var(--stage-ink);
-  box-shadow: inset 0 0 0 1px var(--stage-line);
 }
-.ty .lab-btn.primary {
-  background: var(--ember);
-  color: var(--stage);
-  box-shadow: none;
-}
+/* the quiet ones are outlines (theme.css); the one thing to do is the only fill */
 .ty-go {
   flex: 1 1 12rem;
 }
-.ty-link {
-  color: var(--stage-ink);
-  font-size: var(--text-body-l);
-  text-underline-offset: 3px;
-  padding: 12px 4px;
+/* three buttons: the one to press takes its own row, the two quiet ones share the next */
+.ty-btns:has(> :nth-child(3)) .ty-go {
+  flex-basis: 100%;
 }
 .ty-fine {
   margin: 0;
@@ -91,9 +75,9 @@
 
 /* the minute */
 .ty-orb {
-  width: min(34vw, 9.5rem);
+  width: 80px;
   aspect-ratio: 1;
-  margin: 4px auto 0;
+  margin: 0;
   border-radius: 50%;
   border: 2px solid var(--stage-ink);
   background: color-mix(in srgb, var(--stage-ink) 14%, transparent);
@@ -105,14 +89,7 @@
   transform: scale(1);
 }
 .ty-main .ty-say {
-  font-size: clamp(2.25rem, 12vw, var(--text-d1));
-  text-align: center;
-}
-.ty-pace {
-  margin: 0;
-  color: var(--stage-ink-2);
-  font-size: var(--text-body-l);
-  text-align: center;
+  font-size: clamp(var(--text-h1), 6vw, var(--text-d3));
 }
 .ty-read {
   margin: 4px 0 0;
@@ -204,10 +181,11 @@
 .ty-address {
   margin: 0;
   padding: 12px 14px;
-  border: 1px solid var(--stage-ink);
+  border: 1px solid var(--stage-line);
   border-radius: var(--radius-s);
-  font-size: var(--text-body-l);
-  font-weight: 600;
+  font-size: var(--text-body);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
   user-select: all;
 }
@@ -215,10 +193,12 @@
   outline: 2px solid var(--stage-ink);
   outline-offset: 3px;
 }
-@media (max-height: 720px) {
+@media (min-width: 760px) {
   .ty-orb {
-    width: min(26vw, 7rem);
+    width: 104px;
   }
+}
+@media (max-height: 720px) {
   .ty-read {
     font-size: var(--text-body-l);
   }
@@ -236,5 +216,11 @@
   width: 148px;
   height: 148px;
   margin: 4px 0 2px;
-  border-radius: 6px;
+  border-radius: var(--radius-xs);
+}
+/* a phone cannot point its camera at its own screen */
+@media (hover: none) and (pointer: coarse) {
+  .ty-qr {
+    display: none;
+  }
 }

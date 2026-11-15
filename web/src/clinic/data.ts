@@ -187,12 +187,14 @@ export type ViewStatus = 'low' | 'dipping' | 'quiet' | 'steady' | 'calibrating'
 export const STATUS_ORDER: ViewStatus[] = ['low', 'dipping', 'quiet', 'steady', 'calibrating']
 export const STATUS_LABEL: Record<ViewStatus, string> = { low: 'Low', dipping: 'Dipping', quiet: 'Quiet', steady: 'Steady', calibrating: 'Calibrating' }
 
+/** The clinic and its patients live in Helsinki: days are cut there (winter time, as the server cuts them), whatever the viewer's own time zone. */
+const CLINIC_TZ_MS = 2 * 3_600_000
+const clinicDay = (ms: number) => Math.floor((ms + CLINIC_TZ_MS) / DAY)
+
 /** whole days without a ping, counting today */
 export function silentDays(lastPingAt: string | null, now = Date.now()): number | null {
   if (!lastPingAt) return null
-  const end = new Date(now)
-  end.setHours(23, 59, 59, 999)
-  return Math.max(0, Math.floor((end.getTime() - Date.parse(lastPingAt)) / DAY))
+  return Math.max(0, clinicDay(now) - clinicDay(Date.parse(lastPingAt)))
 }
 
 /** Silence is a signal: someone past calibration with no ping for 3+ days reads as "quiet" unless already low. */
@@ -265,10 +267,10 @@ export const PRACTICE_LABEL: Record<PracticeKind, string> = { breathe: 'Breathin
 
 export const roomCode = (userId: string) => userId.slice(0, 6).toUpperCase()
 
-const dFmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short' })
-const dyFmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
-const wFmt = new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })
-const tFmt = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit' })
+const dFmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', timeZone: 'Europe/Helsinki' })
+const dyFmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Europe/Helsinki' })
+const wFmt = new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Europe/Helsinki' })
+const tFmt = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Helsinki' })
 export const fmtDay = (d: number | string | Date) => dFmt.format(new Date(d))
 export const fmtDayYear = (d: number | string | Date) => dyFmt.format(new Date(d))
 export const fmtWeekday = (d: number | string | Date) => wFmt.format(new Date(d))
@@ -296,3 +298,7 @@ export function ago(iso: string | null, now = Date.now()): string {
   if (s === 1) return 'yesterday'
   return `${s} days ago`
 }
+
+/** the server counts a person's practices as "sessions"; every screen calls them practices, so the clinic does too.
+ *  Only a count in front of the word is touched: a "20-session TMS course" and a "booster session" keep their name. */
+export const practiceWords = (text: string) => text.replace(/(\d+ of \d+|: \d+) session(s?)\b/g, '$1 practice$2')

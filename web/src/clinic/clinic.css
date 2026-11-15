@@ -1695,6 +1695,48 @@
     align-self: end;
   }
 }
+/* a long group that asks for nothing ("Inside their usual") is folded to three rows on a phone */
+.cl-more {
+  display: none;
+}
+@media (max-width: 760px) {
+  /* the name, where the person comes from and when they joined share one line */
+  .cl-c-name {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 8px;
+  }
+  .cl-joined {
+    margin-top: 0;
+    font-size: var(--text-caption);
+  }
+  /* a steady row: the reason runs the full width under the name, the chevron stands at the row's end */
+  .cl-group--calm .cl-row {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      'name status act'
+      'reason reason act';
+    column-gap: 10px;
+  }
+  .cl-group--calm .cl-c-act {
+    align-self: center;
+  }
+  .cl-group--calm .cl-c-reason {
+    font-size: var(--text-small);
+  }
+  .cl-say {
+    margin-top: 4px;
+  }
+  .cl-group.is-folded li:nth-child(n + 4) {
+    display: none;
+  }
+  .cl-more {
+    display: flex;
+    width: calc(100% - 28px);
+    margin: 10px 14px 0;
+  }
+}
 /* the narrowest phones: the wordmark alone, so the three tabs fit */
 @media (max-width: 350px) {
   .cl-brand span {

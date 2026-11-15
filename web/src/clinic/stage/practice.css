@@ -46,3 +46,14 @@
 .sg-pr-verdict {
   display: inline-block;
 }
+
+/* a phone held upright: the practice names are the point of the list, so the bar gives way and none is cut */
+@media (max-aspect-ratio: 1/1) {
+  .sg-practice .sg-sr-board li {
+    grid-template-columns: calc(var(--u) * 5) minmax(0, 1fr) calc(var(--u) * 3.2) calc(var(--u) * 5);
+    gap: calc(var(--u) * 0.9);
+    height: auto;
+    min-height: calc(var(--u) * 4.2);
+  }
+  .sg-practice .sg-sr-name { white-space: normal; }
+}

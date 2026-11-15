@@ -52,7 +52,8 @@
   text-wrap: pretty;
 }
 
-.hm-watch {
+.hm-watch,
+.hm-real {
   display: flex;
   align-items: center;
   gap: 14px;
@@ -67,7 +68,8 @@
     transform var(--dur-press) var(--ease),
     background-color var(--dur-fast) var(--ease);
 }
-.hm-watch:active {
+.hm-watch:active,
+.hm-real:active {
   transform: scale(0.98);
 }
 .hm-play {
@@ -79,19 +81,43 @@
   background: var(--stage);
   fill: var(--ember);
 }
-.hm-watch span {
+.hm-watch span,
+.hm-real span {
   display: grid;
   gap: 1px;
 }
-.hm-watch b {
+.hm-watch b,
+.hm-real b {
   font-size: var(--text-lead);
   font-weight: 650;
   line-height: 1.2;
 }
-.hm-watch small {
+.hm-watch small,
+.hm-real small {
   font-size: var(--text-label);
   font-weight: 500;
   line-height: 1.3;
+}
+
+/* the real check: the same row, outlined, so the run stays the one filled button */
+.hm-real {
+  margin-top: 4px;
+  background: transparent;
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.hm-real .hm-play {
+  background: var(--ember);
+  fill: var(--stage);
+}
+
+/* what the run shows, before the tap: the four parts, as the replay counts them off (.run-parts in theme.css) */
+.hm .hm-parts {
+  margin-top: -4px;
+}
+/* why it matters comes after the one tap, set apart from it */
+.hm .hm-why {
+  margin-top: 10px;
 }
 
 /* ---- the other ways in: rows on hairlines ---- */
@@ -155,6 +181,9 @@
   .hm-watch:hover {
     background: color-mix(in oklab, var(--ember) 90%, var(--stage-ink));
   }
+  .hm-real:hover {
+    background: color-mix(in oklab, var(--ink) 6%, transparent);
+  }
   :is(a.hm-way, .hm-way-main):hover .hm-arrow {
     color: var(--ink);
     transform: translateX(3px);
@@ -204,7 +233,7 @@
     --gutter: 48px;
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
     column-gap: clamp(48px, 7vw, 120px);
-    row-gap: 40px;
+    row-gap: 32px;
     max-width: 78rem;
     padding-top: 28px;
   }
@@ -221,13 +250,23 @@
     max-width: 36rem;
     font-size: var(--text-lead);
   }
-  .hm-watch {
+  .hm-watch,
+  .hm-real {
     justify-self: start;
-    min-width: 22rem;
+    min-width: 32rem;
     margin-top: 14px;
   }
+  .hm-parts {
+    width: 32rem;
+    gap: 8px;
+  }
+  .hm-who {
+    max-width: 36rem;
+  }
+  /* the ways in start on the headline's first line */
   .hm-ways {
-    align-self: end;
+    align-self: start;
+    margin-top: 20px;
   }
   .hm-loop ol {
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -249,6 +288,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .hm-watch,
+  .hm-real,
   .hm-arrow {
     transition: none;
   }

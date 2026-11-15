@@ -4,7 +4,7 @@ import { ChannelMultiples } from './charts/ChannelMultiples'
 import { EchoChart, EchoLegend, timeDomain } from './charts/EchoChart'
 import { OuterChart, OuterLegend, PracticeMark, practiceState } from './charts/OuterChart'
 import { TraceStrip } from './charts/TraceStrip'
-import { PRACTICE_LABEL, STATUS_LABEL, ago, chLabel, echoNow, words, fetchTraces, fmtDay, fmtDayYear, fmtSlot, fmtTime, fmtWeekday, isMock, roomCode, setBooster, signed, useCalled, usePatient, viewStatus } from './data'
+import { PRACTICE_LABEL, STATUS_LABEL, ago, chLabel, echoNow, words, fetchTraces, fmtDay, fmtDayYear, fmtSlot, fmtTime, fmtWeekday, isMock, practiceWords, roomCode, setBooster, signed, silentDays, useCalled, usePatient, viewStatus } from './data'
 import type { OuterRow, PingTraces, PracticeKind, PracticeRec } from '@shared/types'
 import { synthTraces } from './dev/synth'
 import { Check, StatusMark, href, statusDetail } from './Today'
@@ -51,7 +51,7 @@ export default function Patient() {
     return (
       <main className="cl-page">
         <Link to={href('/clinic')} className="cl-back">
-          <Back /> Today
+          <Back /> Call list
         </Link>
         {loading ? (
           <>
@@ -69,9 +69,9 @@ export default function Patient() {
         ) : (
           <section className="cl-none">
             <h1>Nobody here with that id</h1>
-            <p>This link does not match anyone in the clinic. Open the person from today&apos;s list.</p>
+            <p>This link does not match anyone in the clinic. Open the person from today’s list.</p>
             <Link to={href('/clinic')} className="cl-btn cl-btn--primary">
-              Back to today&apos;s list
+              Back to today’s list
             </Link>
           </section>
         )}
@@ -102,7 +102,7 @@ export default function Patient() {
     ? outerFacts(o)
     : detail.status === 'calibrating'
     ? [`${fullPings.length} of 3 ${W.many} so far`, 'No usual of their own yet', 'A rating gives the clinic another view']
-    : [echo == null ? `${W.last} not read` : `${W.last} ${echo}/100, 50 is their usual`, quiet ? cap(W.silent(Math.max(1, Math.round((Date.now() - Date.parse(detail.lastPingAt ?? new Date().toISOString())) / 86_400_000)))) : latestPHQ && latestPHQ.total >= 3 ? `PHQ-2 self-report: ${latestPHQ.total} of 6, at or over its cut-off of 3` : `PHQ-2 self-report: ${latestPHQ ? `${latestPHQ.total} of 6, under its cut-off of 3` : 'not answered recently'}`, detail.boosterRequested ? 'Booster requested' : 'No booster request']
+    : [echo == null ? `${W.last} not read` : `${W.last} ${echo}/100, 50 is their usual`, quiet ? cap(W.silent(Math.max(1, silentDays(detail.lastPingAt) ?? 1))) : latestPHQ && latestPHQ.total >= 3 ? `PHQ-2 self-report: ${latestPHQ.total} of 6, at or over its cut-off of 3` : `PHQ-2 self-report: ${latestPHQ ? `${latestPHQ.total} of 6, under its cut-off of 3` : 'not answered recently'}`, detail.boosterRequested ? 'Booster requested' : 'No booster request']
 
   const toggleBooster = async () => {
     const on = !detail.boosterRequested
@@ -150,7 +150,7 @@ export default function Patient() {
   return (
     <main className="cl-page cl-patient">
       <Link to={href('/clinic')} className="cl-back">
-        <Back /> Today
+        <Back /> Call list
       </Link>
       {stale && (
         <p className="cl-offline" role="status">
@@ -159,7 +159,7 @@ export default function Patient() {
       )}
       {!stale && source === 'mock' && !isMock() && (
         <p className="cl-offline" role="status">
-          <b>The server is not answering.</b> This is a built-in sample person, not your clinic's patient.
+          <b>The server is not answering.</b> This is a built-in sample person, not your clinic’s patient.
         </p>
       )}
 
@@ -217,7 +217,7 @@ export default function Patient() {
               </dd>
             </div>
           </dl>
-          <p className="cl-summary">{detail.summary}</p>
+          <p className="cl-summary">{practiceWords(detail.summary)}</p>
         </div>
 
         <div className="cl-actions">
@@ -227,7 +227,7 @@ export default function Patient() {
                 <Check /> Booster booked
               </span>
               <b className="cl-slot-booked">{fmtSlot(upcoming.at)}</b>
-              <small>{upcoming.by === 'simulated' ? 'A simulated booking, part of this simulated person’s story.' : `Booked ${fmtDay(upcoming.bookedAt)}. ${detail.synthetic ? 'A real person’s phone would show a check-in notice now; this person is simulated.' : 'Their app shows a check-in notice.'}`}</small>
+              <small>{upcoming.by === 'simulated' ? 'A simulated booking, part of this simulated person’s story.' : `Booked ${fmtDay(upcoming.bookedAt)}. ${detail.synthetic ? 'A real person’s phone would show a check-in notice now; this person is simulated, and a booking made here clears itself after 20 minutes.' : 'Their app shows a check-in notice.'}`}</small>
               <button type="button" className="cl-link" onClick={() => book(false)} disabled={busy}>
                 Cancel booking
               </button>
@@ -249,7 +249,7 @@ export default function Patient() {
                   </button>
                 ))}
               </div>
-              <small>The next free slots. Booking is the clinician&apos;s decision.</small>
+              <small>The next free slots. Booking is the clinician’s decision.</small>
             </div>
           ) : detail.boosterRequested ? (
             <div className="cl-done">
@@ -295,12 +295,12 @@ export default function Patient() {
               <span>On the phone</span>
               &ldquo;{o.sentence}&rdquo;
             </p>
-            <p>Then take the clinic&apos;s own rating. Bringing TMS back when people worsen is backed by open-label studies (Janicak et al. 2010), not by a randomised trial. <span>Suggestion for a clinician, never an instruction.</span></p>
+            <p>Then take the clinic’s own rating. Bringing TMS back when people worsen is backed by open-label studies (Janicak et al. 2010), not by a randomised trial. <span>Suggestion for a clinician, never an instruction.</span></p>
           </div>
         ) : o?.state === 'after' ? (
           <p className="cl-next-path">Keep watching the line after the booster. If their days slip below their usual again and the practices do not bring them back, they come back to the top of the list. <span>Suggestion for a clinician, never an instruction.</span></p>
         ) : (
-          <p className="cl-next-path">Call and take the clinic&apos;s own rating. If it is worse two weeks running, Janicak et al. 2010 supports offering TMS reintroduction. Otherwise, keep watching. <span>Suggestion for a clinician, never an instruction.</span></p>
+          <p className="cl-next-path">Call and take the clinic’s own rating. If it is worse two weeks running, Janicak et al. 2010 supports offering TMS reintroduction. Otherwise, keep watching. <span>Suggestion for a clinician, never an instruction.</span></p>
         )}
       </section>
 
@@ -309,7 +309,7 @@ export default function Patient() {
           <div className="cl-card-head">
             <div>
               <h2>Their days against their usual, and the practices</h2>
-              <p>One point a day: how far the day sat from this person&apos;s own usual, in SD. The band is their usual. Under it, every practice the phone offered after a day below the band, or that they opened themselves.</p>
+              <p>One point a day: how far the day sat from this person’s own usual, in SD. The band is their usual. Under it, every practice the phone offered after a day below the band, or that they opened themselves.</p>
             </div>
             <OuterLegend />
           </div>
@@ -334,10 +334,10 @@ export default function Patient() {
               {air
                 ? detail.status === 'calibrating'
                   ? 'One mark per simulated day with AirPods in, scored 0 to 100. Until three days are in, it is scored against typical values, not yet against this person.'
-                  : "One mark per simulated day with AirPods in, scored 0 to 100 against this person's own usual, set in the last two weeks of the course: 50 is their usual. The line is the smoothed drift. Point at a day to see its four signals."
+                  : "One mark per simulated day with AirPods in, scored 0 to 100 against this person’s own usual, set in the last two weeks of the course: 50 is their usual. The line is the smoothed drift. Point at a day to see its four signals."
                 : detail.status === 'calibrating'
                   ? 'Each mark is one one-minute camera check, scored 0 to 100. Until three are in, it is scored against typical values, not yet against this person. Click a check to see its traces.'
-                  : "Each mark is one one-minute camera check, scored 0 to 100 against this person's own usual: 50 is their usual. The line is the smoothed drift. Click a check to see its traces."}
+                  : "Each mark is one one-minute camera check, scored 0 to 100 against this person’s own usual: 50 is their usual. The line is the smoothed drift. Click a check to see its traces."}
             </p>
           </div>
           <EchoLegend calibrating={detail.status === 'calibrating'} air={air} phq2={(detail.phq2?.length ?? 0) > 0} />
@@ -366,10 +366,10 @@ export default function Patient() {
               {air
                 ? detail.status === 'calibrating'
                   ? 'Each simulated signal on the same time axis, in SD from typical values until this person has a usual of their own.'
-                  : "Each simulated signal on the same time axis, in SD from this person's own usual. The band is their usual, set in the last two weeks of the course. Head down and heart rate are drawn up when the head is down longer or the heart rate is higher."
+                  : "Each simulated signal on the same time axis, in SD from this person’s own usual. The band is their usual, set in the last two weeks of the course. Head down and heart rate are drawn up when the head is down longer or the heart rate is higher."
                 : detail.status === 'calibrating'
                   ? 'Measured values on the same time axis. The band is a typical range, centre ± spread, until this person has a usual of their own.'
-                  : "Measured values on the same time axis. The band is this person's usual, centre ± spread."}
+                  : "Measured values on the same time axis. The band is this person’s usual, centre ± spread."}
             </p>
           </div>
         </div>
@@ -398,7 +398,7 @@ export default function Patient() {
             )}
           </div>
           {traces ? <TraceStrip traces={traces.data} /> : <p className="cl-empty">{shownPing ? 'Loading the traces of this check.' : 'No camera check yet, so no traces.'}</p>}
-          {traces && !traces.real && <p className="cl-note">Illustrative trace, scaled to this check's score. The server did not return stored traces for it.</p>}
+          {traces && !traces.real && <p className="cl-note">Illustrative trace, scaled to this check’s score. The server did not return stored traces for it.</p>}
           {traces && traces.real && detail.synthetic && <p className="cl-note">Simulated trace.</p>}
         </section>
         </div>
@@ -407,7 +407,7 @@ export default function Patient() {
       <footer className="cl-foot">
         {detail.synthetic && <span>Simulated person: every number on this page is generated{source === 'mock' ? ' by the built-in mock' : ''}.</span>}
         <span>Only numbers leave the phone: no video, no audio. A signal for the clinic, not a diagnosis.</span>
-        <span>Demo clinic, open to anyone with the link. A real one sits behind the clinic&apos;s own sign-in.</span>
+        <span>Demo clinic, open to anyone with the link. A real one sits behind the clinic’s own sign-in.</span>
         <details className="cl-sources">
           <summary>Sources</summary>
           <p>Janicak et al. 2010, <i>Brain Stimul</i> 3(4):187–199. doi:10.1016/j.brs.2010.07.003</p>
@@ -433,7 +433,7 @@ function outerFacts(o: OuterRow): string[] {
   if (o.state === 'after' && o.after) {
     return [`Booster ${o.after.days} ${o.after.days === 1 ? 'day' : 'days'} ago`, `Now ${signed(o.after.drift)} SD against their usual`, `${t.done} of ${t.offered} practices done before it, ${t.settled} settled`]
   }
-  return [`${o.driftDays} ${o.driftDays === 1 ? 'day' : 'days'} below their usual`, `In those days: ${t.done} of ${t.offered} offered practices done, ${t.settled} settled`, o.working.text]
+  return [`${o.driftDays} ${o.driftDays === 1 ? 'day' : 'days'} below their usual`, `In those days: ${t.done} of ${t.offered} offered practices done, ${t.settled} settled`, practiceWords(o.working.text)]
 }
 
 const WHY: Record<PracticeRec['why'], string> = { drift: 'after a day below usual', asked: 'opened by them' }
@@ -480,7 +480,7 @@ function Practices({ practices, working }: { practices: PracticeRec[]; working: 
           ))}
         </tbody>
       </table>
-      {working && <p className="cl-plain"><b>{working.text}.</b> {working.said === 'learned' ? 'The phone offers it first.' : 'The phone keeps comparing.'}</p>}
+      {working && <p className="cl-plain"><b>{practiceWords(working.text)}.</b> {working.said === 'learned' ? 'The phone offers it first.' : 'The phone keeps comparing.'}</p>}
       <ol className="cl-plist">
         {shown.map((p) => (
           <li key={p.at}>

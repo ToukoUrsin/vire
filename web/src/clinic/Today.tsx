@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { PatientRow } from '@shared/types'
 import { Spark } from './charts/Spark'
-import { STATUS_LABEL, STATUS_ORDER, fmtDay, fmtSlot, fmtTime, groupOf, isMock, roomCode, signed, silentDays, useCalled, usePatients, viewStatus, words } from './data'
+import { STATUS_LABEL, STATUS_ORDER, fmtDay, fmtSlot, fmtTime, groupOf, isMock, practiceWords, roomCode, signed, silentDays, useCalled, usePatients, viewStatus, words } from './data'
 import type { Group, ViewStatus } from './data'
 import { displayName } from '../shared/name'
 import { whole } from '../shared/whole'
@@ -27,7 +27,7 @@ export function statusDetail(row: Pick<PatientRow, 'status' | 'lastPingAt' | 'dr
   const s = silentDays(row.lastPingAt)
   const days = row.outer?.driftDays ?? 0
   if (vs === 'quiet') return s === null ? words(row.synthetic).none : row.synthetic ? `${s} days without AirPods` : `${s} days silent`
-  if (vs === 'low' || vs === 'dipping') return `${signed(row.drift)} SD${days > 0 ? `, ${days} ${days === 1 ? 'day' : 'days'}` : ''}${s !== null && s >= 3 ? `, ${s} d silent` : ''}`
+  if (vs === 'low' || vs === 'dipping') return `${days > 0 ? `${days} ${days === 1 ? 'day' : 'days'} below their usual` : 'Below their usual'} (${signed(row.drift)} SD)${s !== null && s >= 3 ? `, ${s} days silent` : ''}`
   return ''
 }
 
@@ -65,6 +65,8 @@ export default function Today() {
   const shown = only ? model.list.filter((r) => r.vs === only) : model.list
   const stillToCall = model.list.filter((r) => (r.group === 'call' || r.group === 'escalated') && !called.calledAt(r.row.id)).length
   const [focusCall, setFocusCall] = useState(true)
+  // a long group of people who need nothing is folded to its first three on a phone (the stylesheet decides where)
+  const [unfolded, setUnfolded] = useState<Partial<Record<Group, boolean>>>({})
   useEffect(() => {
     if (!rows) return
     const id = window.setTimeout(() => setFocusCall(false), 4500)
@@ -80,7 +82,7 @@ export default function Today() {
       )}
       {rows && !stale && source === 'mock' && !isMock() && (
         <p className="cl-offline" role="status">
-          <b>The server is not answering.</b> These are built-in sample people, not your clinic's list. The real list comes back by itself.
+          <b>The server is not answering.</b> These are built-in sample people, not your clinic’s list. The real list comes back by itself.
         </p>
       )}
       <header className="cl-head">
@@ -154,7 +156,7 @@ export default function Today() {
             <span>Since course</span>
             <span>28 days against their usual</span>
             <span>Now</span>
-            <span>What&apos;s working</span>
+            <span>What’s working</span>
             <span>Why here</span>
             <span />
           </div>
@@ -164,8 +166,10 @@ export default function Today() {
             // people who are on their phone right now come first among the newcomers
             if (g.key === 'new') items.sort((a, b) => Number(b.row.live) - Number(a.row.live) || (b.row.lastPingAt ?? '').localeCompare(a.row.lastPingAt ?? ''))
             const look: Group = g.key === 'new' || g.key === 'camera' ? 'calm' : g.key === 'escalated' ? 'call' : g.key === 'after' ? 'watch' : g.key
+            const foldable = look === 'calm' && items.length > 5 && !only
+            const folded = foldable && !unfolded[g.key]
             return (
-              <section key={g.key} className={`cl-group cl-group--${look} cl-group--is-${g.key}`}>
+              <section key={g.key} className={`cl-group cl-group--${look} cl-group--is-${g.key}${folded ? ' is-folded' : ''}`}>
                 <h2>
                   {g.title}
                   <span>{items.length}</span>
@@ -180,6 +184,11 @@ export default function Today() {
                     ))}
                   </ul>
                 )}
+                {foldable && (
+                  <button type="button" className="cl-btn cl-more" aria-expanded={!folded} onClick={() => setUnfolded((u) => ({ ...u, [g.key]: folded }))}>
+                    {folded ? `Show all ${items.length}` : 'Show the first three'}
+                  </button>
+                )}
               </section>
             )
           })}
@@ -190,7 +199,7 @@ export default function Today() {
         <div className="cl-care-window-copy">
           <h2 id="cl-care-window-title">Watch the months after TMS. Call when the response fades.</h2>
           <p>Senova 2019 found 66.5% still responding at 3 months, 52.9% at 6, and 46.3% at 12. Each person below is placed by days since their course ended.</p>
-          <p className="cl-care-note">If a clinician&apos;s rating is worse for two weeks running, Janicak 2010 found that bringing TMS back restored benefit in 32 of 38 people who worsened. It was open label, with no control.</p>
+          <p className="cl-care-note">If a clinician’s rating is worse for two weeks running, Janicak 2010 found that bringing TMS back restored benefit in 32 of 38 people who worsened. It was open label, with no control.</p>
           <p className="cl-care-note">A scheduled session every month for everyone was not shown to beat watching and re-treating (Philip 2016). No validated marker of response loss exists; Vire does not claim to be one (Dine 2026).</p>
         </div>
         <div className="cl-care-curve" aria-label="Response retained after a TMS course: 66.5 percent at 3 months, 52.9 percent at 6 months, 46.3 percent at 12 months">
@@ -223,7 +232,7 @@ export default function Today() {
             </span>
           )}
           <span>Vire compares each person with their own usual. A signal for the clinic, not a diagnosis.</span>
-          <span>Demo clinic, open to anyone with the link. A real one sits behind the clinic&apos;s own sign-in.</span>
+          <span>Demo clinic, open to anyone with the link. A real one sits behind the clinic’s own sign-in.</span>
         <details className="cl-sources">
           <summary>Sources</summary>
           <p>Senova et al. 2019, <i>Brain Stimul</i> 12(1):119–128. doi:10.1016/j.brs.2018.10.001</p>
@@ -279,7 +288,7 @@ function Row({ row, vs, group, calledAt, focus, onCalled }: { row: PatientRow; v
         {detail && <span>{detail}</span>}
       </div>
       <div className={`cl-c-work is-${o?.working.said ?? 'none'}`}>
-        {o ? <WorkingText text={o.working.text} /> : <span>No practices yet</span>}
+        {o ? <WorkingText text={practiceWords(o.working.text)} /> : <span>No practices yet</span>}
       </div>
       <div className="cl-c-reason" title={row.reason}>
         {o && (o.state === 'escalated' || o.state === 'booked' || o.state === 'after' || o.state === 'answered' || o.state === 'drifting') && o.note ? (
@@ -328,7 +337,7 @@ function Row({ row, vs, group, calledAt, focus, onCalled }: { row: PatientRow; v
   )
 }
 
-/** "Breathing: 9 of 12 sessions settled": the practice in bold, the counts plain */
+/** "Breathing: 9 of 12 practices settled": the practice in bold, the counts plain */
 /** A call row with no headline of its own: the first clause of its reason is set as the headline and the rest under it,
  *  so every call row reads the same way. The words and their order are the server's, untouched. */
 function PlainReason({ text, lead }: { text: string; lead: boolean }) {

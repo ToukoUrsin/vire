@@ -40,9 +40,10 @@ for (const [w, h] of [[390, 844], [1440, 900]]) {
     const box = await page.locator('.hm-watch').boundingBox()
     check(!!box && box.y >= 0 && box.y + box.height <= h && box.x >= 0 && box.x + box.width <= w, `${tag}: replay button inside the first view (${box && Math.round(box.y + box.height)}px of ${h})`)
     const hrefs = await page.locator('main a').evaluateAll((as) => as.map((a) => a.getAttribute('href')))
-    const order = ['#/watch', '#/today', '#/clinic', '#/clinic/live', '#/try', '#/visit']
+    const order = ['#/watch', '#/heard', 'app/', '#/today', '#/clinic', '#/clinic/live', '#/try', '#/visit']
     check(JSON.stringify(hrefs.filter((x) => order.includes(x))) === JSON.stringify(order), `${tag}: ways in, in order (${hrefs.join(' ')})`)
     check(text.includes('Today') && text.includes('AirPods in, five minutes') && text.includes('The clinic') && text.includes('The big screen') && text.includes('No AirPods?') && text.includes('Try the breathing on your phone') && text.includes('Or one minute with the camera') && text.includes('stopped working for about half of the people it helped'), `${tag}: the four ways in are named`)
+    check(text.includes('Watch a real check') && text.includes('Open the phone app') && (await page.locator('[data-app-link]').getAttribute('target')) === null, `${tag}: the real check and the phone app are linked, same tab`)
     check(text.includes('A signal for the clinic, not a diagnosis.') && text.includes('No patient has used Vire yet. The clinic’s patients are simulated.'), `${tag}: the honest lines`)
     const scrollW = await page.evaluate(() => document.documentElement.scrollWidth)
     check(scrollW <= w, `${tag}: no sideways scroll (${scrollW})`)
@@ -66,7 +67,7 @@ for (const [w, h] of [[390, 844], [1440, 900]]) {
     check(!/laughter|wireframe/i.test(live), `${tag}: idle big screen has no laughter or wireframe`)
     check(live.includes('AirPods in, camera off.'), `${tag}: idle big screen says AirPods in, camera off`)
     const liveLinks = await page.locator('.sg-idle-links a').evaluateAll((as) => as.map((a) => `${a.textContent}|${a.getAttribute('href')}`))
-    check(JSON.stringify(liveLinks) === JSON.stringify(['Watch a run|#/watch', 'The last practice|#/clinic/live?practice=1', 'Re-train the whole clinic|#/clinic/live?cohort=1']), `${tag}: idle links ${JSON.stringify(liveLinks)}`)
+    check(JSON.stringify(liveLinks) === JSON.stringify(['Watch a run|#/watch', 'The last practice|#/clinic/live?practice=1', 'The whole clinic, re-trained|#/clinic/live?cohort=1']), `${tag}: idle links ${JSON.stringify(liveLinks)}`)
     check((await page.locator('.sg-facebox, .sg-story').count()) === 0, `${tag}: no face or camera story when idle`)
     await page.screenshot({ path: `${out}/live-idle-${w}.png` })
     // the link to ?cohort=1 on the same page holds the clinic view (and its button) without a reload

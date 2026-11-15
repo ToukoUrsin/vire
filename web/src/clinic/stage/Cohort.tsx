@@ -51,20 +51,15 @@ function Tile({ p }: { p: CohortPatient }) {
   const label = p.name && p.id ? <a className="ch-n" href={`#/clinic/p/${p.id}`}>{p.name}</a> : <span className="ch-n">{String(p.n).padStart(2, '0')}</span>
   return (
     <li className="ch-tile" data-state={p.state} data-n={p.n}>
-      {p.state === 'done' && p.auc !== null && p.works ? (
-        // with what works too, the name and the score share a row so the words get the room
-        <span className="ch-top">
-          {label}
-          <b className="ch-auc">{p.auc.toFixed(2)}</b>
-        </span>
-      ) : (
-        label
-      )}
+      {label}
       {p.state === 'done' && p.auc !== null ? (
         <>
-          {!p.works && <b className="ch-auc">{p.auc.toFixed(2)}</b>}
-          <span className="ch-bar" aria-hidden="true">
-            <i style={{ width: `${Math.max(2, ((p.auc - 0.5) / 0.5) * 100)}%` }} />
+          {/* the name has its own line; the score sits at the end of its bar, so neither can run into the other */}
+          <span className="ch-top">
+            <span className="ch-bar" aria-hidden="true">
+              <i style={{ width: `${Math.max(2, ((p.auc - 0.5) / 0.5) * 100)}%` }} />
+            </span>
+            <b className="ch-auc">{p.auc.toFixed(2)}</b>
           </span>
           {p.works && <Works w={p.works} />}
         </>

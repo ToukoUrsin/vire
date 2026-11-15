@@ -261,6 +261,65 @@ button {
   white-space: nowrap;
 }
 
+/* ---- the four parts of a run, counted off the same way on the first screen (before the tap) and in the replay
+   (with the one playing lit): one rule and one name each ---- */
+.run-parts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.run-parts li {
+  padding-top: 6px;
+  border-top: 2px solid var(--line-2);
+  font-size: var(--text-caption);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--ink-2);
+}
+
+/* ---- the dark stage (the replay, the breathing on a phone): a quiet button is an outline, so the one ember
+   button is the only filled thing on the screen ---- */
+:is(.wt, .ty) .lab-btn:not(.primary) {
+  border: 1px solid var(--stage-line);
+  background: transparent;
+  color: var(--stage-ink);
+}
+:is(.wt, .ty) .lab-btn:not(.primary):disabled {
+  opacity: 0.45;
+}
+@media (hover: hover) {
+  :is(.wt, .ty) .lab-btn:not(.primary):hover:not(:disabled) {
+    border-color: var(--stage-ink-2);
+    background: color-mix(in srgb, var(--stage-ink) 8%, transparent);
+  }
+}
+/* what is asked right now: the sea beside the words, on the page's left edge */
+.run-now {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  min-height: 96px;
+  margin: 4px 0;
+}
+.run-now > p,
+.run-now p {
+  margin: 4px 0 0;
+  color: var(--stage-ink-2);
+  font-size: var(--text-body-s);
+  line-height: 1.35;
+  text-wrap: pretty;
+}
+@media (min-width: 760px) {
+  .run-now {
+    gap: 20px;
+    min-height: 112px;
+  }
+}
+
 /* ---- a block that is still loading: a quiet sweep, never a spinner. Opacity only (no animated blur). ---- */
 .skeleton {
   border-radius: var(--radius-s);

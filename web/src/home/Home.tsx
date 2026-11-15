@@ -1,27 +1,32 @@
 // The first screen: what Vire is, in the submission's words, then the ways in. The replay leads: a judge gets from the
-// address to a run with sound in one tap. Nothing heavy here: no canvas, no images, one small fetch.
+// address to a run with sound in one tap, and to a real recorded check in one more. Nothing heavy here: no canvas,
+// no images, one small fetch.
 import { useEffect, useState } from 'react'
 import { apiUrl } from '../shared/api'
 import './home.css'
 
-/** GET /api/ear/replay says whether the replay is a real run. Anything but `real: true` is the scripted one. */
-function useRealReplay(): boolean | null {
-  const [real, setReal] = useState<boolean | null>(null)
+/** GET /api/ear/replay says whether the replay is a real run, and which practice it holds. Anything but
+ *  `real: true` is the scripted one. */
+function useReplay(): { real: boolean | null; kind: string | null } {
+  const [got, setGot] = useState<{ real: boolean | null; kind: string | null }>({ real: null, kind: null })
   useEffect(() => {
     const ctl = new AbortController()
     const t = setTimeout(() => ctl.abort(), 4000)
     fetch(apiUrl('ear/replay'), { signal: ctl.signal, cache: 'no-store' })
       .then((r) => (r.ok ? r.json() : null))
-      .then((x: { real?: unknown } | null) => setReal(x?.real === true))
-      .catch(() => setReal(false))
+      .then((x: { real?: unknown; kind?: unknown } | null) => setGot({ real: x?.real === true, kind: typeof x?.kind === 'string' ? x.kind : null }))
+      .catch(() => setGot({ real: false, kind: null }))
       .finally(() => clearTimeout(t))
     return () => {
       clearTimeout(t)
       ctl.abort()
     }
   }, [])
-  return real
+  return got
 }
+
+/** the practice in the run, in the replay's own words */
+const PRACTICE: Record<string, string> = { breathe: 'Slow breathing', scan: 'Body scan', walk: 'A short walk' }
 
 const LOOP: { k: string; t: string }[] = [
   { k: 'Sense', t: 'While Vire is open, your AirPods feel head movement, head-down time, walks, nods and, on AirPods Pro 3, heart rate.' },
@@ -31,7 +36,9 @@ const LOOP: { k: string; t: string }[] = [
 ]
 
 export default function Home() {
-  const real = useRealReplay()
+  const { real, kind } = useReplay()
+  // the four parts of the run, named as the replay names them
+  const parts = ['Check before', (kind && PRACTICE[kind]) || 'A practice', 'Check after', 'The clinic’s screen']
   useEffect(() => {
     document.title = 'Vire'
   }, [])
@@ -47,10 +54,6 @@ export default function Home() {
           After TMS for depression, Vire spots drift from your usual, plays a practice in your ears, learns what helps you
           and tells your clinic.
         </p>
-        <p className="hm-who" data-why>
-          A year after a TMS course, it has stopped working for about half of the people it helped. Once you&rsquo;re home, the clinic doesn&rsquo;t see you.
-        </p>
-        <p className="hm-who">For people home after a TMS course, and the clinic that treated them.</p>
 
         <a className="hm-watch" href="#/watch" data-real={real === true ? '1' : '0'}>
           <svg viewBox="0 0 24 24" aria-hidden="true" className="hm-play">
@@ -63,9 +66,36 @@ export default function Home() {
             </small>
           </span>
         </a>
+        {/* what the 40 seconds hold, before the tap: the same four parts the replay counts off */}
+        <ol className="run-parts hm-parts" aria-label="What the run shows">
+          {parts.map((x) => (
+            <li key={x}>{x}</li>
+          ))}
+        </ol>
+        {/* the one thing here that is not a script: a check from the founder's own AirPods, played back */}
+        <a className="hm-real" href="#/heard" data-heard>
+          <svg viewBox="0 0 24 24" aria-hidden="true" className="hm-play">
+            <path d="M8 5.5v13a.6.6 0 0 0 .9.5l10.4-6.5a.6.6 0 0 0 0-1L8.9 5a.6.6 0 0 0-.9.5Z" />
+          </svg>
+          <span>
+            <b>Watch a real check</b>
+            <small>The founder’s own AirPods, camera off, 22 seconds</small>
+          </span>
+        </a>
+
+        <p className="hm-who hm-why" data-why>
+          A year after a TMS course, it has stopped working for about half of the people it helped. Once you&rsquo;re home, the clinic doesn&rsquo;t see you.
+        </p>
+        <p className="hm-who">For people home after a TMS course, and the clinic that treated them.</p>
       </section>
 
       <nav className="hm-ways" aria-label="Ways in">
+        {/* same tab: the iPhone app has no address bar and drops links that open a new window */}
+        <a href="app/" className="hm-way" data-app-link>
+          <b>Open the phone app</b>
+          <span>Teach your AirPods. The rest of it is sample data</span>
+          <Arrow />
+        </a>
         <a href="#/today" className="hm-way">
           <b>Today</b>
           <span>AirPods in, five minutes</span>

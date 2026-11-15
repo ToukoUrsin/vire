@@ -30,6 +30,30 @@ const day = (iso: string) => {
 }
 const NAME = { breathe: 'Slow breathing', scan: 'Body scan', walk: 'A short walk' } as const
 const PART: Record<Part, string> = { before: 'Check before', practice: '', after: 'Check after', result: 'What Today said', clinic: 'On the clinic’s screen' }
+// one line under the heading for each part, so nobody has to guess what they are watching. The practices in Today's own words.
+const ABOUT = {
+  breathe: 'A sea in the ears rises and falls. It slows down as the breath does.',
+  scan: 'A sea in the ears, and one part of the body at a time.',
+  walk: 'Two and a half minutes of walking. The steps are felt.',
+} as const
+const WHAT: Record<'before' | 'after', string> = {
+  before: 'Heart rate and head movement, read before the practice.',
+  after: 'The same check again, to see what changed.',
+}
+
+/** the four parts of the run, as the first screen lists them, with the one playing lit */
+function Steps({ kind, part }: { kind: ReplayBundle['kind']; part: Part }) {
+  const on = part === 'before' ? 0 : part === 'practice' ? 1 : part === 'clinic' ? 3 : 2
+  return (
+    <ol className="run-parts wt-steps" aria-label="The four parts of this run">
+      {['Check before', NAME[kind], 'Check after', 'The clinic’s screen'].map((x, i) => (
+        <li key={x} data-state={i < on ? 'done' : i === on ? 'now' : 'next'} aria-current={i === on ? 'step' : undefined}>
+          {x}
+        </li>
+      ))}
+    </ol>
+  )
+}
 
 export default function Watch() {
   const [b, setB] = useState<ReplayBundle | null>(null)
@@ -141,6 +165,7 @@ export default function Watch() {
           {tag}
         </p>
       )}
+      {b && <Steps kind={b.kind} part={part} />}
       {!b && !err && (
         <section className="td-main wt-wait" role="status">
           <p className="td-day">Loading the run…</p>
@@ -268,12 +293,18 @@ function Stage({ b, p, pos, now }: { b: ReplayBundle; p: Plan; pos: number; now:
       <p className="td-day" data-where={seg.part}>
         {where}
       </p>
-      {practice && b.kind === 'breathe' ? (
-        <div className="td-orb wt-orb" data-phase={breath?.phase ?? 'out'} style={{ transitionDuration: `${Math.max(0.05, phaseSecs)}s` }} aria-hidden="true" />
-      ) : (
-        <div className="wt-still" aria-hidden="true" />
-      )}
-      {said && <h1 className="wt-say">{said}</h1>}
+      {/* the sea beside what it asks: one row, on the page's left edge */}
+      <div className="run-now">
+        {practice && b.kind === 'breathe' ? (
+          <div className="td-orb wt-orb" data-phase={breath?.phase ?? 'out'} style={{ transitionDuration: `${Math.max(0.05, phaseSecs)}s` }} aria-hidden="true" />
+        ) : (
+          <div className="wt-still" aria-hidden="true" />
+        )}
+        <div>
+          {said && <h1 className="wt-say">{said}</h1>}
+          <p className="wt-what">{practice ? ABOUT[b.kind] : WHAT[seg.part === 'after' ? 'after' : 'before']}</p>
+        </div>
+      </div>
       <ul className="td-live">
         <li data-heart={hr ? hr[1] : ''}>
           <b>Heart</b>
@@ -293,13 +324,13 @@ function Stage({ b, p, pos, now }: { b: ReplayBundle; p: Plan; pos: number; now:
         </li>
       </ul>
       {practice && b.kind === 'breathe' && t !== null && <BreathTrace b={b} t={t} />}
-      <Strip b={b} p={p} pos={pos} />
+      <Strip b={b} p={p} pos={pos} part={now.part} />
     </section>
   )
 }
 
 /** heart rate and head movement as they were, drawn up to the moment playing, with each pace check */
-function Strip({ b, p, pos }: { b: ReplayBundle; p: Plan; pos: number }) {
+function Strip({ b, p, pos, part }: { b: ReplayBundle; p: Plan; pos: number; part: Part }) {
   const W = 340
   const total = p.resultAt
   const x = (s: (typeof p.segments)[number], t: number) => ((s.at + ((t - s.t0) / (s.t1 - s.t0)) * s.dur) / total) * W
@@ -326,39 +357,42 @@ function Strip({ b, p, pos }: { b: ReplayBundle; p: Plan; pos: number }) {
   const shown = b.checks.filter((c) => inSeg(c.t) && (x(inSeg(c.t)!, c.t) / W) * total <= pos)
   return (
     <figure className="wt-strip">
-      <svg viewBox={`0 0 ${W} 92`} role="img" aria-label="Heart rate and head movement as they were in this run">
+      {/* which stretch of the strip is which: the two checks are short, the practice is the long middle */}
+      <div className="wt-segs" aria-hidden="true">
+        {p.segments.map((s) => (
+          <span key={s.part} style={{ flexGrow: s.dur }} data-on={s.part === part ? '1' : '0'}>
+            {s.part === 'practice' ? NAME[b.kind] : s.part === 'before' ? 'Before' : 'After'}
+          </span>
+        ))}
+      </div>
+      <svg viewBox={`0 0 ${W} 80`} preserveAspectRatio="none" role="img" aria-label="Heart rate and head movement as they were in this run">
         {p.segments.slice(1).map((s) => (
           <line key={s.part} className="wt-sep" x1={(s.at / total) * W} x2={(s.at / total) * W} y1={0} y2={80} />
         ))}
         {hrs.length > 1 && <path className="wt-hr" d={path(hrs, yh)} />}
         {mvs.length > 1 && <path className="wt-mv" d={path(mvs, ym)} />}
-        {shown.map((c) => {
-          const cx = x(inSeg(c.t)!, c.t)
-          return <circle key={c.t} className={c.by === 'breath' ? 'wt-ck is-yes' : c.by === 'stillness' ? 'wt-ck is-still' : 'wt-ck'} cx={cx} cy={86} r={3.2} />
-        })}
         <line className="wt-head" x1={(Math.min(pos, total) / total) * W} x2={(Math.min(pos, total) / total) * W} y1={0} y2={80} />
       </svg>
+      <div className="wt-cks" aria-hidden="true">
+        {shown.map((c) => (
+          <i key={c.t} className={c.by === 'breath' ? 'wt-ck is-yes' : c.by === 'stillness' ? 'wt-ck is-still' : 'wt-ck'} style={{ left: `${(x(inSeg(c.t)!, c.t) / W) * 100}%` }} />
+        ))}
+      </div>
       <figcaption>
         <span className="wt-k-hr">heart rate</span>
         <span className="wt-k-mv">head movement</span>
         <span className="wt-k-ck">
           pace checks:
           <span>
-            <svg viewBox="0 0 10 10" aria-hidden="true">
-              <circle className="wt-ck is-yes" cx={5} cy={5} r={3.2} />
-            </svg>
+            <i className="wt-ck is-yes" aria-hidden="true" />
             breath followed
           </span>
           <span>
-            <svg viewBox="0 0 10 10" aria-hidden="true">
-              <circle className="wt-ck is-still" cx={5} cy={5} r={3.2} />
-            </svg>
+            <i className="wt-ck is-still" aria-hidden="true" />
             by stillness
           </span>
           <span>
-            <svg viewBox="0 0 10 10" aria-hidden="true">
-              <circle className="wt-ck" cx={5} cy={5} r={3.2} />
-            </svg>
+            <i className="wt-ck" aria-hidden="true" />
             not followed
           </span>
         </span>
@@ -389,7 +423,8 @@ function Result({ b }: { b: ReplayBundle }) {
           ) : (
             <span>not read: the AirPods gave no heart rate in this run</span>
           )}
-          <em>{hr?.change ?? ''}</em>
+          {/* a bare 0 reads as a missing number */}
+          <em>{hr ? (hr.change === '0' ? 'no change' : hr.change) : ''}</em>
         </li>
         <li data-ok={r.settle !== null && r.settle >= 5} data-row="still">
           <b>Stillness</b>
@@ -399,8 +434,8 @@ function Result({ b }: { b: ReplayBundle }) {
         {r.kind === 'breathe' && (
           <li data-ok={r.followed > 0} data-row="breath">
             <b>Breathing</b>
-            <span>{breathRow(r).main}</span>
-            <em>{breathRow(r).own}</em>
+            <span>{breathRow(r, b.scripted).main}</span>
+            <em>{breathRow(r, b.scripted).own}</em>
           </li>
         )}
       </ul>

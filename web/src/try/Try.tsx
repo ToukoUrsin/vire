@@ -302,15 +302,14 @@ export default function Try() {
       <section className="ty-main">
         {stage === 'start' && (
           <>
-            <p className="ty-eyebrow">About one minute</p>
             <h1>Try the breathing with your phone</h1>
-            <p className="ty-lede">Turn the sound on, with any headphones or the speaker. Tap the button, then hold your phone flat against your chest.</p>
+            <p className="ty-lede">A little over a minute. Turn the sound on, with any headphones or the speaker. Tap the button, then hold your phone flat against your chest.</p>
             <p className="ty-lede ty-quiet">A sea rises and falls. It slows when your phone reads your breath going with it, and it says what it read. Here the phone&rsquo;s motion sensor stands in for the AirPods.</p>
             <div className="ty-btns">
               <button type="button" className="lab-btn primary ty-go" data-start onClick={() => void begin()}>
                 Start the sea
               </button>
-              <a className="ty-link" href="#/watch">
+              <a className="lab-btn" href="#/watch">
                 Watch a run
               </a>
             </div>
@@ -320,11 +319,16 @@ export default function Try() {
         )}
         {stage === 'run' && (
           <>
-            <div className="ty-orb" data-phase={live.phase} style={{ transitionDuration: `${Math.max(0.05, live.secs)}s` }} aria-hidden="true" />
-            <h1 className="ty-say">{live.phase === 'in' ? 'Breathe in' : 'Breathe out'}</h1>
-            <p className="ty-pace">
-              {live.phase === 'in' ? 'As the sea rises.' : 'As it falls.'} {paceWord(live.pace)} breaths a minute.
-            </p>
+            {/* the same row as the replay: the sea beside what it asks */}
+            <div className="run-now">
+              <div className="ty-orb" data-phase={live.phase} style={{ transitionDuration: `${Math.max(0.05, live.secs)}s` }} aria-hidden="true" />
+              <div>
+                <h1 className="ty-say">{live.phase === 'in' ? 'Breathe in' : 'Breathe out'}</h1>
+                <p className="ty-pace">
+                  {live.phase === 'in' ? 'As the sea rises.' : 'As it falls.'} {paceWord(live.pace)} breaths a minute.
+                </p>
+              </div>
+            </div>
             <p className="ty-read" data-read={said ? 'yes' : 'no'} aria-live="polite">
               {said ?? (firstIn > 0 ? `Hold the phone flat against your chest. First reading in ${firstIn} seconds.` : 'Reading now.')}
             </p>
@@ -347,13 +351,12 @@ export default function Try() {
               <button type="button" className="lab-btn" data-done onClick={() => (stopAsked.current = true)}>
                 Done
               </button>
-              <span className="ty-fine">{hz > 0 ? `Your phone's motion sensor, ${hz} readings a second.` : 'Waiting for your phone’s motion sensor.'}</span>
+              <span className="ty-fine">{hz > 0 ? `Your phone’s motion sensor, ${hz} readings a second.` : 'Waiting for your phone’s motion sensor.'}</span>
             </div>
           </>
         )}
         {stage === 'result' && res && counts && (
           <>
-            <p className="ty-eyebrow">What your phone read</p>
             <h1 data-from={counts.from} data-to={counts.to}>
               {res.head}
             </h1>
@@ -379,7 +382,6 @@ export default function Try() {
         )}
         {stage === 'refused' && (
           <>
-            <p className="ty-eyebrow">Motion is switched off</p>
             <h1>Your phone did not let this page feel it move.</h1>
             <p className="ty-lede">Reload the page, tap the button again and choose Allow when your phone asks.</p>
             <div className="ty-btns">
@@ -394,7 +396,6 @@ export default function Try() {
         )}
         {stage === 'nophone' && (
           <>
-            <p className="ty-eyebrow">No motion sensor here</p>
             <h1>This needs a phone.</h1>
             <p className="ty-lede">It reads your breath from the way a phone tilts on your chest, and this device gave no motion. Open this address on your phone:</p>
             <Qr text={address()} />

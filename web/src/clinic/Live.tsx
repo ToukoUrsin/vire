@@ -191,7 +191,8 @@ export default function Live() {
         )}
       </header>
 
-      {!idle && (
+      {/* a practice or a clinic run needs no room: the note is only true when this phone follows one */}
+      {!idle && code && mode !== 'practice' && mode !== 'cohort' && (
         <aside className="sg-phone-note" aria-label="Big screen">
           <b>Big screen</b>
           <span>
@@ -224,7 +225,7 @@ export default function Live() {
             <nav className="sg-idle-links" aria-label="Open">
               <a href="#/watch">Watch a run</a>
               <a href="#/clinic/live?practice=1">The last practice</a>
-              {holdCohort && !busy ? <CohortButton start={cohort.start} going={cohortGoing} here /> : <a href="#/clinic/live?cohort=1">Re-train the whole clinic</a>}
+              {holdCohort && !busy ? <CohortButton start={cohort.start} going={cohortGoing} here /> : <a href="#/clinic/live?cohort=1">The whole clinic, re-trained</a>}
             </nav>
             <div className="sg-attract-join">
               <Qr text={url} />

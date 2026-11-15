@@ -55,33 +55,36 @@
 .wt-none h1 {
   text-wrap: balance;
 }
-/* on the stage a quiet button is an outline; cream slabs would outshout the run itself */
-.wt .lab-btn:not(.primary) {
-  border: 1px solid var(--stage-line);
-  background: transparent;
+/* the quiet outlined button and the row of what is asked now are shared with #/try: theme.css */
+.wt-steps {
+  width: min(100%, 44rem);
+  margin: 0 auto;
+}
+.wt-steps li {
+  border-top-color: var(--stage-line);
+  color: var(--stage-ink-2);
+  transition:
+    color var(--dur-move) var(--ease),
+    border-color var(--dur-move) var(--ease);
+}
+.wt-steps li[data-state='done'] {
+  border-top-color: var(--stage-ink-2);
+}
+.wt-steps li[data-state='now'] {
+  border-top-color: var(--stage-ink);
   color: var(--stage-ink);
 }
-.wt .lab-btn:not(.primary):disabled {
-  opacity: 0.45;
+.wt .wt-say {
+  font-size: clamp(var(--text-h1), 6vw, var(--text-d3));
+  min-height: 1.05em;
 }
-@media (hover: hover) {
-  .wt .lab-btn:not(.primary):hover:not(:disabled) {
-    border-color: var(--stage-ink-2);
-    background: color-mix(in srgb, var(--stage-ink) 8%, transparent);
-  }
-}
-.wt-say {
-  font-size: clamp(var(--text-h1), 9vw, var(--text-d1)) !important;
-  min-height: 1.1em;
-}
-.wt-orb {
-  width: min(40vw, 11rem);
-  margin-top: 0;
+.wt-orb,
+.wt-still {
+  width: 80px;
+  aspect-ratio: 1;
+  margin: 0;
 }
 .wt-still {
-  width: min(40vw, 11rem);
-  aspect-ratio: 1;
-  margin: 0 auto;
   border-radius: 50%;
   border: 2px solid var(--stage-line);
   transform: scale(0.55);
@@ -89,15 +92,40 @@
 .wt-strip {
   margin: 4px 0 0;
 }
+/* the three stretches of the strip, named over it, each as wide as it plays */
+.wt-segs {
+  display: flex;
+  margin-bottom: 4px;
+  color: var(--stage-ink-2);
+  font-size: var(--text-caption);
+  line-height: 1.3;
+}
+.wt-segs span {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.wt-segs span + span {
+  padding-left: 6px;
+}
+.wt-segs span[data-on='1'] {
+  color: var(--stage-ink);
+}
 .wt-strip svg {
   display: block;
   width: 100%;
-  height: auto;
-  overflow: visible;
+  height: 72px;
 }
-.wt-sep {
+.wt-sep,
+.wt-head {
   stroke: var(--stage-line);
   stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.wt-head {
+  stroke: var(--stage-ink-2);
 }
 .wt-hr,
 .wt-mv {
@@ -114,20 +142,31 @@
   stroke: var(--stage-ink-2);
   stroke-dasharray: 3 2;
 }
-.wt-head {
-  stroke: var(--stage-ink-2);
-  stroke-width: 1;
+/* each pace check, under the moment it was made */
+.wt-cks {
+  position: relative;
+  height: 8px;
+  margin-top: 4px;
+}
+.wt-cks .wt-ck {
+  position: absolute;
+  top: 0;
+  margin-left: -4px;
 }
 .wt-ck {
-  fill: none;
-  stroke: var(--stage-ink);
-  stroke-width: 1.2;
+  display: inline-block;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid var(--stage-ink);
+  border-radius: 50%;
 }
 .wt-ck.is-yes {
-  fill: var(--stage-ink);
+  background: var(--stage-ink);
 }
 .wt-ck.is-still {
-  fill: var(--stage-ink-2);
+  border-color: var(--stage-ink-2);
+  background: var(--stage-ink-2);
 }
 .wt-strip figcaption {
   display: flex;
@@ -146,13 +185,7 @@
   gap: 4px 10px;
 }
 .wt-k-ck span {
-  gap: 5px;
-}
-.wt-k-ck svg {
-  flex: none;
-  width: 10px;
-  height: 10px;
-  overflow: visible;
+  gap: 6px;
 }
 .wt-k-hr::before,
 .wt-k-mv::before {
@@ -166,9 +199,15 @@
 .wt-k-mv::before {
   border-top: 2px dashed var(--stage-ink-2);
 }
+/* the result follows the step row, which is already a rule */
 .wt-result {
-  padding-top: 8px !important;
-  border-top: 1px solid var(--stage-line);
+  padding-top: 4px !important;
+}
+@media (min-width: 760px) {
+  .wt-orb,
+  .wt-still {
+    width: 104px;
+  }
 }
 .wt-controls {
   width: min(100%, 44rem);
