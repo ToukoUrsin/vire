@@ -17,10 +17,10 @@ Like Meru Health, but your AirPods sense every step. After TMS for depression, V
 ### Try it
 
 - **Start here:** https://vire.fly.dev and tap "Watch a run": the daily five minutes in 40 seconds, scripted for now. No AirPods needed.
+- **No AirPods?** On a phone: https://vire.fly.dev/#/try (phone on your chest: the sea slows only if your breath follows).
 - **The phone app:** https://vire.fly.dev/app/ Teach your AirPods, then watch them read your nods. Everything else in it is sample data.
 - **With AirPods:** the daily five minutes, on our iPhone (at our table) or https://vire.fly.dev/#/today on a Mac with our helper app. Camera off.
 - **The clinic (simulated patients):** https://vire.fly.dev/#/clinic and the big screen https://vire.fly.dev/#/clinic/live?practice=1
-- **No AirPods?** On a phone: https://vire.fly.dev/#/try (the breathing, phone on your chest).
 
 ### Problem
 
@@ -88,7 +88,7 @@ The AirPods sense you and answer you: a sea made as you breathe, that stays put 
 
 ## (stop pasting here)
 
-Current count of the paste region: **4,960** characters, markdown included (counted with `python3`: `len()` of the stripped text between the "Description (paste from here)" heading and "(stop pasting here)"). Room left: 40. The Junction draft is project 2079, "Vire", Beyond the Clinic, Draft, "Best use of Modal" ticked; it is saved with `python3 /home/ubuntu/junction/tools/junction_draft.py /bulk3/runs/depression/junction-draft/fields.json --save` (Save Draft only). The text has no open slots. Not in the draft yet: the video link.
+Current count of the paste region: **4,988** characters, markdown included (counted with `python3`: `len()` of the stripped text between the "Description (paste from here)" heading and "(stop pasting here)"). Room left: 12. The Junction draft is project 2079, "Vire", Beyond the Clinic, Draft, "Best use of Modal" ticked; it is saved with `python3 /home/ubuntu/junction/tools/junction_draft.py /bulk3/runs/depression/junction-draft/fields.json --save` (Save Draft only). The text has no open slots. Not in the draft yet: the video link.
 
 ## Slots to fill on Sunday morning
 
