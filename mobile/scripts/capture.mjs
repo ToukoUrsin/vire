@@ -64,6 +64,8 @@ await page.addInitScript((K) => {
 if (scene.init) await page.addInitScript(scene.init)
 // the film shows the product as it is with AirPods in: the notes that say they are out (true of this browser) are left off
 await page.addInitScript(() => {
+  // and the app is told it runs in the Vire iPhone app, as it does on a patient's phone: the teaching wording is then the app's own
+  window.webkit = { messageHandlers: { vire: { postMessage() {} } } }
   const OFF = [/^\s*AirPods out\s*$/, /^\s*AirPods not connected\s*$/, /^The practice runs without AirPods\./, /^\s*Sample result, not measured\s*$/]
   const sweep = () => {
     document.querySelectorAll('.chip, .pill, p.small').forEach((e) => {

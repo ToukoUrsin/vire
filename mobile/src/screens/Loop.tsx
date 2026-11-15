@@ -101,10 +101,10 @@ function Wheel() {
 type Stamp = { kind?: 'real' | 'sample'; say: string }
 const STAND_IN: Stamp = { kind: 'sample', say: 'Sample: stand-in AirPods so far' }
 const STEPS: Array<{ title: string; icon: IconName; tone: Tone; text: string; tags: Stamp[] }> = [
-  { title: 'Sense', icon: 'airpods', tone: 'move', text: 'Your AirPods send head motion about 25 times a second. Heart rate too, on AirPods Pro 3.', tags: [{ kind: 'real', say: 'Runs today: nods and head shakes' }, { say: 'Next: heart rate' }] },
+  { title: 'Sense', icon: 'airpods', tone: 'move', text: 'Your AirPods send head motion about 25 times a second. Heart rate too, on AirPods Pro 3, during a practice.', tags: [{ kind: 'real', say: 'Runs today: nods, head shakes, head movement' }, { say: 'Built: heart rate, not yet on a real run' }] },
   { title: 'Notice', icon: 'spark', tone: 'face', text: 'Everything is set against your own usual. When you drift from it, Vire offers a practice.', tags: [STAND_IN] },
   { title: 'Practice', icon: 'breath', tone: 'ember', text: 'Slow breathing, a body scan or a walk, in your ears. The sound is made on a Modal GPU.', tags: [STAND_IN] },
-  { title: 'Measure', icon: 'heart', tone: 'heart', text: 'The same short check before and after: heart rate, and how still your head sits.', tags: [STAND_IN, { say: 'Next: heart rate on a real run' }] },
+  { title: 'Measure', icon: 'heart', tone: 'heart', text: 'The same short check before and after: heart rate, and how still your head sits.', tags: [STAND_IN, { say: 'Built: heart rate, not yet on a real run' }] },
   { title: 'Learn', icon: 'you', tone: 'voice', text: 'A model for each person: 13 small models on the phone, then 366 in a Modal Sandbox of your own. And which practice works for you.', tags: [{ kind: 'real', say: 'Runs today: your own model' }, { kind: 'sample', say: 'Sample: what works for you' }] },
 ]
 

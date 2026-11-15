@@ -51,9 +51,9 @@ export const SCENES = {
       await a.wait(100)
       await a.go('/signals/music')
       await a.wait(2100)
-      await a.tapText('12:34').catch(() => console.log('no 12:34'))
+      await a.tapText('11:41').catch(() => console.log('no 11:41'))
       await a.wait(1500)
-      await a.tapText('23:40').catch(() => console.log('no 23:40'))
+      await a.tapText('11:20').catch(() => console.log('no 11:20'))
       await a.wait(1500)
       a.stop()
     },
@@ -105,9 +105,8 @@ export const SCENES = {
       a.start()
       await a.wait(150)
       await a.tap('.tab:nth-child(4)')
-      await a.wait(1100)
-      await a.scroll(560, 1300)
-      await a.wait(2000)
+      // the chat opens at its newest message, so there is nothing to scroll to
+      await a.wait(4400)
       await a.go('/care/clinic')
       await a.wait(900)
       await a.scroll(430, 1000)

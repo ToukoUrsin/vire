@@ -233,13 +233,9 @@ export function Paper(_: { id?: string; topic?: string }) {
         {/* the iPhone app has no way back from a PDF, so there the pages below are the paper */}
         {!inApp() && (
           <div className="yu-paper-acts">
-            <a className="btn btn-primary yu-open" href="/app/vire-paper.pdf" target="_blank" rel="noreferrer">
+            <a className="btn btn-primary yu-open" href="/app/vire-paper.pdf">
               <I.paper size={19} />
               Open the PDF
-            </a>
-            <a className="btn btn-quiet yu-open" href="/app/vire-paper.pdf" download="vire-paper.pdf">
-              <I.down size={19} />
-              Download
             </a>
           </div>
         )}

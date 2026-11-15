@@ -66,7 +66,7 @@ export interface Moment {
 }
 export const DAY: Moment[] = [
   { t: '07:05', icon: 'airpods', tone: 'plain', title: 'AirPods in', sub: 'Vire starts sensing' },
-  { t: '09:00', icon: 'call', tone: 'voice', title: 'Call with Aino', sub: '22 min · you nodded 28 times', to: '/signals/calls' },
+  { t: '09:00', icon: 'call', tone: 'voice', title: 'Call with Liisa', sub: '22 min · you nodded 28 times', to: '/signals/calls' },
   { t: '10:10', icon: 'music', tone: 'face', title: 'Music while working', sub: '1 h 40 min · head moved with the beat on 4 of 11 songs', to: '/signals/music' },
   { t: '12:30', icon: 'walk', tone: 'move', title: 'Walk', sub: '14 min · 1,480 steps', to: '/signals/movement' },
   { t: '13:10', icon: 'move', tone: 'move', title: 'Head down, hardly moving', sub: '2 h 20 min · no talking · heart rate 7 above your usual', loop: true },
@@ -88,7 +88,7 @@ export interface Person {
 }
 export const PEOPLE: Person[] = [
   { name: 'Mum', who: 'Family', minutes: 64, calls: 4, nods: 14, talk: 0.52, note: 'You nod most on these calls.', week: [0, 0, 9, 14, 0, 20, 21] },
-  { name: 'Aino', who: 'Work', minutes: 118, calls: 5, nods: 12.9, talk: 0.41, note: 'Steady. Close to your usual.', week: [28, 0, 0, 22, 24, 24, 20] },
+  { name: 'Liisa', who: 'Work', minutes: 118, calls: 5, nods: 12.9, talk: 0.41, note: 'Steady. Close to your usual.', week: [28, 0, 0, 22, 24, 24, 20] },
   { name: 'Jussi', who: 'Work', minutes: 47, calls: 2, nods: 4.2, talk: 0.24, note: 'You go quiet and still here.', week: [24, 0, 0, 0, 23, 0, 0] },
   { name: 'Sanna', who: 'TMS nurse', minutes: 12, calls: 1, nods: 10, talk: 0.58, note: 'Check-in call on Tuesday.', week: [0, 12, 0, 0, 0, 0, 0] },
 ]
