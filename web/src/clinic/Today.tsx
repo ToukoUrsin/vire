@@ -28,7 +28,8 @@ export function statusDetail(row: Pick<PatientRow, 'status' | 'lastPingAt' | 'dr
   const days = row.outer?.driftDays ?? 0
   if (vs === 'quiet') return s === null ? words(row.synthetic).none : row.synthetic ? `${s} days without AirPods` : `${s} days silent`
   // Dipping at −1.8 SD reads as a mistake beside "Low: more than 1.5 SD below for three days": say that it is not three days yet
-  const soon = vs === 'dipping' && row.drift < -1.5 ? ', under three days past −1.5' : ''
+  // (only when the number shown is past −1.5: −1.52 reads "−1.5 SD" and needs no note)
+  const soon = vs === 'dipping' && row.drift <= -1.55 ? ', under three days past −1.5' : ''
   if (vs === 'low' || vs === 'dipping') return `${days > 0 ? `${days} ${days === 1 ? 'day' : 'days'} below their usual` : 'Below their usual'} (${signed(row.drift)} SD${soon})${s !== null && s >= 3 ? `, ${s} days silent` : ''}`
   return ''
 }
