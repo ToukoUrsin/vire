@@ -1,30 +1,26 @@
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { go } from '../router'
-import { DAY, NOW_H, NURSE, CHAT, PROGRAMME, RING, type RingKey } from '../data/sample'
+import { DAY, NOW_H, NURSE, CHAT, PRACTICES, PROGRAMME, RING, type RingKey } from '../data/sample'
 import { usePods, useModel } from '../live/pods'
 import { DayRing } from '../ui/charts'
-import { I } from '../ui/icons'
-import { Badge, Btn, Chip, Row, SampleNote, Screen, Section, Seg } from '../ui/kit'
+import { I, type IconName } from '../ui/icons'
+import { Art, Badge, Chip, Row, SampleNote, Screen, Section, type Tone } from '../ui/kit'
 import './today.css'
 
-const hello = () => {
-  // the greeting follows the real clock; the day drawn under it is a sample and says so right above it
-  const h = new Date().getHours()
-  return h < 5 ? 'Still up' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening'
-}
+// the day drawn here is a sample, looked at from NOW_H, so the greeting is for that hour and not for the real clock
+const hello = (h: number) => (h < 5 ? 'Still up' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening')
 
 const SAY: Record<RingKey, { head: string; sub: string }> = {
   move: { head: 'Back in your usual', sub: 'since the breathing at 15:40' },
   talk: { head: 'Talking again', sub: 'two quiet hours after lunch' },
   heart: { head: 'Settled again', sub: '79 before the breathing, 71 after' },
 }
-const LOOP: Array<{ icon: 'airpods' | 'spark' | 'breath' | 'heart' | 'you'; label: string }> = [
-  { icon: 'airpods', label: 'Sense' },
-  { icon: 'spark', label: 'Notice' },
-  { icon: 'breath', label: 'Practice' },
-  { icon: 'heart', label: 'Measure' },
-  { icon: 'you', label: 'Learn' },
+const SIG: Array<{ id: RingKey; label: string; icon: IconName; tone: Tone; unit: string }> = [
+  { id: 'move', label: 'Movement', icon: 'move', tone: 'move', unit: 'a min' },
+  { id: 'talk', label: 'Talking', icon: 'voice', tone: 'voice', unit: 'min' },
+  { id: 'heart', label: 'Heart', icon: 'heart', tone: 'heart', unit: 'bpm' },
 ]
+const rise = (i: number) => ({ '--i': i }) as CSSProperties
 
 export function PodsChip() {
   const pods = usePods()
@@ -37,98 +33,123 @@ export function PodsChip() {
   )
 }
 
+/** one signal, now, on a small scale where the pale stretch is your own usual for this hour */
+function Signal({ id, label, icon, tone, unit, on, pick }: (typeof SIG)[number] & { on: boolean; pick: () => void }) {
+  const s = RING[id]
+  const k = s.today.length - 1
+  const v = s.today[k]
+  const lo = s.lo[k]
+  const hi = s.hi[k]
+  const min = Math.min(...s.lo, ...s.today)
+  const max = Math.max(...s.hi, ...s.today)
+  const x = (n: number) => `${(((n - min) / (max - min)) * 100).toFixed(1)}%`
+  const C = I[icon]
+  return (
+    <button className={`sig ${on ? 'is-on' : ''}`} aria-pressed={on} onClick={pick} style={{ '--tone': `var(--${tone})` } as CSSProperties}>
+      <span className="sig-top">
+        <C size={16} />
+        {label}
+      </span>
+      <span className="sig-v num">
+        {v.toFixed(0)}
+        <small>{unit}</small>
+      </span>
+      <span className="sig-bar" aria-hidden="true">
+        <i style={{ left: x(lo), right: `calc(100% - ${x(hi)})` }} />
+        <b style={{ left: x(v) }} />
+      </span>
+      <span className="sig-sub num">
+        usual {lo.toFixed(0)} to {hi.toFixed(0)}
+      </span>
+    </button>
+  )
+}
+
 export function Today() {
   const [key, setKey] = useState<RingKey>('move')
   const model = useModel()
   const ok = model ? (['nod', 'shake', 'smile'] as const).filter((e) => model.events[e]?.score.ok) : []
   const fresh = CHAT.filter((m) => m.fresh)
+  const next = PRACTICES[0]
+  const lesson = PROGRAMME.lessons.find((l) => !l.done)
   return (
-    <Screen>
-      <div className="pad rise" style={{ '--i': 0 } as React.CSSProperties}>
+    <Screen glow="ember">
+      <div className="pad rise" style={rise(0)}>
         <div className="today-top">
           <Chip>Sample day</Chip>
           <PodsChip />
         </div>
-        <h1 className="title-xl">{hello()}</h1>
+        <h1 className="title-xl voice">{hello(NOW_H)}</h1>
       </div>
 
-      <div className="today-ring rise" style={{ '--i': 1 } as React.CSSProperties}>
+      <div className="today-ring rise" style={rise(1)}>
         <DayRing s={RING[key]} nowH={NOW_H} mark={15.67}>
           <div>
-            <div className="title-m">{SAY[key].head}</div>
-            <div className="small" style={{ marginTop: 6 }}>
-              {SAY[key].sub}
-            </div>
+            <div className="ring-head">{SAY[key].head}</div>
+            <div className="ring-sub">{SAY[key].sub}</div>
           </div>
         </DayRing>
       </div>
-      <div className="pad rise" style={{ '--i': 2, marginTop: 20 } as React.CSSProperties}>
-        <Seg
-          value={key}
-          onChange={setKey}
-          options={[
-            { id: 'move', label: 'Movement' },
-            { id: 'talk', label: 'Talking' },
-            { id: 'heart', label: 'Heart' },
-          ]}
-        />
-        <p className="today-say">
-          You went quiet and still after lunch. Vire offered three minutes of breathing, and <b>your afternoon came back.</b>
-        </p>
-        <p className="small" style={{ marginTop: 10 }}>
-          The pale band is your own usual for each hour. The line is today. Drag round the ring to read it.
-        </p>
+
+      <div className="pad rise" style={rise(2)}>
+        <div className="sigs">
+          {SIG.map((s) => (
+            <Signal key={s.id} {...s} on={key === s.id} pick={() => setKey(s.id)} />
+          ))}
+        </div>
       </div>
 
-      <Section title="Your AirPods" i={3}>
+      <div className="pad rise" style={{ ...rise(3), marginTop: 12 }}>
+        <button className="card insight" onClick={() => go('/loop')}>
+          <p className="today-say">
+            You went quiet and still after lunch. Three minutes of slow breathing, and <b>your afternoon came back.</b>
+          </p>
+          <span className="pills">
+            <span className="pill num">
+              <I.heart size={14} /> 79 to 71 bpm
+            </span>
+            <span className="pill num">
+              <I.move size={14} /> 38% stiller
+            </span>
+          </span>
+          <span className="insight-more">
+            How Vire works <I.right size={16} />
+          </span>
+        </button>
+      </div>
+
+      <Section title="Your AirPods" i={4}>
         {model ? (
           <div className="group">
-            <Row icon="airpods" tone="ember" title="Your own model is running" sub={ok.length ? `Reads your ${ok.map((e) => (e === 'shake' ? 'head shakes' : `${e}s`)).join(', ').replace(/, ([^,]*)$/, ' and $1')} from the AirPods alone` : 'Taught, still learning'} to="/live" />
+            <Row icon="airpods" tone="ember" title="Your own model is running" sub={ok.length ? `Reads your ${ok.map((e) => (e === 'shake' ? 'head shakes' : `${e}s`)).join(', ').replace(/, ([^,]*)$/, ' and $1')}` : 'Taught, still learning'} to="/live" />
             <Row icon="plus" title="Teach it another minute" sub="More minutes, better model" to="/train" />
           </div>
         ) : (
-          <button className="card" onClick={() => go('/train')}>
-            <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
-              <Badge icon="airpods" tone="ember" size={46} />
-              <div style={{ flex: 1 }}>
-                <div className="row-title">Teach your AirPods</div>
-                <div className="row-sub">65 seconds. They learn your nod, your head shake and your smile.</div>
-              </div>
-              <I.right size={18} style={{ color: 'var(--ink-3)' }} />
-            </div>
-          </button>
+          <div className="group">
+            <Row icon="airpods" tone="ember" title="Teach your AirPods" sub="One minute with the camera. They learn your nod and head shake." to="/train" />
+          </div>
         )}
       </Section>
 
-      <Section title="How it works" more="The whole loop" to="/loop" i={4}>
-        <button className="card" onClick={() => go('/loop')}>
-          <p className="body-2">Vire senses your day, notices when you drift from your own usual, plays a practice in your ears, measures what it did and learns what works for you.</p>
-          <div className="loop-steps">
-            {LOOP.map((s, i) => (
-              <div key={s.label} className={`loop-step ${i === 2 ? 'is-now' : ''}`}>
-                <Badge icon={s.icon} />
-                {s.label}
-              </div>
-            ))}
-          </div>
-        </button>
+      <Section title="Next for you" more="All practices" to="/practices" i={5}>
+        <Art kind="breath" h={188} tag={`${next.minutes} min`} title={next.name} sub="Six breaths a minute, in your ears" to={`/practice/${next.id}`}>
+          <span className="art-play" aria-hidden="true">
+            <I.play size={20} />
+          </span>
+        </Art>
       </Section>
 
-      <Section title="Today so far" i={5}>
+      <Section title="Today so far" i={6}>
         <div className="rail">
           {DAY.map((m) => {
             const body = (
               <>
-                <span className="moment-t num">{m.t}</span>
                 <Badge icon={m.icon} tone={m.tone} />
                 <span>
-                  <span className="moment-title" style={{ display: 'block' }}>
-                    {m.title}
-                  </span>
-                  <span className="moment-sub num" style={{ display: 'block' }}>
-                    {m.sub}
-                  </span>
+                  <span className="moment-title">{m.title}</span>
+                  <span className="moment-sub num">{m.sub}</span>
                 </span>
+                <span className="moment-t num">{m.t}</span>
               </>
             )
             return m.to ? (
@@ -144,11 +165,11 @@ export function Today() {
         </div>
       </Section>
 
-      <Section title={`Week ${PROGRAMME.week} of ${PROGRAMME.of}`} more="Programme" to="/programme" i={6}>
+      <Section title={`Week ${PROGRAMME.week} of ${PROGRAMME.of}`} more="Programme" to="/programme" i={7}>
         <button className="card" onClick={() => go('/programme')}>
           <div className="row-title">{PROGRAMME.theme}</div>
           <div className="row-sub">
-            {PROGRAMME.lessons.filter((l) => l.done).length} of {PROGRAMME.lessons.length} done this week. Next: {PROGRAMME.lessons.find((l) => !l.done)?.title}, {PROGRAMME.lessons.find((l) => !l.done)?.minutes} min.
+            Next: {lesson?.title}, {lesson?.minutes} min
           </div>
           <div className="weekdots">
             {PROGRAMME.weeks.map((w, i) => (
@@ -158,7 +179,7 @@ export function Today() {
         </button>
       </Section>
 
-      <Section title="From your clinic" i={7}>
+      <Section title="From your clinic" i={8}>
         <button className="card" onClick={() => go('/care')}>
           <div className="who">
             <span className="avatar">{NURSE.name[0]}</span>
@@ -172,14 +193,9 @@ export function Today() {
           </div>
           <p className="quote">{fresh[0]?.text}</p>
         </button>
-        <div style={{ marginTop: 12 }}>
-          <Btn kind="quiet" wide to="/care/checkin">
-            Weekly check-in, 2 min
-          </Btn>
-        </div>
       </Section>
 
-      <SampleNote>The day, the programme and the clinic on this screen are a sample, to show where Vire is going. Your AirPods model is real: it is taught and run on this phone.</SampleNote>
+      <SampleNote>This day, the programme and the clinic are a sample of where Vire is going. Your AirPods model is real.</SampleNote>
     </Screen>
   )
 }

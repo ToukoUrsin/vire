@@ -28,7 +28,7 @@ Research earbuds have read nods, posed expressions, breathing and steps in small
 **practices** — `kuyken-2016`, `noetel-2024`.
 Strong for full programmes over weeks (MBCT, exercise, behavioural activation), small to medium for HRV biofeedback and breathwork (`pizzoli-2021`, `fincham-2023`); no evidence that one short session lowers depressive symptoms.
 
-**meru** — `forman-hoffman-2024`, `raevuori-2021`.
+**programme** — `forman-hoffman-2024`, `raevuori-2021`.
 Two RCTs of the whole programme: one beat a waitlist (d = -0.8, n = 100), one found no difference from usual care on depression (n = 124); the breathing on its own has only a non-randomised comparison (`economides-2020`). Show both.
 
 **loop** — `pratap-2019`, `zhu-2021`.

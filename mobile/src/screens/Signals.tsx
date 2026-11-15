@@ -1,17 +1,20 @@
 // Signals: what the AirPods could pick up through a day, drawn with the sample person. Calls, music and sleep are
-// not built; movement is felt today on the main site. Each screen says so at the end.
+// not built; movement is felt today on the main site. Each screen says so at the top and again at the end.
 import { useState, type CSSProperties, type ReactNode } from 'react'
-import { CALL_WEEK, DAY, HEAD_DOWN_WEEK, NIGHT, NIGHT_WEEK, PEOPLE, PRACTICES, RING, SONGS, STEPS_WEEK, type Song } from '../data/sample'
-import { BandBars, BandLine, Spark, Strip } from '../ui/charts'
-import { Chip, Head, Research, Row, SampleNote, Screen, Section, type Tone } from '../ui/kit'
+import { go } from '../router'
+import { CALL_WEEK, DAY, HEAD_DOWN_WEEK, NIGHT, NIGHT_WEEK, PEOPLE, PRACTICES, SONGS, STEPS_WEEK, type Song } from '../data/sample'
+import { BandBars, BandDots, BandLine, Strip } from '../ui/charts'
+import { I, type IconName } from '../ui/icons'
+import { Art, Btn, Chip, Delta, Head, Research, Row, SampleNote, Screen, Section, Stat, type ArtKind } from '../ui/kit'
 import { PodsChip } from './Today'
-import type { Topic } from '../data/refs'
 import './signals.css'
 
 const rise = (i?: number): CSSProperties => ({ '--i': i ?? 0 }) as CSSProperties
 const WORD = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten']
 const word = (n: number) => WORD[n] ?? String(n)
 const signed = (n: number) => (n > 0 ? `+${n}` : n < 0 ? `−${-n}` : '0')
+const sum = (v: number[]) => v.reduce((a, b) => a + b, 0)
+const thousands = (n: number) => n.toLocaleString('en-GB')
 
 // The sample day is a Thursday (the nurse wrote on Wednesday and looks again on Friday, and Thursday's night is the
 // sample night). So a week is drawn as the last seven days, and the last bar is today.
@@ -20,95 +23,64 @@ const TUE = 1
 const WED = 2
 const week = <T,>(v: T[]): T[] => [...v.slice(TODAY + 1), ...v.slice(0, TODAY + 1)]
 const DAYS = week(CALL_WEEK.days).map((d, i, a) => (i === a.length - 1 ? 'Today' : d))
+const FULL: Record<string, string> = { Mon: 'Monday', Tue: 'Tuesday', Wed: 'Wednesday', Thu: 'Thursday', Fri: 'Friday', Sat: 'Saturday', Sun: 'Sunday' }
+const LAST = DAYS.length - 1
+const when = (i: number) => (i === LAST ? 'today' : `on ${FULL[DAYS[i]]}`)
 
-/** the sentence that carries a screen */
+type Versus = { tone?: 'off' | 'ok'; text: string }
+/** where a reading sits against your own usual */
+const versus = (v: number, lo: number, hi: number): Versus => (v < lo ? { tone: 'off', text: 'Under your usual' } : v > hi ? { tone: 'off', text: 'Over your usual' } : { tone: 'ok', text: 'In your usual' })
+
+/** the top of a detail screen: one number said large, how it sits against your usual, and the chart it comes from */
+function Hero({ value, unit, versus: v, cap, children, i }: { value: ReactNode; unit: ReactNode; versus?: Versus; cap: ReactNode; children: ReactNode; i: number }) {
+  return (
+    <div className="sg-hero pad rise" style={rise(i)}>
+      <div className="sg-hero-top">
+        <span className="big-num">
+          {value}
+          <small>{unit}</small>
+        </span>
+        {v && <Delta tone={v.tone}>{v.text}</Delta>}
+      </div>
+      <p className="sg-hero-cap num">{cap}</p>
+      <div className="sg-hero-chart">{children}</div>
+    </div>
+  )
+}
+
+/** the one sentence Vire says on a screen */
 function Say({ children, i }: { children: ReactNode; i: number }) {
   return (
-    <p className="sg-say pad rise" style={rise(i)}>
-      {children}
-    </p>
-  )
-}
-
-/** a slim bar, 0 to 1. `mid` draws a hairline at the half. */
-function Bar({ share, tone, mid }: { share: number; tone: Tone; mid?: boolean }) {
-  return (
-    <span className={`sg-bar ${mid ? 'has-mid' : ''}`}>
-      <i style={{ width: `${Math.max(1.5, Math.min(1, share) * 100)}%`, background: `var(--${tone})` }} />
-    </span>
-  )
-}
-/** a change either side of none, on a scale of plus and minus `max` */
-function Swing({ v, max, tone }: { v: number; max: number; tone: Tone }) {
-  const w = (Math.abs(v) / max) * 50
-  return (
-    <span className="sg-bar has-mid">
-      <i className={v < 0 ? 'is-down' : ''} style={{ left: `${v < 0 ? 50 - w : 50}%`, width: `${w}%`, background: `var(--${tone})` }} />
-    </span>
-  )
-}
-function Read({ label, value, children }: { label: string; value: string; children: ReactNode }) {
-  return (
-    <div className="sg-read">
-      <span>{label}</span>
-      {children}
-      <span className="num">{value}</span>
+    <div className="pad rise" style={{ ...rise(i), marginTop: 22 }}>
+      <div className="card">
+        <p className="sg-say">{children}</p>
+      </div>
     </div>
   )
 }
 
-/**
- * A week of nights as dots against the usual band. The kit's BandBars start at zero, where a resting heart rate
- * of 53 and one of 58 look the same; dots have no zero to start from, so the scale can sit round the band.
- */
-function BandDots({ values, labels, heads, lo, hi, tone, fmt }: { values: number[]; labels: string[]; heads?: string[]; lo: number; hi: number; tone: Tone; fmt: (v: number) => string }) {
-  const [sel, setSel] = useState(values.length - 1)
-  const W = 320
-  const H = 150
-  const top = 22
-  const base = H - 24
-  const min = Math.min(lo, ...values) - 2
-  const max = Math.max(hi, ...values) + 1.5
-  const y = (v: number) => base - ((v - min) / (max - min)) * (base - top)
-  const slot = (W - 8) / values.length
-  const x = (i: number) => 4 + i * slot + slot / 2
-  const color = `var(--${tone})`
+/** a practice to do about it, on its own cover */
+function Offer({ id, kind, title, i }: { id: string; kind: ArtKind; title: string; i: number }) {
+  const p = PRACTICES.find((x) => x.id === id)
+  if (!p) return null
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
-        <span className="title-m num">{fmt(values[sel])}</span>
-        <span className="small">{(heads ?? labels)[sel]}</span>
-      </div>
-      <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', touchAction: 'pan-y' }} role="img" aria-label="The week against your usual">
-        <rect x={0} y={y(hi)} width={W} height={y(lo) - y(hi)} fill="var(--ink)" fillOpacity={0.08} rx={3} />
-        <text x={W - 6} y={y(lo) + 14} textAnchor="end" fontSize="10.5" fill="var(--ink-3)" fontFamily="var(--font-ui)" className="num">
-          your usual, {lo} to {hi}
-        </text>
-        <line x1={0} x2={W} y1={base} y2={base} stroke="var(--ink)" strokeOpacity={0.14} />
-        <path d={values.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join('')} fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" opacity={0.45} />
-        {values.map((v, i) => (
-          <g key={i} onPointerDown={() => setSel(i)} style={{ cursor: 'pointer' }}>
-            <rect x={x(i) - slot / 2} y={0} width={slot} height={H} fill="transparent" />
-            <circle cx={x(i)} cy={y(v)} r={i === sel ? 7 : 5.5} fill="var(--bg-1)" />
-            <circle cx={x(i)} cy={y(v)} r={i === sel ? 5 : 3.5} fill={color} />
-            <text x={x(i)} y={H - 6} textAnchor="middle" fontSize="11" fill={i === sel ? 'var(--ink)' : 'var(--ink-3)'} fontFamily="var(--font-ui)">
-              {labels[i]}
-            </text>
-          </g>
-        ))}
-      </svg>
-    </div>
+    <Section title={title} i={i}>
+      <Art kind={kind} h={176} tag={`${p.minutes} min`} title={p.name} sub={p.line} to={`/practice/${p.id}`}>
+        <span className="art-play" aria-hidden="true">
+          <I.play size={20} />
+        </span>
+      </Art>
+    </Section>
   )
 }
 
-/** a second block of studies on one screen, under its own heading (the kit's block always says "What the research says") */
-function AlsoResearch({ topic, title, i }: { topic: Topic; title: string; i: number }) {
+/** the way to a second set of studies, without printing them all here */
+function More({ topic, children }: { topic: string; children: ReactNode }) {
   return (
-    <div className="sg-also">
-      <div className="section-head rise" style={rise(i)}>
-        <h2 className="title-m">{title}</h2>
-      </div>
-      <Research topic={topic} i={i} />
+    <div className="pad sg-more">
+      <Btn kind="ghost" small to={`/research/${topic}`}>
+        {children} <I.right size={16} />
+      </Btn>
     </div>
   )
 }
@@ -117,225 +89,295 @@ function AlsoResearch({ topic, title, i }: { topic: Topic; title: string; i: num
 
 /** how every chart in the app is read: a pale band for your usual, a line for today, a dot for now */
 function Legend() {
-  const t = { fontSize: 10.5, fill: 'var(--ink-3)', fontFamily: 'var(--font-ui)' }
+  const t = { fontSize: 11, fontWeight: 500, fill: 'var(--ink-3)', fontFamily: 'var(--font-ui)' }
+  const d = 'M6 44C26 34 44 36 66 41S104 33 128 43s34 34 60 33 44-26 66-31 30-3 40-4'
   return (
-    <svg className="sg-legend" viewBox="0 0 320 96" role="img" aria-label="A pale band for your usual. The line of today dips under it and comes back.">
-      <rect x={0} y={26} width={320} height={32} rx={3} fill="var(--ink)" fillOpacity={0.09} />
-      <text x={314} y={19} textAnchor="end" {...t}>
+    <svg className="sg-legend" viewBox="0 0 320 98" role="img" aria-label="A pale band for your usual. The line of today dips under it and comes back.">
+      <defs>
+        <filter id="sg-legend-glow" x="-10%" y="-60%" width="120%" height="220%">
+          <feGaussianBlur stdDeviation="5" />
+        </filter>
+      </defs>
+      <rect x={0} y={24} width={320} height={34} rx={9} fill="var(--ink)" fillOpacity={0.1} />
+      <text x={314} y={16} textAnchor="end" {...t}>
         your usual
       </text>
-      <path className="sg-legend-line" pathLength={1} d="M6 44C26 34 44 36 66 41S104 33 128 43s34 34 60 33 44-26 66-31 30-3 40-4" fill="none" stroke="var(--ember)" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" />
+      <path className="sg-legend-line" pathLength={1} d={d} fill="none" stroke="var(--ember)" strokeOpacity={0.7} strokeWidth={8} strokeLinecap="round" filter="url(#sg-legend-glow)" />
+      <path className="sg-legend-line" pathLength={1} d={d} fill="none" stroke="#ff8a5c" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
       <g className="sg-legend-dot">
-        <circle cx={294} cy={41} r={7} fill="var(--bg-1)" />
-        <circle cx={294} cy={41} r={5} fill="var(--ember)" />
+        <circle cx={294} cy={41} r={8.5} fill="var(--bg)" />
+        <circle cx={294} cy={41} r={6} fill="#ff8a5c" />
       </g>
-      <text x={188} y={93} textAnchor="middle" {...t}>
+      <text x={188} y={95} textAnchor="middle" {...t}>
         under your usual
       </text>
-      <text x={294} y={74} textAnchor="middle" {...t}>
+      <text x={294} y={76} textAnchor="middle" {...t}>
         now
       </text>
     </svg>
   )
 }
-const KEY: Array<{ tone: Tone; label: string }> = [
-  { tone: 'voice', label: 'Voice' },
-  { tone: 'face', label: 'Face' },
-  { tone: 'heart', label: 'Heart' },
-  { tone: 'move', label: 'Movement' },
-]
+
+/** one signal on the tab root: its cover, its number for today, and the way in */
+function Cover({ kind, icon, label, to, value, unit, sub, i }: { kind: ArtKind; icon: IconName; label: string; to: string; value: ReactNode; unit: string; sub: string; i: number }) {
+  const C = I[icon]
+  return (
+    <div className="rise" style={rise(i)}>
+      <Art
+        kind={kind}
+        h={164}
+        to={to}
+        className="sg-cover"
+        sub={sub}
+        tag={
+          <>
+            <C size={14} /> {label}
+          </>
+        }
+      >
+        <span className="sg-cover-num num">
+          {value}
+          <small>{unit}</small>
+        </span>
+        <span className="sg-go" aria-hidden="true">
+          <I.right size={18} />
+        </span>
+      </Art>
+    </div>
+  )
+}
 
 export function Signals(_: { id?: string; topic?: string }) {
   const calls = DAY.filter((m) => m.icon === 'call').length
-  const smiley = [...PEOPLE].sort((a, b) => b.smiles - a.smiles)[0]
+  const mins = CALL_WEEK.minutes[TODAY]
   const beat = /(\d+) of (\d+) songs/.exec(DAY.find((m) => m.icon === 'music')?.sub ?? '')
-  const still = DAY.find((m) => m.icon === 'move')?.sub.split(' · ')[0]
+  const steps = STEPS_WEEK.steps[TODAY]
   return (
-    <Screen>
-      <Head chip={<PodsChip />} title="Signals" sub="What your AirPods pick up, set against your own usual." />
-
-      <Section i={1}>
-        <div className="group">
-          <Row icon="airpods" tone="ember" title="Nods, head shakes and smiles, live" sub="This part is real. It runs on this phone." to="/live" />
-        </div>
-      </Section>
-
-      <section className="section rise" style={rise(2)}>
-        <div className="section-head sg-head">
-          <h2 className="title-m">Today</h2>
+    <Screen glow="move">
+      <div className="pad rise" style={rise(0)}>
+        <div className="sg-top">
           <Chip>Sample day</Chip>
+          <PodsChip />
         </div>
-        <div className="pad">
-          <div className="group">
-            <Row icon="call" tone="voice" title="Calls" sub={`${calls} calls today. You smile most with ${smiley.name}.`} right={<Spark values={RING.talk.today} tone="voice" w={56} />} to="/signals/calls" />
-            <Row
-              icon="music"
-              tone="face"
-              title="Music"
-              sub={`Your head moved with the beat on ${beat ? `${beat[1]} of ${beat[2]}` : `${SONGS.filter((s) => s.beat > 0.5).length} of ${SONGS.length}`} songs.`}
-              right={<Spark values={SONGS.map((s) => s.beat)} tone="face" w={56} />}
-              to="/signals/music"
-            />
-            <Row icon="sleep" tone="heart" title="Sleep" sub={`Resting heart rate ${NIGHT.rest} last night, ${NIGHT.rest - NIGHT.usual} above your usual.`} right={<Spark values={NIGHT.bpm} tone="heart" w={56} />} to="/signals/sleep" />
-            <Row icon="move" tone="move" title="Movement" sub={`Head down and still for ${still ?? 'two hours'} after lunch.`} right={<Spark values={RING.move.today} tone="move" w={56} />} to="/signals/movement" />
-          </div>
+        <h1 className="title-xl">Signals</h1>
+      </div>
+
+      <div className="pad rise" style={{ ...rise(1), marginTop: 20 }}>
+        <button className="sg-live" onClick={() => go('/live')}>
+          <span className="sg-live-top">
+            <Chip tone="live" dot pulse>
+              Real, on this phone
+            </Chip>
+            <span className="sg-go" aria-hidden="true">
+              <I.right size={18} />
+            </span>
+          </span>
+          <span className="sg-live-title">Nods, head shakes and smiles, live</span>
+          <span className="pills">
+            <span className="pill">
+              <I.nod size={15} /> Nod
+            </span>
+            <span className="pill">
+              <I.shake size={15} /> Shake
+            </span>
+            <span className="pill">
+              <I.smile size={15} /> Smile
+            </span>
+          </span>
+        </button>
+      </div>
+
+      <section className="section">
+        <div className="section-head rise" style={rise(2)}>
+          <h2 className="title-m">Today</h2>
+        </div>
+        <div className="pad sg-covers">
+          <Cover kind="call" icon="call" label="Calls" to="/signals/calls" value={mins} unit="min" sub={`${calls} calls. ${versus(mins, CALL_WEEK.lo, CALL_WEEK.hi).text}.`} i={2} />
+          <Cover kind="music" icon="music" label="Music" to="/signals/music" value={beat ? beat[1] : SONGS.filter((s) => s.beat > 0.5).length} unit={`of ${beat ? beat[2] : SONGS.length} songs`} sub="Your head moved with the beat." i={3} />
+          <Cover kind="sleep" icon="sleep" label="Sleep" to="/signals/sleep" value={NIGHT.rest} unit="bpm" sub={`Resting heart rate. ${NIGHT.rest - NIGHT.usual} above your usual.`} i={4} />
+          <Cover kind="walk" icon="move" label="Movement" to="/signals/movement" value={thousands(steps)} unit="steps" sub={`${versus(steps, STEPS_WEEK.lo, STEPS_WEEK.hi).text}.`} i={5} />
         </div>
       </section>
 
-      <Section title="How to read it" i={3}>
+      <Section title="How to read it" i={6}>
         <div className="card">
           <Legend />
-          <p className="body-2" style={{ marginTop: 14 }}>
-            The pale band is your own usual. The line is today and the dot is now. Vire sets you against your own earlier days, never against other people.
+          <p className="body-2" style={{ marginTop: 12 }}>
+            You against your own earlier days. Never against other people.
           </p>
-          <div className="sg-key">
-            {KEY.map((k) => (
-              <span key={k.tone}>
-                <i style={{ background: `var(--${k.tone})` }} />
-                {k.label}
-              </span>
-            ))}
-          </div>
         </div>
       </Section>
 
-      <SampleNote>Calls, music, sleep and movement are a sample day, to show where Vire is going. The live screen is real: your own model, taught and run on this phone.</SampleNote>
+      <SampleNote>Calls, music, sleep and movement show a sample day. The live screen is real.</SampleNote>
     </Screen>
   )
 }
 
 // ---------- calls ----------
 
+const FACE = ['linear-gradient(140deg, #3fb8a8, #1d6f66)', 'linear-gradient(140deg, #e0a04a, #8a5a1a)', 'linear-gradient(140deg, #8f99ea, #434c9c)', 'linear-gradient(140deg, #e07a8c, #8a3345)']
+
 export function Calls(_: { id?: string; topic?: string }) {
-  const people = [...PEOPLE].sort((a, b) => b.smiles - a.smiles)
+  const mins = week(CALL_WEEK.minutes)
+  const [sel, setSel] = useState(LAST)
+  // nods, because that is what the AirPods read on their own; smiles still need the camera
+  const people = [...PEOPLE].sort((a, b) => b.nods - a.nods)
   const top = people[0]
   const low = people[people.length - 1]
-  const maxSmiles = Math.max(...PEOPLE.map((p) => p.smiles))
-  const maxNods = Math.max(...PEOPLE.map((p) => p.nods))
+  const quiet = [...PEOPLE].sort((a, b) => a.talk - b.talk)[0]
   return (
-    <Screen nav="Calls" backTo="/signals">
-      <Head chip={<Chip>Sample</Chip>} title="Calls" sub="Who you talk with, and how you are with them." />
-      <Say i={1}>
-        You smile about <b>{word(Math.round(top.smiles / low.smiles))} times as often</b> with {top.name} as with {low.name}.
+    <Screen nav="Calls" backTo="/signals" glow="voice">
+      <Head chip={<Chip>Sample week</Chip>} title="Calls" />
+      <Hero i={1} value={mins[sel]} unit="min" versus={versus(mins[sel], CALL_WEEK.lo, CALL_WEEK.hi)} cap={`On calls ${when(sel)}`}>
+        <BandBars bare sel={sel} onSel={setSel} values={mins} labels={DAYS} lo={CALL_WEEK.lo} hi={CALL_WEEK.hi} tone="voice" fmt={(v) => `${v} min`} height={190} />
+      </Hero>
+
+      <Say i={2}>
+        You nod about <b>{word(Math.round(top.nods / low.nods))} times as often</b> with {top.name} as with {low.name}.
       </Say>
 
-      <Section title="Time on calls" i={2}>
-        <div className="card">
-          <BandBars values={week(CALL_WEEK.minutes)} labels={DAYS} lo={CALL_WEEK.lo} hi={CALL_WEEK.hi} tone="voice" fmt={(v) => `${v} min`} />
-          <p className="small sg-cap">Minutes on calls a day, over the last seven days. The pale band is your usual. Tap a day.</p>
+      <div className="pad rise" style={{ ...rise(3), marginTop: 12 }}>
+        <div className="stat-grid">
+          <Stat icon="call" tone="voice" label="This week" value={sum(CALL_WEEK.minutes)} unit="min" sub={`${sum(PEOPLE.map((p) => p.calls))} calls`} />
+          <Stat icon="clock" label="Your usual" value={`${CALL_WEEK.lo}–${CALL_WEEK.hi}`} unit="min" sub="a day" />
+          <Stat icon="nod" tone="face" label="Most nods" value={top.name} sub={`${top.nods} every ten minutes`} />
+          <Stat icon="voice" tone="voice" label="Quietest with" value={quiet.name} sub={`You talk ${Math.round(quiet.talk * 100)}% of the call`} />
         </div>
-      </Section>
+      </div>
 
-      <Section title="Who you talk with" i={3}>
-        <p className="small sg-lead">Smiles and nods for every ten minutes of call. Talking is your share of the call.</p>
-        {people.map((p) => (
-          <div className="card" key={p.name}>
-            <div className="sg-who">
-              <span className="sg-avatar">{p.name[0]}</span>
-              <div>
-                <div className="row-title">{p.name}</div>
-                <div className="row-sub" style={{ marginTop: 0 }}>
-                  {p.who}
+      <Section title="Who you talk with" i={4}>
+        <div className="group sg-people">
+          {people.map((p, k) => (
+            <div className="sg-person" key={p.name}>
+              <div className="sg-person-top">
+                <span className="sg-avatar" style={{ background: FACE[k % FACE.length] }}>
+                  {p.name[0]}
+                </span>
+                <div>
+                  <div className="row-title">{p.name}</div>
+                  <div className="row-sub">{p.note}</div>
+                </div>
+                <div className="sg-person-min num">
+                  {p.minutes}
+                  <small>min</small>
                 </div>
               </div>
-              <div className="sg-who-meta num">
-                <b>{p.minutes} min</b>
-                {p.calls} {p.calls === 1 ? 'call' : 'calls'}
+              <div className="pills">
+                <span className="pill num">
+                  <I.nod size={15} /> {p.nods.toFixed(0)}
+                </span>
+                <span className="pill num">
+                  <I.voice size={15} /> {Math.round(p.talk * 100)}%
+                </span>
               </div>
             </div>
-            <div className="sg-reads">
-              <Read label="Smiles" value={p.smiles.toFixed(1)}>
-                <Bar share={p.smiles / maxSmiles} tone="face" />
-              </Read>
-              <Read label="Nods" value={p.nods.toFixed(0)}>
-                <Bar share={p.nods / maxNods} tone="move" />
-              </Read>
-              <Read label="You talk" value={`${Math.round(p.talk * 100)}%`}>
-                <Bar share={p.talk} tone="voice" mid />
-              </Read>
-            </div>
-            <p className="sg-person-note">{p.note}</p>
-          </div>
-        ))}
+          ))}
+        </div>
+        <p className="small sg-cap">Nods every ten minutes, and your share of the talking.</p>
       </Section>
 
-      <Section title="How Vire knows" i={4}>
+      <Section i={5}>
         <div className="group">
-          <Row icon="nod" tone="move" title="Nods and head shakes" sub="From the motion of your AirPods. This part runs today." to="/live" />
-          <Row icon="face" tone="face" title="Smiles" sub="The camera keeps these for now. From the AirPods alone they are still a guess." />
-          <Row icon="voice" tone="voice" title="Talking" sub="From the microphone. When you talk, never what you say." />
-          <Row icon="call" tone="voice" title="Who it is" sub="From the phone's own call. Today Vire is only told that a call is on." />
+          <Row icon="nod" tone="ember" title="Nods run today" sub="Smiles still need the camera." to="/live" />
+          <Row icon="lock" title="Never what you say" sub="Vire hears when you talk, not the words." />
         </div>
       </Section>
 
-      <Research topic="calls" i={5} />
-      <AlsoResearch topic="face" title="And on smiles and head movement" i={6} />
-      <SampleNote>Sample, and not built. The by-person view does not exist: today Vire only knows that a call is on. These people and numbers are made up.</SampleNote>
+      <Research topic="calls" i={6} />
+      <More topic="face">Studies on smiles and head movement</More>
+      <SampleNote>Sample, and not built. Today Vire only knows that a call is on. These people and numbers are made up.</SampleNote>
     </Screen>
   )
 }
 
 // ---------- music ----------
 
-const MOOD: Record<Song['mood'], { word: string; d: string }> = {
-  lifts: { word: 'Lifts', d: 'M12 19V5.5M6.5 11L12 5.5 17.5 11' },
-  calms: { word: 'Calms', d: 'M4 12c2.7-3.2 5.3-3.2 8 0s5.3 3.2 8 0' },
-  sinks: { word: 'Sinks', d: 'M12 5v13.5M6.5 13L12 18.5 17.5 13' },
-  flat: { word: 'Flat', d: 'M5 12h14' },
+const MOOD: Record<Song['mood'], { word: string; d: string; tone?: 'off' | 'ok'; art: string }> = {
+  lifts: { word: 'Lifts', d: 'M12 19V5.5M6.5 11L12 5.5 17.5 11', tone: 'ok', art: 'linear-gradient(140deg, #d9952f, #6b4512)' },
+  calms: { word: 'Calms', d: 'M4 12c2.7-3.2 5.3-3.2 8 0s5.3 3.2 8 0', art: 'linear-gradient(140deg, #2fa596, #134a44)' },
+  sinks: { word: 'Sinks', d: 'M12 5v13.5M6.5 13L12 18.5 17.5 13', tone: 'off', art: 'linear-gradient(140deg, #6b76d6, #262b5e)' },
+  flat: { word: 'Flat', d: 'M5 12h14', art: 'linear-gradient(140deg, #6f675b, #2f2a23)' },
+}
+function Mood({ mood }: { mood: Song['mood'] }) {
+  return (
+    <Delta tone={MOOD[mood].tone}>
+      <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d={MOOD[mood].d} />
+      </svg>
+      {MOOD[mood].word}
+    </Delta>
+  )
 }
 
 export function Music(_: { id?: string; topic?: string }) {
-  const songs = [...SONGS].sort((a, b) => b.bpm - a.bpm)
-  const slow = songs[songs.length - 1]
-  const maxHr = Math.max(...SONGS.map((s) => Math.abs(s.hr)))
+  const songs = [...SONGS].sort((a, b) => a.at.localeCompare(b.at))
+  const [sel, setSel] = useState(() => songs.indexOf([...songs].sort((a, b) => b.beat - a.beat)[0]))
+  const s = songs[sel]
+  const slow = [...SONGS].sort((a, b) => a.bpm - b.bpm)[0]
+  const up = [...SONGS].sort((a, b) => b.hr - a.hr)[0]
+  const down = [...SONGS].sort((a, b) => a.hr - b.hr)[0]
+  const day = DAY.find((m) => m.icon === 'music')?.sub ?? ''
+  const beat = /(\d+) of (\d+) songs/.exec(day)
+  const long = /^(.*) min$/.exec(day.split(' · ')[0])
   return (
-    <Screen nav="Music" backTo="/signals">
-      <Head chip={<Chip>Sample</Chip>} title="Music" sub="What you play, and what it does to you." />
-      <Say i={1}>
+    <Screen nav="Music" backTo="/signals" glow="face">
+      <Head chip={<Chip>Sample day</Chip>} title="Music" />
+      <Hero
+        i={1}
+        value={Math.round(s.beat * 100)}
+        unit="% with the beat"
+        versus={{ tone: MOOD[s.mood].tone, text: MOOD[s.mood].word }}
+        cap={
+          <>
+            <b>{s.title}</b> by {s.by}, {s.bpm} bpm
+          </>
+        }
+      >
+        <BandBars bare sel={sel} onSel={setSel} values={songs.map((x) => Math.round(x.beat * 100))} labels={songs.map((x) => x.at)} tone="face" fmt={(v) => `${v}%`} height={190} />
+      </Hero>
+
+      <Say i={2}>
         Faster songs get your head moving. A slow one at {slow.at} left you <b>still, with your heart rate up.</b>
       </Say>
 
-      <Section title="What you played" i={2}>
+      <div className="pad rise" style={{ ...rise(3), marginTop: 12 }}>
+        <div className="stat-grid">
+          <Stat icon="music" tone="face" label="With the beat" value={beat ? beat[1] : '0'} unit={`of ${beat ? beat[2] : SONGS.length} songs`} />
+          <Stat icon="clock" label="Listening" value={long ? long[1] : day.split(' · ')[0]} unit={long ? 'min' : undefined} />
+          <Stat icon="heart" tone="heart" label="Heart up most" value={signed(up.hr)} unit="bpm" sub={up.title} />
+          <Stat icon="heart" tone="heart" label="Heart down most" value={signed(down.hr)} unit="bpm" sub={down.title} />
+        </div>
+      </div>
+
+      <Section title="A few from today" i={4}>
         <div className="group">
-          {songs.map((s) => (
-            <div className="sg-song" key={s.title}>
-              <div className="sg-song-top">
-                <div>
-                  <div className="row-title">{s.title}</div>
-                  <div className="row-sub num">
-                    {s.by} · {s.bpm} bpm · {s.at}
-                  </div>
-                </div>
-                <Chip>
-                  <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d={MOOD[s.mood].d} />
-                  </svg>
-                  {MOOD[s.mood].word}
-                </Chip>
-              </div>
-              <div className="sg-reads" style={{ '--label': '88px' } as CSSProperties}>
-                <Read label="With the beat" value={`${Math.round(s.beat * 100)}%`}>
-                  <Bar share={s.beat} tone="face" />
-                </Read>
-                <Read label="Heart rate" value={signed(s.hr)}>
-                  <Swing v={s.hr} max={maxHr} tone="heart" />
-                </Read>
-              </div>
-            </div>
+          {songs.map((x, k) => (
+            <button className={`sg-song ${k === sel ? 'is-on' : ''}`} key={x.title} onClick={() => setSel(k)} aria-pressed={k === sel}>
+              <span className="sg-thumb" style={{ background: MOOD[x.mood].art }}>
+                <I.music size={20} />
+              </span>
+              <span>
+                <span className="row-title" style={{ display: 'block' }}>
+                  {x.title}
+                </span>
+                <span className="row-sub num" style={{ display: 'block' }}>
+                  {x.by} · {x.bpm} bpm
+                </span>
+              </span>
+              <Mood mood={x.mood} />
+            </button>
           ))}
         </div>
-        <p className="small sg-cap">Fastest first. With the beat is the share of the song your head moved in time with it. Heart rate is the change over the song, in beats a minute.</p>
       </Section>
 
-      <Section title="What Vire would do with it" i={3}>
+      <Section i={5}>
         <div className="group">
-          <Row icon="play" tone="ember" title="Queue what lifts you" sub="When you drift from your usual, the songs that got you moving come up first." />
-          <Row icon="lock" title="Keep your taste to yourself" sub="The clinic would see whether music still moves you. Never what you play." />
+          <Row icon="lock" title="Your taste stays yours" sub="The clinic would see whether music still moves you. Never what you play." />
         </div>
       </Section>
 
-      <Research topic="music" i={4} />
-      <SampleNote>Sample, and not built. Vire does not read what is playing yet, and AirPods give heart rate only during a workout session. The songs and artists are made up.</SampleNote>
+      <Research topic="music" i={6} />
+      <SampleNote>Sample, and not built. Vire cannot read what is playing yet. The songs and artists are made up.</SampleNote>
     </Screen>
   )
 }
@@ -350,67 +392,60 @@ const clock = (t: number): string => {
 }
 
 export function Sleep(_: { id?: string; topic?: string }) {
+  const [pick, setPick] = useState<number | null>(null)
   const rest = week(NIGHT_WEEK.rest)
   const nights = week(NIGHT_WEEK.days)
   let over = 0
   while (over < rest.length && rest[rest.length - 1 - over] > NIGHT_WEEK.hi) over++
-  const stirred = NIGHT.stir.reduce((a, b) => a + b, 0)
   const peak = NIGHT.stir.indexOf(Math.max(...NIGHT.stir))
   const rose = NIGHT.bpm[peak] > NIGHT.bpm[Math.max(0, peak - 1)]
-  const down = PRACTICES.find((p) => p.id === 'winddown')
+  const lowest = Math.min(...NIGHT.bpm)
+  const [h1, m1] = NIGHT.to.split(':').map(Number)
+  const span = (h1 * 60 + m1 - (H0 * 60 + M0) + 1440) % 1440
   return (
-    <Screen nav="Sleep" backTo="/signals">
-      <Head chip={<Chip>Sample</Chip>} title="Sleep" sub="The night, through your AirPods." />
-      <Say i={1}>
-        Last night your resting heart rate was {NIGHT.rest} beats a minute,{' '}
-        <b>
-          {NIGHT.rest - NIGHT.usual} above your usual {NIGHT.usual}.
-        </b>
-      </Say>
+    <Screen nav="Sleep" backTo="/signals" glow="heart">
+      <Head chip={<Chip>Sample night</Chip>} title="Sleep" />
+      <Hero
+        i={1}
+        value={pick == null ? NIGHT.rest : NIGHT.bpm[pick]}
+        unit="bpm"
+        versus={pick == null ? { tone: 'off', text: `${NIGHT.rest - NIGHT.usual} above your usual` } : versus(NIGHT.bpm[pick], NIGHT.lo[pick], NIGHT.hi[pick])}
+        cap={pick == null ? 'Resting heart rate, last night' : `Heart rate at ${clock(NIGHT.t[pick])}`}
+      >
+        <BandLine bare onPick={setPick} x={NIGHT.t} y={NIGHT.bpm} lo={NIGHT.lo} hi={NIGHT.hi} tone="heart" fmtX={clock} fmtY={(v) => `${v} bpm`} height={216} usual="your usual night" />
+      </Hero>
 
-      <Section title="Last night" i={2}>
+      <div className="pad rise" style={{ ...rise(2), marginTop: 22 }}>
+        <div className="stat-grid">
+          <Stat icon="sleep" tone="move" label="Night" value={`${Math.floor(span / 60)} h ${span % 60}`} unit="min" sub={`${NIGHT.from} to ${NIGHT.to}`} />
+          <Stat icon="heart" tone="heart" label="Lowest" value={lowest} unit="bpm" sub={`at ${clock(NIGHT.t[NIGHT.bpm.indexOf(lowest)])}`} />
+          <Stat wide icon="move" tone="move" label="Head moving" value={sum(NIGHT.stir)} unit="min" sub={`Most around ${clock(NIGHT.t[peak])}${rose ? ', when your heart rate rose too' : ''}`}>
+            <Strip values={NIGHT.stir} tone="move" height={48} flush />
+            <span className="sg-axis num">
+              <span>{clock(NIGHT.t[0])}</span>
+              <span>{clock(NIGHT.t[NIGHT.t.length - 1])}</span>
+            </span>
+          </Stat>
+        </div>
+      </div>
+
+      <Section title="Seven nights" i={3}>
         <div className="card">
-          <BandLine x={NIGHT.t} y={NIGHT.bpm} lo={NIGHT.lo} hi={NIGHT.hi} tone="heart" fmtX={clock} fmtY={(v) => `${v} beats a minute`} />
-          <p className="small sg-cap">
-            Heart rate from {NIGHT.from} until you woke at {NIGHT.to}, one reading every 20 minutes. The pale band is your usual night. Drag to read it.
-          </p>
-          <div className="sg-split" />
-          <div className="sg-strip-head">
-            <span className="title-m num">{stirred} min</span>
-            <span className="small">head moving</span>
-          </div>
-          <Strip values={NIGHT.stir} tone="move" />
-          <div className="sg-axis num">
-            <span>{clock(NIGHT.t[0])}</span>
-            <span>{clock(NIGHT.t[NIGHT.t.length - 1])}</span>
-          </div>
-          <p className="small sg-cap">
-            Minutes your head moved, on the same clock. Most around {clock(NIGHT.t[peak])}
-            {rose ? ', when your heart rate rose too' : ''}. AirPods can feel you turn over, not sleep stages.
-          </p>
+          <BandDots values={rest} labels={nights} heads={nights.map((d, i) => (i === nights.length - 1 ? 'Last night' : `Night to ${FULL[d]}`))} lo={NIGHT_WEEK.lo} hi={NIGHT_WEEK.hi} tone="heart" fmt={(v) => `${v} bpm resting`} />
         </div>
       </Section>
 
-      <Section title="The last seven nights" i={3}>
-        <div className="card">
-          <BandDots values={rest} labels={nights} heads={nights.map((d, i) => (i === nights.length - 1 ? 'Last night' : `Night to ${d}`))} lo={NIGHT_WEEK.lo} hi={NIGHT_WEEK.hi} tone="heart" fmt={(v) => `${v} beats a minute`} />
-          <p className="small sg-cap">
-            Resting heart rate, night by night.{over > 0 ? ` ${over === 1 ? 'Last night sits' : `The last ${word(over)} nights sit`} above your usual.` : ''} Tap a night.
-          </p>
-        </div>
-      </Section>
-
-      {down && (
-        <Section title="For tonight" i={4}>
-          <div className="group">
-            <Row icon={down.icon} tone="ember" title={down.name} sub={`${down.minutes} min. ${down.line}`} to="/practice/winddown" />
-          </div>
-        </Section>
+      {over > 0 && (
+        <Say i={4}>
+          Your resting heart rate has sat <b>above your usual for {over === 1 ? 'one night' : `${word(over)} nights`}.</b>
+        </Say>
       )}
 
-      <Research topic="sleep" i={5} />
-      <AlsoResearch topic="heart" title="And on heart rate" i={6} />
-      <SampleNote>Sample, and not built. Today AirPods Pro 3 give heart rate only during a workout session, in beats a minute. They cannot tell sleep stages, and many people do not sleep in AirPods.</SampleNote>
+      <Offer id="winddown" kind="sleep" title="For tonight" i={5} />
+
+      <Research topic="sleep" i={6} />
+      <More topic="heart">Studies on heart rate</More>
+      <SampleNote>Sample, and not built. Today AirPods give heart rate only during a workout, and never sleep stages.</SampleNote>
     </Screen>
   )
 }
@@ -420,48 +455,49 @@ export function Sleep(_: { id?: string; topic?: string }) {
 export function Movement(_: { id?: string; topic?: string }) {
   const steps = STEPS_WEEK.steps
   const down = HEAD_DOWN_WEEK.hours
+  const days = week(steps)
+  const [sel, setSel] = useState(LAST)
   const part = (steps[TUE] + steps[WED]) / (STEPS_WEEK.lo + STEPS_WEEK.hi)
   const back = steps[TODAY] > Math.max(steps[TUE], steps[WED]) && down[TODAY] < Math.min(down[TUE], down[WED])
-  const walk = PRACTICES.find((p) => p.id === 'walk')
+  const walk = (DAY.find((m) => m.icon === 'walk')?.sub ?? '').split(' · ')
+  const still = /^(.*) min$/.exec((DAY.find((m) => m.icon === 'move')?.sub ?? '').split(' · ')[0])
   return (
-    <Screen nav="Movement" backTo="/signals">
-      <Head chip={<Chip>Sample week</Chip>} title="Movement" sub="Your steps, and how long your head is down." />
-      <Say i={1}>
-        On Tuesday and Wednesday you took <b>{part < 0.4 ? 'about a third of' : part < 0.62 ? 'about half' : 'fewer than'} your usual steps</b>, and your head was down over {word(Math.floor(Math.min(down[TUE], down[WED])))} hours a day.{back ? ' Today is closer to your usual.' : ''}
+    <Screen nav="Movement" backTo="/signals" glow="move">
+      <Head chip={<Chip>Sample week</Chip>} title="Movement" />
+      <Hero i={1} value={thousands(days[sel])} unit="steps" versus={versus(days[sel], STEPS_WEEK.lo, STEPS_WEEK.hi)} cap={`Steps ${when(sel)}`}>
+        <BandBars bare sel={sel} onSel={setSel} values={days} labels={DAYS} lo={STEPS_WEEK.lo} hi={STEPS_WEEK.hi} tone="move" fmt={(v) => `${thousands(v)} steps`} height={190} />
+      </Hero>
+
+      <Say i={2}>
+        On Tuesday and Wednesday you took <b>{part < 0.4 ? 'about a third of' : part < 0.62 ? 'about half' : 'fewer than'} your usual steps.</b>
+        {back ? ' Today is closer.' : ''}
       </Say>
 
-      <Section title="Steps" i={2}>
-        <div className="card">
-          <BandBars values={week(steps)} labels={DAYS} lo={STEPS_WEEK.lo} hi={STEPS_WEEK.hi} tone="move" fmt={(v) => `${v.toLocaleString('en-GB')} steps`} />
-          <p className="small sg-cap">Steps a day, over the last seven days. The pale band is your usual. Tap a day.</p>
+      <div className="pad rise" style={{ ...rise(3), marginTop: 12 }}>
+        <div className="stat-grid">
+          <Stat icon="walk" tone="move" label="Walk today" value={walk[0]?.replace(/ min$/, '')} unit="min" sub={walk[1]} />
+          <Stat icon="move" tone="move" label="Still after lunch" value={still ? still[1] : '0'} unit="min" sub="Head down, no talking" />
         </div>
+      </div>
+
+      <Section title="Head down" i={4}>
+        <div className="card">
+          <BandBars values={week(down)} labels={DAYS} lo={HEAD_DOWN_WEEK.lo} hi={HEAD_DOWN_WEEK.hi} tone="move" fmt={(v) => `${v.toFixed(1)} hours`} height={160} />
+        </div>
+        <p className="small sg-cap">Hours a day with your head tipped down, as over a phone or a desk.</p>
       </Section>
 
-      <Section title="Head down" i={3}>
-        <div className="card">
-          {/* the kit prints "your usual" at the right end of the band, where today's bar stands in this chart */}
-          <BandBars values={week(down)} labels={DAYS} lo={HEAD_DOWN_WEEK.lo} hi={HEAD_DOWN_WEEK.hi} tone="move" fmt={(v) => `${v.toFixed(1)} hours`} usual="" />
-          <p className="small sg-cap">Hours a day with your head tipped down, the way it sits over a phone or a desk. The pale band is your usual.</p>
-        </div>
-      </Section>
-
-      <Section title="What runs today" i={4}>
+      <Section i={5}>
         <div className="group">
-          <Row icon="airpods" tone="ember" title="Your AirPods feel this already" sub="Head movement, head down, walks and steps, while Vire is open." />
+          <Row icon="airpods" tone="ember" title="Your AirPods feel this already" sub="Head movement, walks and steps, all the time they are in." />
         </div>
       </Section>
 
-      {walk && (
-        <Section title="For a still day" i={5}>
-          <div className="group">
-            <Row icon={walk.icon} tone="ember" title={walk.name} sub={`${walk.minutes} min. ${walk.line}`} to="/practice/walk" />
-          </div>
-        </Section>
-      )}
+      <Offer id="walk" kind="walk" title="For a still day" i={6} />
 
-      <Research topic="movement" i={6} />
+      <Research topic="movement" i={7} />
       <SampleNote>
-        This week's numbers are a sample. The sensing is real and runs on{' '}
+        This week is a sample. The sensing is real and runs on{' '}
         <a href="https://vire.fly.dev/#/day" target="_blank" rel="noreferrer">
           the main Vire site
         </a>

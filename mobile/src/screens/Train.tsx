@@ -7,7 +7,7 @@ import { api } from '@web/shared/api'
 import { postNative } from '@web/sense/native'
 import { EarRecorder, TEACH_MS, TEACH_ROUNDS, TEACH_STEPS, adoptSearch, earKey, keepMinute, listMinutes, scoreModelOn, syncMinutes, trainEarModel } from '@web/tune/ear'
 import { go } from '../router'
-import { currentModel, inApp, keepAwake, keepModel, onHead, sense, usePods, wakePods } from '../live/pods'
+import { currentModel, inApp, keepAwake, keepModel, onHead, onPhone, sense, usePods, wakePods } from '../live/pods'
 import { MotionStrip } from '../live/views'
 import { I } from '../ui/icons'
 import { Badge, Btn, Chip, Head, Row, RunsOn, Screen, Section } from '../ui/kit'
@@ -252,9 +252,10 @@ export function Train() {
   const shown = model ? SHOWN.filter((e) => model.events[e]) : []
   const okNames = shown.filter((e) => model!.events[e]!.score.ok)
   const searching = search && (search.state === 'queued' || search.state === 'running')
+  const phone = onPhone()
 
   return (
-    <Screen nav="Teach your AirPods" flow backTo="/you" className={live ? 'train-live' : ''}>
+    <Screen nav="Teach your AirPods" flow backTo="/you" className={live ? 'train-live' : ''} glow="ember">
       <div className="train-bar" style={{ opacity: phase === 'minute' ? 1 : 0 }}>
         <i style={{ width: `${done * 100}%` }} />
       </div>
@@ -273,10 +274,10 @@ export function Train() {
 
       {phase === 'intro' && (
         <>
-          <Head title="Teach your AirPods" sub="65 seconds. The camera shows your AirPods what your nod, your head shake and your smile look like. After that they read them on their own." />
+          <Head title="Teach your AirPods" sub="One minute with the camera. After that Vire says what your AirPods can read on their own." />
           <Section i={1}>
             <div className="group">
-              <Row icon="airpods" tone={pods.on ? 'ember' : 'plain'} title="AirPods" sub={pods.on ? `In. ${pods.hz} samples a second` : pods.app ? 'Put them in. They show up here by themselves' : 'Not connected on this device'} right={pods.on ? <Chip tone="live" dot pulse>Live</Chip> : undefined} />
+              <Row icon="airpods" tone={pods.on ? 'ember' : 'plain'} title="AirPods" sub={pods.on ? `In. ${pods.hz} samples a second` : pods.app ? 'Put them in. They show up here by themselves' : phone ? 'They run in the Vire iPhone app' : 'Not connected on this device'} right={pods.on ? <Chip tone="live" dot pulse>Live</Chip> : undefined} />
               <Row icon="camera" title="Camera" sub="For this minute only. No picture leaves the phone, only numbers" />
               <Row icon="box" title="Your own sandbox" sub="The model is searched for on Modal, in a box of its own with the network blocked" />
             </div>
@@ -297,11 +298,17 @@ export function Train() {
             </Btn>
             {!pods.on && !pods.app && (
               <>
-                <Btn wide kind="quiet" onClick={() => void wakePods().then((ok) => !ok && setError('Vire Ears did not answer on this Mac. On an iPhone, open Vire in the Vire app.'))}>
-                  Connect AirPods on this Mac
-                </Btn>
+                {phone ? (
+                  <p className="small" style={{ textAlign: 'center', textWrap: 'balance' }}>
+                    AirPods run in the Vire iPhone app. A phone browser cannot reach them, so the minute cannot start here.
+                  </p>
+                ) : (
+                  <Btn wide kind="quiet" onClick={() => void wakePods().then((ok) => !ok && setError('Vire Ears did not answer on this Mac. On an iPhone, open Vire in the Vire app.'))}>
+                    Connect AirPods on this Mac
+                  </Btn>
+                )}
                 <Btn wide kind="ghost" onClick={() => go('/live', { replace: true })}>
-                  No AirPods here? Try it with the camera
+                  See the camera read you live
                 </Btn>
               </>
             )}

@@ -62,25 +62,29 @@ const render = (path: string): ReactNode => {
 function TabBar() {
   const loc = useLoc()
   const { route } = find(loc.path)
+  const hidden = route.flow || route.bare ? 'is-hidden' : ''
   return (
-    <nav className={`tabbar ${route.flow || route.bare ? 'is-hidden' : ''}`} aria-label="Vire">
+    <>
+    <div className={`tabfade ${hidden}`} />
+    <nav className={`tabbar ${hidden}`} aria-label="Vire">
       {TABS.map((t) => {
         const C = I[t.icon]
         const here = route.tab === t.id
         return (
           <button key={t.id} className="tab" aria-current={here ? 'page' : undefined} onClick={() => go(t.path, here ? { move: 'pop', replace: true } : {})}>
-            <C size={25} strokeWidth={here ? 1.9 : 1.6} />
+            <C size={23} strokeWidth={here ? 2 : 1.7} />
             {t.label}
           </button>
         )
       })}
     </nav>
+    </>
   )
 }
 
 function Aside() {
   const url = `${location.origin}/app/`
-  const qr = useMemo(() => renderSVG(url, { border: 2, blackColor: '#14110d', whiteColor: '#f3ece0' }), [url])
+  const qr = useMemo(() => renderSVG(url, { border: 2, blackColor: '#0e0c0a', whiteColor: '#f6efe4' }), [url])
   return (
     <>
       <div className="aside aside-left">

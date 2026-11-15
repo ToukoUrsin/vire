@@ -60,12 +60,12 @@ export interface Moment {
 }
 export const DAY: Moment[] = [
   { t: '07:05', icon: 'airpods', tone: 'plain', title: 'AirPods in', sub: 'Vire starts sensing' },
-  { t: '09:00', icon: 'call', tone: 'voice', title: 'Call with Aino', sub: '22 min · you nodded 28 times, smiled 8', to: '/signals/calls' },
+  { t: '09:00', icon: 'call', tone: 'voice', title: 'Call with Aino', sub: '22 min · you nodded 28 times', to: '/signals/calls' },
   { t: '10:10', icon: 'music', tone: 'face', title: 'Music while working', sub: '1 h 40 min · head moved with the beat on 4 of 11 songs', to: '/signals/music' },
   { t: '12:30', icon: 'walk', tone: 'move', title: 'Walk', sub: '14 min · 1,480 steps', to: '/signals/movement' },
   { t: '13:10', icon: 'move', tone: 'move', title: 'Head down, hardly moving', sub: '2 h 20 min · no talking · heart rate 7 above your usual', loop: true },
   { t: '15:40', icon: 'breath', tone: 'ember', title: 'Vire offered slow breathing', sub: '3 min · heart rate 79 to 71 · head 38% stiller', to: '/practice/breathing', loop: true },
-  { t: '16:20', icon: 'call', tone: 'voice', title: 'Call with Mum', sub: '14 min · you smiled 9 times', to: '/signals/calls' },
+  { t: '16:20', icon: 'call', tone: 'voice', title: 'Call with Mum', sub: '14 min · you nodded 20 times', to: '/signals/calls' },
 ]
 
 export interface Person {
@@ -73,8 +73,7 @@ export interface Person {
   who: string
   minutes: number
   calls: number
-  /** per ten minutes of call */
-  smiles: number
+  /** per ten minutes of call. Nods only: the AirPods alone did not pass their check for smiles */
   nods: number
   /** share of the call you were the one talking */
   talk: number
@@ -82,10 +81,10 @@ export interface Person {
   week: number[]
 }
 export const PEOPLE: Person[] = [
-  { name: 'Mum', who: 'Family', minutes: 64, calls: 4, smiles: 6.1, nods: 14, talk: 0.52, note: 'You smile most on these calls.', week: [0, 18, 0, 14, 0, 14, 18] },
-  { name: 'Aino', who: 'Work', minutes: 118, calls: 5, smiles: 3.8, nods: 12.9, talk: 0.41, note: 'Steady. Close to your usual.', week: [22, 24, 26, 22, 24, 0, 0] },
-  { name: 'Jussi', who: 'Work', minutes: 47, calls: 2, smiles: 0.9, nods: 4.2, talk: 0.24, note: 'You go quiet and still here.', week: [0, 0, 31, 0, 16, 0, 0] },
-  { name: 'Sanna', who: 'TMS nurse', minutes: 12, calls: 1, smiles: 2.5, nods: 10, talk: 0.58, note: 'Check-in call on Tuesday.', week: [0, 12, 0, 0, 0, 0, 0] },
+  { name: 'Mum', who: 'Family', minutes: 64, calls: 4, nods: 14, talk: 0.52, note: 'You nod most on these calls.', week: [0, 18, 0, 14, 0, 14, 18] },
+  { name: 'Aino', who: 'Work', minutes: 118, calls: 5, nods: 12.9, talk: 0.41, note: 'Steady. Close to your usual.', week: [22, 24, 26, 22, 24, 0, 0] },
+  { name: 'Jussi', who: 'Work', minutes: 47, calls: 2, nods: 4.2, talk: 0.24, note: 'You go quiet and still here.', week: [0, 0, 31, 0, 16, 0, 0] },
+  { name: 'Sanna', who: 'TMS nurse', minutes: 12, calls: 1, nods: 10, talk: 0.58, note: 'Check-in call on Tuesday.', week: [0, 12, 0, 0, 0, 0, 0] },
 ]
 export const CALL_WEEK = { days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], minutes: [22, 54, 57, 36, 40, 14, 18], lo: 34, hi: 62 }
 
@@ -98,15 +97,14 @@ export interface Song {
   beat: number
   /** heart rate change over the song */
   hr: number
-  smiles: number
   mood: 'lifts' | 'calms' | 'sinks' | 'flat'
 }
 export const SONGS: Song[] = [
-  { title: 'Kesäyö', by: 'Aava', bpm: 118, at: '10:14', beat: 0.81, hr: 3, smiles: 2, mood: 'lifts' },
-  { title: 'Northern Line', by: 'Oda Vale', bpm: 104, at: '10:31', beat: 0.64, hr: 1, smiles: 1, mood: 'lifts' },
-  { title: 'Glass Harbour', by: 'Mirel', bpm: 72, at: '11:02', beat: 0.08, hr: -4, smiles: 0, mood: 'calms' },
-  { title: 'Hiljaa', by: 'Sointu & Kuu', bpm: 64, at: '23:40', beat: 0.03, hr: 2, smiles: 0, mood: 'sinks' },
-  { title: 'Run Home', by: 'Lantern Club', bpm: 126, at: '12:34', beat: 0.72, hr: 6, smiles: 1, mood: 'lifts' },
+  { title: 'Kesäyö', by: 'Aava', bpm: 118, at: '10:14', beat: 0.81, hr: 3, mood: 'lifts' },
+  { title: 'Northern Line', by: 'Oda Vale', bpm: 104, at: '10:31', beat: 0.64, hr: 1, mood: 'lifts' },
+  { title: 'Glass Harbour', by: 'Mirel', bpm: 72, at: '11:02', beat: 0.08, hr: -4, mood: 'calms' },
+  { title: 'Hiljaa', by: 'Sointu & Kuu', bpm: 64, at: '23:40', beat: 0.03, hr: 2, mood: 'sinks' },
+  { title: 'Run Home', by: 'Lantern Club', bpm: 126, at: '12:34', beat: 0.72, hr: 6, mood: 'lifts' },
 ]
 
 /** the sample night: heart rate every 20 minutes from 23:40, and the usual band for each point */
@@ -169,11 +167,12 @@ export const CHAT: Array<{ from: 'nurse' | 'you'; text: string; day?: string; fr
   { from: 'you', text: 'Tired mostly. Worked from home both days and barely talked to anyone.' },
   { from: 'nurse', text: 'Thanks, that fits what Vire saw. The breathing brought your heart rate down both times, so keep that one.' },
   { from: 'nurse', day: 'Today', fresh: true, text: 'Today looks better after the breathing. Let’s look again on Friday. If it keeps dipping we book a booster then, no need to wait for the December visit.' },
-  { from: 'nurse', fresh: true, text: 'Your weekly check-in is open. It takes two minutes.' },
+  { from: 'nurse', fresh: true, text: 'Your weekly check-in is open. Two questions, two taps.' },
 ]
 
 export const CHECKIN = {
   lead: 'Over the last week, how often have you been bothered by:',
-  items: ['Little interest or pleasure in doing things', 'Feeling down, depressed or hopeless', 'Trouble falling or staying asleep, or sleeping too much', 'Feeling tired or having little energy'],
+  // the PHQ-2: the same two weekly questions the clinic side shows
+  items: ['Little interest or pleasure in doing things', 'Feeling down, depressed or hopeless'],
   options: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'],
 }

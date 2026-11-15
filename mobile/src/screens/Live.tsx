@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { postNative } from '@web/sense/native'
 import { go } from '../router'
 import { Follow, SEEN, type Now, type Seen } from '../live/follow'
-import { keepAwake, onHead, sense, useModel, usePods, wakePods } from '../live/pods'
+import { keepAwake, onHead, onPhone, sense, useModel, usePods, wakePods } from '../live/pods'
 import { HeadView, MotionStrip, type Pose } from '../live/views'
 import { Meter } from '../ui/charts'
 import { Badge, Btn, Chip, RunsOn, Screen, Section } from '../ui/kit'
@@ -113,6 +113,7 @@ export function Live() {
     <Screen
       nav="Live"
       backTo="/you"
+      glow="ember"
       right={
         pods.on ? (
           <Chip tone="live" dot pulse>
@@ -128,7 +129,7 @@ export function Live() {
       <div className="pad rise" style={{ '--i': 0 } as React.CSSProperties}>
         <h1 className="title-l">{pods.on ? 'Your AirPods, reading you' : standIn ? 'Your camera, standing in' : 'No AirPods here'}</h1>
         <p className="body-2" style={{ marginTop: 6 }}>
-          {pods.on ? (cam === 'on' ? 'Head from the AirPods. The camera keeps the smile.' : 'From their motion alone. The camera is off.') : standIn ? 'With AirPods in, the same reading comes from their motion, camera off.' : 'In the Vire iPhone app this reads your AirPods. Here the camera can stand in.'}
+          {pods.on ? (cam === 'on' ? 'Head from the AirPods. The camera keeps the smile.' : 'From their motion alone. The camera is off.') : standIn ? 'With AirPods in, the same reading comes from their motion, camera off.' : onPhone() ? 'AirPods run in the Vire iPhone app. Here the camera can stand in.' : 'In the Vire iPhone app this reads your AirPods. Here the camera can stand in.'}
         </p>
       </div>
 
@@ -161,7 +162,7 @@ export function Live() {
           <Btn wide icon="camera" onClick={() => void camera(true)} disabled={cam === 'starting'}>
             Try it with your camera
           </Btn>
-          {!pods.app && (
+          {!pods.app && !onPhone() && (
             <Btn wide kind="quiet" onClick={() => void wakePods().then((ok) => !ok && setError('Vire Ears did not answer on this Mac.'))}>
               Connect AirPods on this Mac
             </Btn>

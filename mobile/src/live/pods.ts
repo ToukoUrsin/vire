@@ -10,6 +10,9 @@ import { loadEarModel, saveEarModel } from '@web/tune/ear'
 export const sense: Sense = createSense()
 export const inApp = (): boolean => !!(window as unknown as { webkit?: { messageHandlers?: { vire?: unknown } } }).webkit?.messageHandlers?.vire
 
+/** a phone or tablet browser, outside the Vire iPhone app: the Mac helper cannot be here, so there is nothing to connect */
+export const onPhone = (): boolean => !inApp() && (navigator.maxTouchPoints > 0 || !!window.matchMedia?.('(pointer: coarse)').matches)
+
 export interface Pods {
   /** inside the iPhone app */
   app: boolean

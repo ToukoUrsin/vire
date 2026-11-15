@@ -1,238 +1,346 @@
-/* Practices and the programme: the pt-week as a checklist, what pt-works for you as slim bars, twelve pt-weeks as a rail */
+/* Practices and the programme: covers to pick from, the week as a ring, twelve weeks as a path */
 
-/* ---------- the pt-week ---------- */
-.pt-wk-head {
+.pr-top {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
+  margin-bottom: 20px;
 }
-.pt-wk-head svg {
-  flex: none;
-  margin-top: 3px;
+
+/* ---------- covers ---------- */
+.pr-feature {
+  border-radius: 26px;
+  box-shadow: 0 24px 50px -22px rgba(22, 120, 110, 0.55);
+}
+.pr-feature .art-body {
+  padding: 18px 76px 18px 18px;
+}
+.pr-feature .art-title {
+  font-size: 25px;
+  letter-spacing: -0.03em;
+}
+.pr-feature .art-sub {
+  font-size: 14px;
+}
+.pr-feature .art-play {
+  right: 18px;
+  bottom: 18px;
+  width: 52px;
+  height: 52px;
+}
+.pr-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.pr-tile.is-wide {
+  grid-column: 1 / -1;
+}
+.pr-tile .art-body {
+  padding: 14px;
+}
+.pr-tile .art-title {
+  font-size: 17px;
+  letter-spacing: -0.022em;
+}
+
+/* ---------- the week: a ring with the week number, and twelve dots ---------- */
+.pr-week {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 14px 16px 16px;
+}
+.pr-week > svg {
   color: var(--ink-3);
 }
-.pt-wk-dots {
-  display: flex;
-  gap: 5px;
-  margin-top: 14px;
+.pr-week-body {
+  display: block;
+  min-width: 0;
 }
-.pt-wk-dots i {
+.pr-week-body .row-title,
+.pr-week-body .row-sub {
+  display: block;
+}
+.pr-ring {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.pr-ring svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.pr-ring b {
+  font: 650 24px/1 var(--font-ui);
+  letter-spacing: -0.04em;
+}
+.pr-ring-fill {
+  animation: pr-ring 1100ms var(--ease) 300ms both;
+}
+@keyframes pr-ring {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+.pr-dots {
+  display: flex;
+  gap: 4px;
+  margin-top: 12px;
+}
+.pr-dots i {
   flex: 1;
   height: 4px;
   border-radius: 2px;
-  background: var(--bg-3);
+  background: var(--glass-2);
 }
-.pt-wk-dots i.is-done {
-  background: var(--ink-2);
+.pr-dots i.is-done {
+  background: var(--ink);
 }
-.pt-wk-dots i.is-now {
-  background: var(--ember);
+.pr-dots i.is-now {
+  background: var(--ember-hi);
+}
+.pr-dots.is-tall {
+  gap: 5px;
+  margin-top: 20px;
+}
+.pr-dots.is-tall i {
+  height: 6px;
+  border-radius: 3px;
 }
 
-/* four pt-lessons, done ones checked, the next one ringed in ember */
-.pt-lessons {
+/* ---------- lessons of the week ---------- */
+.pr-lessons {
   display: block;
-  margin: 14px 0 -8px;
+  margin: 14px 0 0;
   padding: 0;
   list-style: none;
 }
-.pt-lesson {
+.pr-lesson {
   display: grid;
-  grid-template-columns: 22px 1fr auto;
+  grid-template-columns: 24px 1fr auto;
   align-items: center;
   gap: 12px;
-  min-height: 46px;
+  min-height: 48px;
   padding: 6px 0;
   border-top: 1px solid var(--line);
 }
-.pt-lesson-check {
+.pr-lesson-check {
   display: grid;
   place-items: center;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  border: 1.5px solid var(--line-2);
+  background: var(--glass-2);
   color: transparent;
 }
-.pt-lesson.is-done .pt-lesson-check {
-  border-color: transparent;
-  background: var(--ink-2);
-  color: var(--bg-1);
+.pr-lesson.is-done .pr-lesson-check {
+  background: var(--ink);
+  color: #17130f;
 }
-.pt-lesson.is-next .pt-lesson-check {
-  border-color: var(--ember);
+.pr-lesson.is-next .pr-lesson-check {
+  background: rgba(228, 87, 46, 0.24);
+  box-shadow: inset 0 0 0 7px rgba(228, 87, 46, 0);
 }
-.pt-lesson-title {
-  font: 500 15.5px/1.3 var(--font-ui);
+.pr-lesson.is-next .pr-lesson-check::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ember-hi);
 }
-.pt-lesson.is-done .pt-lesson-title {
+.pr-lesson-title {
+  font: 600 15.5px/1.3 var(--font-ui);
+  letter-spacing: -0.014em;
+}
+.pr-lesson.is-done .pr-lesson-title {
   color: var(--ink-2);
 }
-.pt-lesson-meta {
-  font-size: 13px;
-  line-height: 1.3;
+.pr-lesson-meta {
+  font: 500 13px/1.3 var(--font-ui);
   color: var(--ink-3);
   white-space: nowrap;
 }
 
-/* ---------- what pt-works for you ---------- */
-.pt-works-say {
-  font: 400 19px/1.42 var(--font-display);
+/* ---------- what works for you ---------- */
+.pr-say {
+  font-size: 21px;
+  line-height: 1.3;
   color: var(--ink);
-  text-wrap: pretty;
+  text-wrap: balance;
 }
-.pt-works {
-  margin-top: 16px;
+.pr-works {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
 }
-.pt-works-row {
-  padding: 11px 0;
-}
-.pt-works-top {
-  display: flex;
+.pr-works-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
+  column-gap: 12px;
+  row-gap: 8px;
 }
-.pt-works-name {
-  font: 500 15px/1.3 var(--font-ui);
+.pr-works-name {
+  font: 600 14.5px/1.2 var(--font-ui);
+  letter-spacing: -0.012em;
   color: var(--ink-2);
 }
-.pt-works-row.is-best .pt-works-name {
+.pr-works-row.is-best .pr-works-name {
   color: var(--ink);
 }
-.pt-works-count {
-  font-size: 13.5px;
-  line-height: 1.3;
+.pr-works-count {
+  grid-column: 2;
+  grid-row: 1;
+  font: 600 13px/1.2 var(--font-ui);
   color: var(--ink-3);
 }
-.pt-works-bar {
+.pr-works-row.is-best .pr-works-count {
+  color: #7fe0cf;
+}
+.pr-works-bar {
+  grid-column: 1 / -1;
   position: relative;
-  height: 6px;
-  margin-top: 8px;
-  border-radius: 3px;
-  background: var(--bg-3);
+  height: 8px;
+  border-radius: 4px;
+  background: var(--glass-2);
   overflow: hidden;
 }
-.pt-works-bar i {
+.pr-works-bar i {
   position: absolute;
   inset: 0 auto 0 0;
   width: var(--w);
-  border-radius: 3px;
-  background: var(--ink);
-  opacity: 0.34;
+  border-radius: 4px;
+  background: rgba(255, 240, 220, 0.42);
   transform-origin: left center;
-  animation: pt-works-grow 900ms var(--ease) both;
+  animation: pr-grow 900ms var(--ease) both;
   animation-delay: calc(var(--k, 0) * 70ms + 380ms);
 }
-.pt-works-row.is-best .pt-works-bar i {
-  opacity: 1;
+.pr-works-row.is-best .pr-works-bar i {
+  background: linear-gradient(90deg, #2fa596, #8ff0dc);
 }
-@keyframes pt-works-grow {
+@keyframes pr-grow {
   from {
     transform: scaleX(0);
   }
 }
-.pt-works-foot {
-  margin-top: 10px;
-  padding-top: 14px;
-  border-top: 1px solid var(--line);
+.pr-works-foot {
+  margin-top: 16px;
 }
 
-/* ---------- the programme: twelve pt-weeks down a rail ---------- */
-.pt-weeks {
-  position: relative;
+/* ---------- the programme: twelve weeks down a path ---------- */
+.pr-prog-head {
+  margin-top: 22px;
 }
-.pt-week {
+.pr-path {
+  position: relative;
   display: grid;
-  grid-template-columns: 38px 1fr;
-  gap: 14px;
-  align-items: start;
-  padding: 8px 0;
-  position: relative;
+  gap: 8px;
+  margin-top: 28px;
 }
-.pt-week::before {
+.pr-wk {
+  position: relative;
+  border-radius: var(--r);
+  background: var(--glass);
+  box-shadow: var(--edge);
+  padding: 0 16px;
+}
+/* the path: a short link from each week down to the next */
+.pr-wk + .pr-wk::before {
   content: '';
   position: absolute;
-  left: 19px;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: var(--line-2);
+  left: 37px;
+  top: -8px;
+  width: 2px;
+  height: 8px;
+  background: var(--glass-3);
 }
-.pt-week:first-child::before {
-  top: 24px;
+.pr-wk.is-done + .pr-wk::before {
+  background: var(--ink-2);
 }
-.pt-week:last-child::before {
-  bottom: calc(100% - 24px);
+.pr-wk-line {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  min-height: 62px;
 }
-.pt-week .badge {
-  position: relative;
-  box-shadow: 0 0 0 4px var(--bg);
-  font: 600 14px/1 var(--font-ui);
-}
-.pt-week.is-later .badge {
-  background: var(--bg-2);
+.pr-wk-n {
+  font: 300 30px/1 var(--font-ui);
+  letter-spacing: -0.05em;
   color: var(--ink-3);
 }
-.pt-week.is-now .badge {
-  background: var(--ember);
-  color: var(--on-ember);
-}
-.pt-week-body {
-  min-height: 38px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-width: 0;
-}
-.pt-week-line {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-}
-.pt-week-name {
-  font: 500 16px/1.3 var(--font-ui);
-}
-.pt-week.is-done .pt-week-name {
-  color: var(--ink-3);
-}
-.pt-week.is-later .pt-week-name {
+.pr-wk-name {
+  font: 600 16.5px/1.25 var(--font-ui);
+  letter-spacing: -0.018em;
   color: var(--ink-2);
 }
-.pt-week-side {
-  font-size: 13px;
-  line-height: 1.3;
-  color: var(--ink-3);
-  white-space: nowrap;
+.pr-wk.is-done .pr-wk-n,
+.pr-wk.is-done .pr-wk-name {
+  color: var(--ink);
 }
-.pt-week.is-now {
-  padding: 14px 0 16px;
+.pr-wk-ok {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(116, 185, 140, 0.2);
+  color: #9ad6ae;
 }
-.pt-week.is-now .pt-week-name {
-  font: 500 20px/1.25 var(--font-display);
-  letter-spacing: -0.01em;
+.pr-wk-next {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 12px;
+  background: var(--glass-2);
+  color: var(--ink-2);
+  font: 600 12px/1 var(--font-ui);
 }
-.pt-week-open {
-  margin-top: 12px;
+.pr-wk.is-now {
+  margin: 6px 0;
+  padding: 6px 16px 16px;
+  border-radius: 26px;
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(228, 87, 46, 0.26), rgba(228, 87, 46, 0) 62%),
+    var(--glass-2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 240, 220, 0.1),
+    0 24px 50px -26px rgba(228, 87, 46, 0.6);
 }
-.pt-week-open .pt-lessons {
-  margin-top: -8px;
+.pr-wk.is-now .pr-wk-line {
+  min-height: 78px;
 }
-.pt-week-open .pt-lesson:first-child {
-  border-top: 0;
+.pr-wk.is-now .pr-wk-n {
+  font-size: 40px;
+  font-weight: 350;
+  color: #ff9a78;
 }
-/* inside the rail the card is narrower: kind and minutes go under the title */
-.pt-week-open .pt-lesson {
-  grid-template-columns: 22px 1fr;
-  row-gap: 1px;
-  min-height: 56px;
-  padding: 9px 0;
+.pr-wk.is-now .pr-wk-name {
+  font: 680 21px/1.15 var(--font-ui);
+  letter-spacing: -0.028em;
+  color: var(--ink);
 }
-.pt-week-open .pt-lesson-check {
-  grid-row: span 2;
+.pr-wk-sub {
+  display: block;
+  margin-top: 5px;
+  font: 500 13px/1.3 var(--font-ui);
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
 }
-.pt-week-open .pt-lesson-meta {
-  grid-column: 2;
+.pr-wk.is-now .pr-ring b {
+  display: none;
+}
+.pr-wk.is-now .pr-lessons {
+  margin-top: 2px;
+}
+.pr-wk.is-now + .pr-wk::before {
+  top: -14px;
+  height: 14px;
 }

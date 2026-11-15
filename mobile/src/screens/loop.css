@@ -1,0 +1,110 @@
+/* How Vire works: the five steps round a circle, then a card a step */
+
+.lp-lede {
+  margin-top: 10px;
+}
+
+/* the wheel */
+.lp-wheel {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  margin: 14px auto -6px;
+  aspect-ratio: 1;
+}
+.lp-wheel svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.lp-orbit {
+  transform-origin: 160px 160px;
+  animation: lp-orbit 14s linear infinite;
+}
+@keyframes lp-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.lp-mid {
+  position: absolute;
+  inset: 27%;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  pointer-events: none;
+}
+.lp-mid-sub {
+  margin-top: 6px;
+  font: 500 13px/1.3 var(--font-ui);
+  color: var(--ink-2);
+}
+
+/* a card a step */
+.lp-steps {
+  display: grid;
+  gap: 12px;
+}
+.lp-steps .card + .card {
+  margin-top: 0;
+}
+.lp-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 14px;
+  padding: 18px 18px 18px 16px;
+}
+.lp-step h3 {
+  padding: 2px 34px 0 0;
+}
+.lp-step p {
+  margin-top: 5px;
+}
+.lp-step-n {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  font: 300 30px/1 var(--font-ui);
+  letter-spacing: -0.04em;
+  color: rgba(255, 240, 220, 0.26);
+}
+
+/* what runs today and what is a sample, as filled pills */
+.lp-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 13px;
+  background: var(--glass-2);
+  color: var(--ink-2);
+  font: 600 12px/1 var(--font-ui);
+  white-space: nowrap;
+}
+.lp-step .lp-tag {
+  margin-top: 12px;
+}
+.lp-tag.is-real {
+  background: rgba(116, 185, 140, 0.16);
+  color: #9ad6ae;
+}
+.lp-tag.is-sample {
+  background: rgba(228, 87, 46, 0.2);
+  color: #ff9a78;
+}
+
+.lp-not {
+  padding: 20px 18px;
+}
+.lp-not .voice {
+  font-size: 21px;
+  line-height: 1.3;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.lp-not .body-2 {
+  margin-top: 10px;
+}

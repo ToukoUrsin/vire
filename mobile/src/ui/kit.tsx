@@ -12,7 +12,7 @@ const rise = (i?: number): CSSProperties | undefined => (i == null ? undefined :
  * One screen. With `nav` it is a pushed screen: a bar with back and a title that appears once the big title has
  * scrolled away. Without it, it is a tab root. `flow` screens cover the tab bar.
  */
-export function Screen({ nav, backTo, right, flow, children, className = '' }: { nav?: string; backTo?: string; right?: ReactNode; flow?: boolean; children: ReactNode; className?: string }) {
+export function Screen({ nav, backTo, right, flow, children, className = '', glow }: { nav?: string; backTo?: string; right?: ReactNode; flow?: boolean; children: ReactNode; className?: string; glow?: Tone }) {
   const ref = useRef<HTMLDivElement>(null)
   const [solid, setSolid] = useState(false)
   useScrollMemory(ref)
@@ -37,6 +37,7 @@ export function Screen({ nav, backTo, right, flow, children, className = '' }: {
         </header>
       )}
       <div ref={ref} className={`screen ${nav != null ? 'has-nav' : ''} ${flow ? 'no-tabs' : ''} ${className}`}>
+        {glow && <div className={`glow ${glow === 'ember' ? '' : `is-${glow}`}`} aria-hidden="true" />}
         {children}
       </div>
     </>
@@ -109,7 +110,7 @@ export function Chip({ children, tone, dot, pulse }: { children: ReactNode; tone
   )
 }
 
-export function Btn({ children, kind = 'primary', wide, small, onClick, to, disabled, icon }: { children: ReactNode; kind?: 'primary' | 'quiet' | 'ghost'; wide?: boolean; small?: boolean; onClick?: () => void; to?: string; disabled?: boolean; icon?: IconName }) {
+export function Btn({ children, kind = 'primary', wide, small, onClick, to, disabled, icon }: { children: ReactNode; kind?: 'primary' | 'ember' | 'quiet' | 'ghost'; wide?: boolean; small?: boolean; onClick?: () => void; to?: string; disabled?: boolean; icon?: IconName }) {
   const C = icon ? I[icon] : null
   return (
     <button className={`btn btn-${kind} ${wide ? 'btn-wide' : ''} ${small ? 'btn-s' : ''}`} onClick={to ? () => go(to) : onClick} disabled={disabled}>
@@ -227,6 +228,178 @@ export function RunsOn({ what = 'one locked Sandbox per person', bare }: { what?
       <span>
         <b>Runs on Modal</b> · {what}
       </span>
+    </div>
+  )
+}
+
+/** one reading, said large. In a `.stat-grid` two sit side by side; `wide` takes the whole row. */
+export function Stat({ icon, tone = 'plain', label, value, unit, sub, to, onClick, wide, children }: { icon?: IconName; tone?: Tone; label: ReactNode; value: ReactNode; unit?: ReactNode; sub?: ReactNode; to?: string; onClick?: () => void; wide?: boolean; children?: ReactNode }) {
+  const act = to ? () => go(to) : onClick
+  const body = (
+    <>
+      <span className="stat-top">
+        {icon && <Badge icon={icon} tone={tone} size={26} />}
+        {label}
+      </span>
+      {children && <span className="stat-chart">{children}</span>}
+      <span className="stat-v">
+        {value}
+        {unit && <small>{unit}</small>}
+      </span>
+      {sub && <span className="stat-sub">{sub}</span>}
+    </>
+  )
+  return act ? (
+    <button className={`stat ${wide ? 'stat-wide' : ''}`} onClick={act}>
+      {body}
+    </button>
+  ) : (
+    <div className={`stat ${wide ? 'stat-wide' : ''}`}>{body}</div>
+  )
+}
+
+/** a small pill that says how a reading sits against your own usual */
+export function Delta({ children, tone }: { children: ReactNode; tone?: 'off' | 'ok' }) {
+  return <span className={`delta ${tone ? `is-${tone}` : ''}`}>{children}</span>
+}
+
+// ---------- cover art ----------
+export type ArtKind = 'breath' | 'body' | 'sit' | 'stretch' | 'walk' | 'sleep' | 'call' | 'music'
+const COVER: Record<ArtKind, { a: string; b: string }> = {
+  breath: { a: '#16524f', b: '#0c1a24' },
+  body: { a: '#353072', b: '#120f22' },
+  sit: { a: '#8a3a1a', b: '#1d110c' },
+  stretch: { a: '#6a2748', b: '#190e15' },
+  walk: { a: '#235640', b: '#0c1611' },
+  sleep: { a: '#22316a', b: '#090b17' },
+  call: { a: '#14514c', b: '#0b181a' },
+  music: { a: '#6b4512', b: '#1a120a' },
+}
+function Cover({ kind }: { kind: ArtKind }) {
+  const id = `art-${kind}`
+  const c = COVER[kind]
+  return (
+    <svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id={`${id}-bg`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor={c.a} />
+          <stop offset="1" stopColor={c.b} />
+        </linearGradient>
+        <radialGradient id={`${id}-orb`} cx="0.35" cy="0.3" r="0.8">
+          <stop offset="0" stopColor="#fff" stopOpacity="0.95" />
+          <stop offset="1" stopColor="#fff" stopOpacity="0.35" />
+        </radialGradient>
+      </defs>
+      <rect width="320" height="200" fill={`url(#${id}-bg)`} />
+      {kind === 'breath' && (
+        <g>
+          {[118, 96, 74, 52].map((r, i) => (
+            <circle key={r} cx="236" cy="78" r={r} fill="#8ff0dc" fillOpacity={0.05 + i * 0.035} />
+          ))}
+          <circle cx="236" cy="78" r="30" fill="#a8f5e4" fillOpacity="0.9" />
+          <circle cx="236" cy="78" r="30" fill={`url(#${id}-orb)`} fillOpacity="0.35" />
+        </g>
+      )}
+      {kind === 'body' && (
+        <g>
+          <path d="M0 96 C60 70 110 118 170 92 S270 70 320 98 V200 H0Z" fill="#8f88ff" fillOpacity="0.16" />
+          <path d="M0 124 C70 98 120 146 190 120 S280 100 320 126 V200 H0Z" fill="#8f88ff" fillOpacity="0.2" />
+          <path d="M0 152 C60 132 130 172 200 150 S290 136 320 156 V200 H0Z" fill="#8f88ff" fillOpacity="0.26" />
+          <circle cx="238" cy="56" r="20" fill="#cfcaff" fillOpacity="0.92" />
+          <circle cx="238" cy="56" r="38" fill="#cfcaff" fillOpacity="0.1" />
+        </g>
+      )}
+      {kind === 'sit' && (
+        <g>
+          <circle cx="232" cy="104" r="86" fill="#ffb26b" fillOpacity="0.1" />
+          <circle cx="232" cy="104" r="62" fill="#ffb26b" fillOpacity="0.14" />
+          <circle cx="232" cy="104" r="40" fill="#ffc98a" />
+          <rect y="118" width="320" height="82" fill="#1d110c" fillOpacity="0.82" />
+          <rect x="176" y="130" width="112" height="3" rx="1.5" fill="#ffc98a" fillOpacity="0.5" />
+          <rect x="196" y="144" width="72" height="3" rx="1.5" fill="#ffc98a" fillOpacity="0.32" />
+          <rect x="212" y="158" width="40" height="3" rx="1.5" fill="#ffc98a" fillOpacity="0.2" />
+        </g>
+      )}
+      {kind === 'stretch' && (
+        <g fill="none" strokeLinecap="round">
+          <path d="M150 220 A150 150 0 0 1 300 70" stroke="#ff9cc0" strokeOpacity="0.85" strokeWidth="14" />
+          <path d="M182 220 A118 118 0 0 1 300 102" stroke="#ff9cc0" strokeOpacity="0.5" strokeWidth="14" />
+          <path d="M214 220 A86 86 0 0 1 300 134" stroke="#ff9cc0" strokeOpacity="0.28" strokeWidth="14" />
+          <path d="M246 220 A54 54 0 0 1 300 166" stroke="#ff9cc0" strokeOpacity="0.14" strokeWidth="14" />
+        </g>
+      )}
+      {kind === 'walk' && (
+        <g>
+          <circle cx="250" cy="52" r="20" fill="#f3e3a8" fillOpacity="0.9" />
+          <path d="M0 130 C50 96 96 96 150 124 S250 150 320 104 V200 H0Z" fill="#5fc58f" fillOpacity="0.22" />
+          <path d="M0 158 C70 126 130 140 190 156 S280 164 320 140 V200 H0Z" fill="#5fc58f" fillOpacity="0.3" />
+          <path d="M118 200 C150 176 132 160 176 150 S232 138 252 122" fill="none" stroke="#f6efe4" strokeOpacity="0.78" strokeWidth="3" strokeLinecap="round" strokeDasharray="1 9" />
+        </g>
+      )}
+      {kind === 'sleep' && (
+        <g>
+          <circle cx="238" cy="70" r="58" fill="#b9c6ff" fillOpacity="0.08" />
+          <circle cx="238" cy="70" r="30" fill="#f1e7c8" />
+          <circle cx="252" cy="60" r="27" fill="#1c2957" />
+          {[
+            [60, 44, 1.6],
+            [112, 78, 1.1],
+            [164, 36, 1.4],
+            [92, 128, 1.2],
+            [176, 108, 1.7],
+            [286, 132, 1.2],
+            [36, 96, 1],
+          ].map(([x, y, r]) => (
+            <circle key={`${x}-${y}`} cx={x} cy={y} r={r} fill="#f1e7c8" fillOpacity="0.8" />
+          ))}
+        </g>
+      )}
+      {kind === 'call' && (
+        <g>
+          {[14, 26, 44, 30, 56, 38, 20, 48, 64, 34, 22, 40, 28, 16].map((h, i) => (
+            <rect key={i} x={126 + i * 13} y={72 - h / 2} width="6" height={h} rx="3" fill="#8ff0dc" fillOpacity={0.9 - (i % 3) * 0.14} />
+          ))}
+          {[10, 18, 12, 30, 22, 44, 26, 14, 36, 20, 12, 24, 16, 10].map((h, i) => (
+            <rect key={i} x={126 + i * 13} y={132 - h / 2} width="6" height={h} rx="3" fill="#f6efe4" fillOpacity={0.5 - (i % 3) * 0.1} />
+          ))}
+        </g>
+      )}
+      {kind === 'music' && (
+        <g>
+          <circle cx="240" cy="92" r="70" fill="#ffc46b" fillOpacity="0.1" />
+          <circle cx="240" cy="92" r="52" fill="#ffc46b" fillOpacity="0.16" />
+          <circle cx="240" cy="92" r="34" fill="#ffc46b" fillOpacity="0.9" />
+          <circle cx="240" cy="92" r="9" fill="#2a1c0b" />
+          {[34, 58, 44, 76, 52, 30].map((h, i) => (
+            <rect key={i} x={30 + i * 17} y={170 - h} width="9" height={h} rx="4.5" fill="#ffd596" fillOpacity={0.3 + (i % 2) * 0.22} />
+          ))}
+        </g>
+      )}
+    </svg>
+  )
+}
+
+/** a drawn cover with words on it: a practice, a kind of signal. Height in px; it fills its width. */
+export function Art({ kind, title, sub, tag, h = 168, to, onClick, children, className = '' }: { kind: ArtKind; title?: ReactNode; sub?: ReactNode; tag?: ReactNode; h?: number; to?: string; onClick?: () => void; children?: ReactNode; className?: string }) {
+  const act = to ? () => go(to) : onClick
+  const body = (
+    <>
+      <Cover kind={kind} />
+      {tag && <span className="art-tag">{tag}</span>}
+      <span className="art-body">
+        {children}
+        {title && <span className="art-title">{title}</span>}
+        {sub && <span className="art-sub">{sub}</span>}
+      </span>
+    </>
+  )
+  return act ? (
+    <button className={`art ${className}`} style={{ height: h }} onClick={act}>
+      {body}
+    </button>
+  ) : (
+    <div className={`art ${className}`} style={{ height: h }}>
+      {body}
     </div>
   )
 }

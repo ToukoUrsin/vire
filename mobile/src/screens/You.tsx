@@ -4,8 +4,11 @@ import type { EarEvent, EarModel2 } from '@shared/ear'
 import { ALL } from '../data/refs'
 import { inApp, useModel } from '../live/pods'
 import { I, type IconName } from '../ui/icons'
-import { Badge, Btn, Head, Row, Screen, Section, Sheet } from '../ui/kit'
+import { Badge, Btn, Chip, Row, RunsOn, Screen, Section, Sheet, Stat } from '../ui/kit'
+import { PodsChip } from './Today'
 import './you.css'
+
+const rise = (i: number) => ({ '--i': i }) as CSSProperties
 
 // ---------- the model ----------
 const SHOWN: Array<{ id: EarEvent; name: string; icon: IconName; tone: 'move' | 'face' }> = [
@@ -38,57 +41,54 @@ function ModelCard({ m }: { m: EarModel2 }) {
   const alone = rows.filter((r) => r.score.ok)
   const says = alone.length ? `Reads your ${alone.map((r) => (r.id === 'shake' ? 'head shakes' : `${r.id}s`)).join(', ').replace(/, ([^,]*)$/, ' and $1')} from the AirPods alone` : 'Taught, still learning'
   return (
-    <div className="card">
+    <div className="card yu-model">
       <div className="yu-model-head">
         <Badge icon="airpods" tone="ember" size={46} />
         <div>
-          <div className="row-title">Your own model</div>
+          <div className="title-m">Your AirPods model</div>
           <div className="row-sub">{says}</div>
         </div>
       </div>
 
       {rows.length > 0 && (
-        <div className="yu-model-scores">
-          {rows.map((r, k) => {
-            const checked = r.score.windows > 0
-            return (
-              <div key={r.id} className={`yu-score ${r.score.ok ? '' : 'is-off'}`}>
-                <Badge icon={r.icon} tone={r.score.ok ? r.tone : 'plain'} />
-                <div>
-                  <div className="yu-score-top">
-                    <span className="yu-score-name">{r.name}</span>
-                    {checked && <span className="yu-score-num num">{r.score.auc.toFixed(2)}</span>}
-                  </div>
+        <>
+          <div className="yu-scores">
+            {rows.map((r, k) => {
+              const checked = r.score.windows > 0
+              return (
+                <div key={r.id} className={`yu-score ${r.score.ok ? '' : 'is-off'}`}>
+                  <span className="yu-score-name">
+                    <Badge icon={r.icon} tone={r.score.ok ? r.tone : 'plain'} size={26} />
+                    {r.name}
+                  </span>
+                  <span className="yu-score-num num">{checked ? r.score.auc.toFixed(2) : '–'}</span>
                   {checked && (
-                    <div className="yu-score-bar" role="img" aria-label={`${r.name}: ${r.score.auc.toFixed(2)}, where 0.50 is luck and 1.00 is never wrong`}>
+                    <span className="yu-score-bar" role="img" aria-label={`${r.name}: ${r.score.auc.toFixed(2)}, where 0.50 is luck and 1.00 is never wrong`}>
                       <i style={{ '--w': along(r.score.auc), '--tone': `var(--${r.tone})`, '--k': k } as CSSProperties} />
-                    </div>
+                    </span>
                   )}
-                  <div className="yu-score-word">{!checked ? 'Not checked yet' : r.score.ok ? 'Reads it from the AirPods alone' : 'The camera keeps this one'}</div>
+                  <span className="yu-score-word">{!checked ? 'Not checked yet' : r.score.ok ? 'AirPods alone' : 'Camera keeps it'}</span>
                 </div>
-              </div>
-            )
-          })}
-          <div className="yu-score-axis num" aria-hidden="true">
-            <span>0.50 luck</span>
-            <span>1.00 never wrong</span>
+              )
+            })}
           </div>
-        </div>
+          <p className="small yu-axis">
+            1.00 is never wrong, 0.50 is luck. Checked on {m.held === 'minute' ? 'a whole minute' : m.held === 'round' ? 'a round' : 'parts'} the model never saw.
+          </p>
+        </>
       )}
 
-      <div className="yu-model-made">
-        <p className="body-2 num">{made(m)}</p>
-        <p className="small">The score: 1.00 is never wrong, 0.50 is luck. It is checked on {m.held === 'minute' ? 'a whole minute' : m.held === 'round' ? 'a round' : 'parts'} the model never saw.</p>
-        {m.shell === 'sim' && <p className="small">This one was made from scripted signals, not from a person.</p>}
+      <div className="yu-model-acts">
+        <Btn to="/live">See it live</Btn>
+        <Btn kind="quiet" to="/train">
+          Teach more
+        </Btn>
       </div>
 
-      <div className="yu-model-acts">
-        <Btn wide to="/live">
-          See it live
-        </Btn>
-        <Btn kind="quiet" wide to="/train">
-          Teach another minute
-        </Btn>
+      <div className="yu-model-made">
+        <p className="small num">{made(m)}</p>
+        {m.shell === 'sim' && <p className="small">This one was made from scripted signals, not from a person.</p>}
+        <RunsOn />
       </div>
     </div>
   )
@@ -96,20 +96,26 @@ function ModelCard({ m }: { m: EarModel2 }) {
 
 function Teach() {
   return (
-    <div className="card">
-      <div className="yu-teach">
-        <Badge icon="airpods" tone="ember" size={46} />
-        <div>
-          <div className="row-title">Teach your AirPods</div>
-          <div className="row-sub">65 seconds. The camera shows them your nod, your head shake and your smile.</div>
-        </div>
+    <div className="card yu-model yu-teach">
+      <Badge icon="airpods" tone="ember" size={52} />
+      <h2 className="title-l yu-teach-title">Teach your AirPods</h2>
+      <p className="body-2 yu-teach-say">One minute with the camera. Then Vire says what it can read from the AirPods alone.</p>
+      <div className="pills yu-teach-pills">
+        {SHOWN.map((e) => {
+          const C = I[e.icon]
+          return (
+            <span key={e.id} className="pill">
+              <C size={15} /> {e.name}
+            </span>
+          )
+        })}
       </div>
-      <Btn wide to="/train">
+      <Btn kind="ember" wide to="/train">
         Teach them, 65 seconds
       </Btn>
-      <p className="small" style={{ marginTop: 12 }}>
-        Then Vire tells you which ones it can read from the AirPods alone.
-      </p>
+      <div className="yu-model-made">
+        <RunsOn />
+      </div>
     </div>
   )
 }
@@ -124,30 +130,46 @@ export function You(_: { id?: string; topic?: string }) {
   const model = useModel()
   const [sheet, setSheet] = useState(false)
   const app = inApp()
+  const addHome = !app && !standalone()
   return (
-    <Screen>
-      <Head title="You" sub="Your model, your data, and how Vire works." />
+    <Screen glow="ember">
+      <div className="pad rise yu-top" style={rise(0)}>
+        <h1 className="title-xl">You</h1>
+        <PodsChip />
+      </div>
 
-      <Section title="Your AirPods model" i={1}>
+      <div className="pad rise yu-hero" style={rise(1)}>
+        <div className="yu-real">
+          <Chip tone="live" dot>
+            Real, on this phone
+          </Chip>
+        </div>
         {model ? <ModelCard m={model} /> : <Teach />}
-      </Section>
+      </div>
 
-      <Section title="Privacy" i={2}>
+      <Section title="About Vire" i={2}>
         <div className="group">
-          <Row icon="lock" title="Only numbers leave the phone" sub="No video, no sound" />
-          <Row icon="box" title="A sandbox of its own, on Modal" sub="Your model is made there, with the network blocked" />
-          <Row icon="shield" title="A signal for the clinic, not a diagnosis" sub="No patient or clinic has used it yet" />
+          <Row icon="spark" tone="face" title="The evidence" sub={`${ALL.length} studies, each one checked`} to="/research" />
+          <Row icon="paper" tone="move" title="The paper" sub="What we built and measured" to="/paper" />
+          <Row icon="loop" tone="ember" title="How Vire works" sub="The loop, step by step" to="/loop" />
         </div>
       </Section>
 
-      <Section title="More" i={3}>
+      <Section title="Privacy" i={3}>
         <div className="group">
-          <Row icon="spark" title="The evidence" sub={`${ALL.length} studies, each one checked`} to="/research" />
-          <Row icon="paper" title="The paper" sub="What we built and measured" to="/paper" />
-          <Row icon="loop" title="How Vire works" sub="The loop, step by step" to="/loop" />
-          {!app && !standalone() && <Row icon="share" title="Add Vire to your Home Screen" sub="It opens like an app" onClick={() => setSheet(true)} />}
+          <Row icon="lock" tone="voice" title="Only numbers leave the phone" sub="No video, no sound" />
+          <Row icon="box" tone="voice" title="A sandbox of its own, on Modal" sub="Your model is made there, with the network blocked" />
+          <Row icon="shield" tone="voice" title="A signal for the clinic, not a diagnosis" sub="No patient or clinic has used it yet" />
         </div>
       </Section>
+
+      {addHome && (
+        <Section title="This app" i={4}>
+          <div className="group">
+            <Row icon="share" title="Add Vire to your Home Screen" sub="It opens like an app" onClick={() => setSheet(true)} />
+          </div>
+        </Section>
+      )}
 
       {app && (
         <Section title="This iPhone app" i={4}>
@@ -158,7 +180,7 @@ export function You(_: { id?: string; topic?: string }) {
         </Section>
       )}
 
-      <p className="yu-foot rise" style={{ '--i': 5 } as CSSProperties}>
+      <p className="yu-foot rise" style={rise(5)}>
         <b>Vire</b>
         Built at Junction 2026 in Espoo.
       </p>
@@ -190,42 +212,74 @@ export function You(_: { id?: string; topic?: string }) {
 
 // ---------- the paper ----------
 // Title, authors and abstract copied from paper/vire.tex as it stood on 14.11.2026 at 23:00.
+const PAGES = [1, 2, 3, 4, 5, 6]
+
 export function Paper(_: { id?: string; topic?: string }) {
   const [page, setPage] = useState(true)
   return (
-    <Screen nav="The paper" backTo="/you">
-      <div className="pad rise" style={{ '--i': 0 } as CSSProperties}>
+    <Screen nav="The paper" backTo="/you" glow="move">
+      <div className="pad rise" style={rise(0)}>
+        <div className="pills yu-paper-tags">
+          <span className="pill">Hackathon preprint</span>
+          <span className="pill">Not peer reviewed</span>
+        </div>
         <h1 className="title-l">Vire: Per-Person Head-Gesture Models from Consumer Earbuds and a Closed Loop for Staying Well After TMS</h1>
         <p className="yu-paper-by">
           Touko Ursin and the Vire team
-          <span>Junction 2026, Espoo, Finland. Hackathon preprint, not peer reviewed.</span>
+          <span>Junction 2026, Espoo, Finland</span>
         </p>
+        {/* the iPhone app has no way back from a PDF, so there the pages below are the paper */}
+        {!inApp() && (
+          <div className="yu-paper-acts">
+            <a className="btn btn-primary yu-open" href="/app/vire-paper.pdf" target="_blank" rel="noreferrer">
+              <I.paper size={19} />
+              Open the PDF
+            </a>
+            <a className="btn btn-quiet yu-open" href="/app/vire-paper.pdf" download="vire-paper.pdf">
+              <I.down size={19} />
+              Download
+            </a>
+          </div>
+        )}
       </div>
 
-      <Section title="Abstract" i={1}>
+      <Section title="What we measured" i={1}>
+        <div className="stat-grid">
+          <Stat icon="nod" tone="move" label="Nods" value="0.97" sub="AUC on a minute it never saw" />
+          <Stat icon="shake" tone="move" label="Head shakes" value="0.97" sub="shuffled labels: 0.56 to 0.59" />
+          <Stat icon="smile" label="Smile" value="0.64" sub={<b>Failed its check</b>} />
+          <Stat icon="box" tone="ember" label="The search" value="46" unit="s" sub="366 models, one person" />
+        </div>
+        <p className="yu-paper-limit">Limits: one person, simulated patients, no clinical validation.</p>
+      </Section>
+
+      <Section title="Abstract" i={2}>
         <div className="card yu-paper-abs">
           <p>Transcranial magnetic stimulation (TMS) for depression is given at the clinic, but its benefit often fades at home: in a meta-analysis of 19 studies, 46.3% of initial responders still responded at twelve months.</p>
           <p>We built Vire, an iPhone app that uses AirPods as sensor and speaker. In a 65-second teaching minute the camera labels smiles, nods and head shakes while the AirPods’ motion is recorded; a sandbox without network then searches 366 candidate models for that person.</p>
           <p>With three teaching minutes from one person, the search took 46.06 s and reached an AUC of 0.972 for nods and 0.971 for head shakes on a minute it never saw (shuffled labels: 0.56 to 0.59). Smile reached 0.644 and failed its check. A shared model pretrained on 30 other people did not clearly win.</p>
           <p>The loop around the model (practice, re-check, per-person learner, clinic list) has run only with stand-in AirPods and simulated patients.</p>
-          <p className="yu-paper-limit">Limits: one person, simulated patients, no clinical validation.</p>
         </div>
       </Section>
 
-      <Section i={2}>
-        {/* the iPhone app has no way back from a PDF, so there the pages below are the paper */}
-        {!inApp() && (
-          <a className="btn btn-primary btn-wide yu-open" href="/app/vire-paper.pdf" target="_blank" rel="noreferrer">
-            <I.paper size={19} />
-            Open the PDF
-          </a>
-        )}
-        {page && [1, 2, 3, 4, 5, 6].map((n) => <img key={n} className="yu-paper-page" src={`/app/paper-${n}.png`} alt={`Page ${n} of the paper`} loading={n > 1 ? 'lazy' : undefined} onError={() => setPage(false)} />)}
-      </Section>
+      {page && (
+        <Section title="The pages" i={3}>
+          <div className="yu-pages">
+            {PAGES.map((n) => (
+              <figure key={n} className="yu-page">
+                <img src={`/app/paper-${n}.png`} alt={`Page ${n} of the paper`} loading={n > 1 ? 'lazy' : undefined} onError={() => setPage(false)} />
+                <figcaption className="num">
+                  {n} of {PAGES.length}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </Section>
+      )}
 
-      <Section i={3}>
+      <Section i={4}>
         <div className="group">
-          <Row icon="spark" title="The evidence" sub={`${ALL.length} studies, each one checked`} to="/research" />
+          <Row icon="spark" tone="face" title="The evidence" sub={`${ALL.length} studies, each one checked`} to="/research" />
         </div>
       </Section>
     </Screen>

@@ -15,7 +15,7 @@ export interface Ref {
   limit: string
   strength: string
 }
-export type Topic = 'calls' | 'face' | 'music' | 'sleep' | 'heart' | 'movement' | 'earables' | 'practices' | 'meru' | 'loop' | 'tms'
+export type Topic = 'calls' | 'face' | 'music' | 'sleep' | 'heart' | 'movement' | 'earables' | 'practices' | 'programme' | 'loop' | 'tms'
 
 export const ALL = raw as Ref[]
 export const REFS: Record<string, Ref> = Object.fromEntries(ALL.map((r) => [r.id, r]))
@@ -41,8 +41,8 @@ export const TOPICS: Record<Topic, TopicInfo> = {
   heart: topic('heart', 'Heart', ['koch-2019', 'doherty-2026'], 'Lower heart rate variability in depression is a solid group difference. AirPods Pro 3 heart rate has one outside check: 40 healthy adults, workouts, beats a minute only.'),
   movement: topic('movement', 'Movement', ['burton-2013', 'bizzozero-peroni-2024'], 'Less activity and fewer steps go with depression across many studies, but those only watched people. Posture and head-down rest on small lab studies.'),
   practices: topic('practices', 'Practices', ['kuyken-2016', 'fincham-2023'], 'Strong for full programmes over weeks. Small to medium for breathing on its own. Nothing shows one short session lowers depression.'),
-  meru: topic('meru', 'Meru Health, the model for the programme', ['forman-hoffman-2024', 'raevuori-2021'], 'Two trials of the whole programme: one beat a waitlist, one found no difference from usual care on depression. Both are shown.'),
+  programme: topic('programme', 'A 12-week programme with a therapist', ['forman-hoffman-2024', 'raevuori-2021'], 'Two trials of an app programme with a therapist and paced breathing: one beat a waitlist, one found no difference from usual care on depression. Both are shown.'),
 }
 
-export const TOPIC_ORDER: Topic[] = ['tms', 'earables', 'loop', 'calls', 'face', 'music', 'sleep', 'heart', 'movement', 'practices', 'meru']
+export const TOPIC_ORDER: Topic[] = ['tms', 'earables', 'loop', 'calls', 'face', 'music', 'sleep', 'heart', 'movement', 'practices', 'programme']
 export const refsOf = (t: Topic): Ref[] => ALL.filter((r) => r.topic === t)

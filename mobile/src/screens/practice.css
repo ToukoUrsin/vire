@@ -1,262 +1,390 @@
-/* One practice: the card before, the circle during, the reading after */
+/* One practice: the cover before, the light during, the reading after.
+   --hue and --hi come from the practice: the colour of its cover. */
 
-.prac-intro {
-  padding-top: 6px;
-  padding-bottom: 40px;
+.screen.no-tabs.pr-flow {
+  padding-top: 0;
+  padding-bottom: 0;
 }
-.prac-art {
+
+/* ---------- before ---------- */
+.pr-intro {
   position: relative;
-  width: 148px;
-  height: 148px;
-  margin: 6px 0 30px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
-.prac-art i {
+.pr-close {
   position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: color-mix(in oklab, var(--ember) 9%, transparent);
-}
-.prac-art i:nth-child(2) {
-  inset: 22px;
-  background: color-mix(in oklab, var(--ember) 20%, transparent);
-}
-.prac-art i:nth-child(3) {
-  inset: 44px;
+  z-index: 3;
+  top: calc(var(--safe-t) + 12px);
+  left: 14px;
   display: grid;
   place-items: center;
-  background: var(--ember);
-  color: var(--on-ember);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(10, 8, 6, 0.42);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  color: #fff8ee;
+  transition: transform 160ms var(--ease);
 }
-.prac-steps {
-  margin: 28px 0 0;
-  padding: 0;
+.pr-close:active {
+  transform: scale(0.92);
+}
+.art.pr-hero {
+  flex: none;
+  border-radius: 0;
+  animation: pr-in 700ms var(--ease) both;
+}
+/* the cover melts into the page */
+.art.pr-hero::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 62%;
+  background: linear-gradient(to top, var(--bg) 26%, rgba(14, 12, 10, 0.72) 52%, rgba(14, 12, 10, 0));
+  pointer-events: none;
+}
+.pr-intro-body {
+  position: relative;
+  z-index: 1;
+  margin-top: -58px;
+  padding-bottom: 18px;
+}
+.pr-pill-live {
+  background: rgba(116, 185, 140, 0.2);
+  color: #a9e2bd;
+}
+.pr-pill-heart svg {
+  color: var(--heart);
+}
+.pr-steps {
+  margin: 22px 0 0;
+  padding: 4px 16px;
   list-style: none;
   counter-reset: s;
-  display: grid;
-  gap: 14px;
+  border-radius: var(--r);
+  background: var(--glass);
+  box-shadow: var(--edge);
 }
-.prac-steps li {
+.pr-steps li {
   counter-increment: s;
   display: grid;
   grid-template-columns: 26px 1fr;
+  align-items: center;
   gap: 12px;
-  font-size: 15.5px;
-  line-height: 1.45;
-  color: var(--ink-2);
+  min-height: 50px;
+  padding: 9px 0;
+  font-size: 15px;
+  line-height: 1.35;
+  color: var(--ink);
 }
-.prac-steps li::before {
+.pr-steps li + li {
+  border-top: 1px solid var(--line);
+}
+.pr-steps li::before {
   content: counter(s);
   display: grid;
   place-items: center;
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  border: 1px solid var(--line-2);
-  font: 500 12.5px/1 var(--font-ui);
-  color: var(--ink-2);
+  background: color-mix(in oklab, var(--hue) 34%, transparent);
+  font: 650 12.5px/1 var(--font-ui);
+  color: var(--hi);
 }
-.prac-reads {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-top: 26px;
-}
-.prac-go {
+.pr-cta {
+  position: sticky;
+  z-index: 4;
+  bottom: 0;
   display: grid;
-  gap: 12px;
-  margin-top: 26px;
+  gap: 10px;
+  margin-top: auto;
+  padding: 26px var(--gutter) calc(var(--safe-b) + 20px);
+  background: linear-gradient(to bottom, rgba(14, 12, 10, 0), var(--bg) 30%);
+}
+.pr-cta .btn {
+  height: 58px;
+  border-radius: 29px;
+  font-size: 17.5px;
 }
 
 /* ---------- during ---------- */
-.prac-run {
+.pr-run {
   position: absolute;
   inset: 0;
   display: flex;
   flex-direction: column;
-  padding-bottom: calc(var(--safe-b) + 18px);
-  animation: prac-in 700ms var(--ease) both;
+  align-items: center;
+  padding: calc(var(--safe-t) + 20px) 0 calc(var(--safe-b) + 14px);
+  background:
+    radial-gradient(86% 46% at 50% 41%, color-mix(in oklab, var(--hue) 30%, transparent), transparent 100%),
+    radial-gradient(140% 60% at 50% 108%, color-mix(in oklab, var(--hue) 13%, transparent), transparent 70%),
+    #0b0a09;
+  animation: pr-in 1200ms var(--ease) both;
 }
-@keyframes prac-in {
+@keyframes pr-in {
   from {
     opacity: 0;
   }
 }
-.prac-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 28px;
-  padding: 0 var(--gutter);
+.pr-run-top {
+  display: grid;
+  justify-items: center;
+  gap: 7px;
 }
-.prac-beat {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font: 500 15px/1 var(--font-ui);
+.pr-run-name {
+  font: 600 13.5px/1 var(--font-ui);
+  letter-spacing: -0.005em;
   color: var(--ink-2);
 }
-.prac-beat svg {
-  color: var(--heart);
+.pr-run-left {
+  font: 600 22px/1 var(--font-ui);
+  letter-spacing: -0.03em;
+  color: var(--ink);
 }
-.pacer {
+
+/* the light: a thin ring of time round three rings that swell and fall with the pace */
+.pr-stage {
   position: relative;
   flex: none;
-  width: min(76%, 304px);
+  width: min(82%, 330px);
   aspect-ratio: 1;
-  margin: auto auto 0;
+  margin: auto 0 0;
 }
-.pacer-rim,
-.pacer-c {
+.pr-prog {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.pr-prog-fill {
+  stroke: var(--hi);
+  transition: stroke-dashoffset 1000ms linear;
+  filter: drop-shadow(0 0 5px color-mix(in oklab, var(--hue) 80%, transparent));
+}
+.pr-c {
+  position: absolute;
+  inset: 18px;
   border-radius: 50%;
-}
-.pacer-rim {
-  border: 1px solid var(--line);
-}
-.pacer-c {
   will-change: transform;
-  background: color-mix(in oklab, var(--ember) 10%, transparent);
+}
+.pr-c.is-3 {
   transform: scale(0.78);
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--hue) 4%, transparent) 55%, color-mix(in oklab, var(--hue) 20%, transparent) 100%);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklab, var(--hi) 12%, transparent),
+    0 0 80px color-mix(in oklab, var(--hue) 22%, transparent);
 }
-.pacer-c:nth-child(3) {
-  background: color-mix(in oklab, var(--ember) 22%, transparent);
+.pr-c.is-2 {
   transform: scale(0.56);
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--hue) 14%, transparent) 45%, color-mix(in oklab, var(--hue) 40%, transparent) 100%);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklab, var(--hi) 20%, transparent),
+    0 0 70px color-mix(in oklab, var(--hue) 34%, transparent);
 }
-.pacer-c:nth-child(4) {
-  background: var(--ember);
+.pr-c.is-1 {
   transform: scale(0.34);
+  background: radial-gradient(circle at 36% 30%, #fff 0%, var(--hi) 24%, var(--hue) 92%);
+  box-shadow:
+    0 0 90px color-mix(in oklab, var(--hue) 80%, transparent),
+    0 0 220px color-mix(in oklab, var(--hue) 55%, transparent),
+    inset 0 -18px 40px rgba(0, 0, 0, 0.16);
 }
-.pacer-word {
+.pr-count {
   position: absolute;
   inset: 0;
   display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 4px;
+  font: 650 40px/1 var(--font-ui);
+  letter-spacing: -0.045em;
+  color: #0c1512;
+}
+.pr-count small {
+  font: 600 12.5px/1 var(--font-ui);
+  letter-spacing: 0;
+  color: rgba(12, 21, 18, 0.74);
+}
+.pr-headview {
+  position: absolute;
+  inset: 18px;
+  display: grid;
   place-items: center;
-  font: 500 27px/1 var(--font-display);
-  letter-spacing: -0.01em;
-  color: var(--on-ember);
-  animation: prac-word 600ms var(--ease) both;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--hue) 26%, transparent), color-mix(in oklab, var(--hue) 6%, transparent));
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--hi) 12%, transparent);
 }
-.pacer.is-count .pacer-word {
-  font-size: 34px;
-  animation: none;
-}
-@keyframes prac-word {
-  from {
-    opacity: 0;
-    transform: scale(0.92);
-  }
-}
-.prac-head {
-  margin: auto 0 0;
-}
-.prac-ticks {
+.pr-ticks {
   display: flex;
   justify-content: center;
-  gap: 8px;
-  margin-top: 4px;
+  gap: 7px;
+  margin-top: 18px;
 }
-.prac-ticks i {
-  width: 22px;
-  height: 4px;
-  border-radius: 2px;
-  background: var(--bg-3);
-  transition: background 300ms var(--ease);
+.pr-ticks i {
+  width: 24px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--glass-2);
+  transition: background 400ms var(--ease);
 }
-.prac-ticks i.is-now {
-  background: var(--ink-3);
+.pr-ticks i.is-now {
+  background: var(--ink-2);
 }
-.prac-ticks i.is-done {
-  background: var(--ok);
+.pr-ticks i.is-done {
+  background: var(--hi);
 }
-.prac-say {
-  margin: 30px 0 auto;
+.pr-say {
+  margin-top: 26px;
   padding: 0 var(--gutter);
   text-align: center;
 }
-.prac-word {
-  font: 500 40px/1.1 var(--font-display);
-  letter-spacing: -0.02em;
-  margin-bottom: 14px;
-  animation: prac-word 600ms var(--ease) both;
+.pr-word {
+  font-size: 42px;
+  line-height: 1.08;
+  letter-spacing: -0.022em;
+  color: var(--ink);
+  animation: pr-word 1100ms var(--ease) both;
 }
-.prac-word.is-rest {
-  color: var(--ink-2);
-  font-size: 30px;
-}
-.prac-unit {
-  margin: -14px 0 14px;
-  font-size: 15px;
+.pr-word.is-rest {
   color: var(--ink-2);
 }
-.prac-left {
-  font: 400 19px/1 var(--font-ui);
-  color: var(--ink-2);
+@keyframes pr-word {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
 }
-.prac-line {
+.pr-line {
   min-height: 22px;
-  margin-top: 16px;
+  margin-top: 12px;
   font-size: 15.5px;
   line-height: 1.4;
   color: var(--ink-2);
-  animation: prac-word 600ms var(--ease) both;
+  text-wrap: balance;
+  animation: pr-in 900ms var(--ease) both;
 }
-.prac-end {
+.pr-live {
+  justify-content: center;
+  margin: 18px 0 auto;
+  padding: 0 var(--gutter);
+}
+.pr-live .pill {
+  background: rgba(255, 240, 220, 0.09);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+.pr-live .pill.pr-pill-live {
+  background: rgba(116, 185, 140, 0.2);
+}
+.pr-end {
   display: grid;
   justify-items: center;
-  gap: 6px;
+  gap: 8px;
+  margin-top: 18px;
+}
+.pr-finish {
+  height: 48px;
+  padding: 0 30px;
+  border-radius: 24px;
+  background: rgba(255, 240, 220, 0.1);
+  box-shadow: var(--edge);
+  font: 600 16px/1 var(--font-ui);
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  transition:
+    transform 160ms var(--ease),
+    background 160ms var(--ease);
+}
+.pr-finish:active {
+  transform: scale(0.96);
+  background: rgba(255, 240, 220, 0.16);
+}
+.pr-sound {
+  font-size: 12px;
 }
 
 /* ---------- after ---------- */
-.prac-done {
-  padding-top: calc(var(--safe-t) + 44px);
-  padding-bottom: 44px;
+.pr-done {
+  padding-top: 6px;
+  padding-bottom: 20px;
 }
-.prac-check {
-  display: grid;
-  place-items: center;
-  width: 54px;
-  height: 54px;
-  margin-bottom: 22px;
-  border-radius: 50%;
-  background: var(--ember);
-  color: var(--on-ember);
-}
-.prac-sentence {
-  margin-top: 12px;
-  font: 500 23px/1.25 var(--font-display);
-  letter-spacing: -0.015em;
-}
-.prac-hr {
+.pr-done-top {
   display: flex;
   align-items: center;
-  gap: 14px;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 26px;
+}
+.pr-done-what {
+  font: 600 13px/1 var(--font-ui);
+  color: var(--ink-2);
+}
+.pr-big {
+  margin-top: 16px;
+  font-size: 84px;
+  font-weight: 250;
+}
+.pr-big small {
+  font-size: 19px;
+  color: var(--ink-2);
+}
+.pr-result {
+  margin-top: 14px;
+  font-size: 21px;
+  line-height: 1.32;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.pr-chart {
+  margin-top: 24px;
+}
+.pr-stats {
   margin-top: 12px;
 }
-.prac-felt {
-  margin-top: 34px;
+.pr-stats .stat {
+  min-height: 118px;
 }
-.prac-felt-row {
+.pr-done .sample-note {
+  margin: 14px 0 0;
+}
+.pr-felt {
+  margin-top: 32px;
+}
+.pr-felt-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
   margin-top: 14px;
 }
-.prac-pick {
-  height: 48px;
-  border-radius: var(--r);
-  border: 1px solid var(--line-2);
-  background: var(--bg-1);
-  font: 500 15px/1 var(--font-ui);
+.pr-pick {
+  height: 52px;
+  border-radius: 26px;
+  background: var(--glass-2);
+  box-shadow: var(--edge);
+  font: 600 15.5px/1 var(--font-ui);
+  letter-spacing: -0.014em;
   color: var(--ink);
   transition:
-    background 160ms var(--ease),
-    border-color 160ms var(--ease);
+    background 200ms var(--ease),
+    color 200ms var(--ease),
+    transform 160ms var(--ease);
 }
-.prac-pick.is-on {
-  background: var(--ember-wash);
-  border-color: var(--ember);
+.pr-pick:active {
+  transform: scale(0.96);
 }
-.prac-done .sample-note {
-  margin: 12px 0 0;
+.pr-pick.is-on {
+  background: var(--ink);
+  color: #17130f;
+}
+.pr-go {
+  display: grid;
+  gap: 8px;
+  margin-top: 28px;
 }
