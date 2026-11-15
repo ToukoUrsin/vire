@@ -747,7 +747,7 @@ export default function EarsLab() {
   }, [use])
 
   const s = step >= 0 ? TEACH_STEPS[step] : null
-  const here = inApp() ? 'phone' : 'Mac'
+  const here = inApp() || /iPhone|iPad|Android|Mobile/i.test(navigator.userAgent) ? 'phone' : 'Mac'
   const streaming = hz >= 10
   const linked = info.state === 'on' || inApp()
   const onPhone = !!phone?.route && /bluetooth/i.test(phone.route)
@@ -797,7 +797,7 @@ export default function EarsLab() {
           {state === 'idle' && (
             <>
               <h1>Teach your AirPods.</h1>
-              <p className="el-lede">One minute of smiles, nods and head shakes in front of the camera, in three short rounds. The camera is the teacher. After that the AirPods follow you on their own.</p>
+              <p className="el-lede">65 seconds of smiles, nods and head shakes in front of the camera, in three short rounds. The camera is the teacher. After that the AirPods follow you on their own.</p>
               <div className="el-btns">
                 {!linked && !streaming ? (
                   <button type="button" className="lab-btn primary" onClick={connect} disabled={info.state === 'connecting'}>

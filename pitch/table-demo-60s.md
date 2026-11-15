@@ -54,7 +54,7 @@ The names in brackets are for you, not to say. Sources are in `claims.md`.
 - **"Can AirPods read a smile?"** Not well enough yet. On my minutes, nods and head shakes 0.97, smiles 0.64, so the camera keeps smiles. *(row 119)*
 - **"Is the booster earlier better?"** Nobody knows. Bringing TMS back when people got worse worked for 32 of 38 in an open study without a control group, and the evidence is rated low. That's what a pilot would test. *(rows 3, 130)*
 - **"Is it tested on patients?"** No. No patient or clinic has used it. The clinic's patients are simulated.
-- **"Does it run all day?"** It senses all the time your AirPods are in. On today's iPhone build that is with Vire on screen; with the phone locked is next.
+- **"Does it run all day?"** It senses all the time your AirPods are in. Sensing with the iPhone locked is next.
 - **"What leaves the phone?"** Numbers: AirPods angles, heart-rate samples, what was asked when. No video, no sound. *(row 118)*
 
 ## Slots to fill

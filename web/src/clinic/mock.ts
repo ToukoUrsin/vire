@@ -287,7 +287,7 @@ function build(seed: Seed, idx: number, now: number): PatientDetailX {
   } else if (silentDays >= 3) {
     priority = clamp(0.3 + 0.04 * silentDays + Math.max(0, -drift) * 0.3, 0, 0.9)
     reason = drift < -0.5 ? `AirPods not in for ${silentDays} days, after a week of drifting down.` : `AirPods not in for ${silentDays} days, after ${home.length} steady days.`
-    summary = `${first} had AirPods in on ${home.length} days after the course and then stopped ${silentDays} days ago. ${drift < -0.5 ? `The last days were already ${(-drift).toFixed(1)} SD under their usual${leadText ? `, mostly ${leadText}` : ''}. ` : 'Their days were inside their usual when they stopped. '}Not opening Vire is a signal too, not a measurement.`
+    summary = `${first} had AirPods in on ${home.length} days after the course and then stopped ${silentDays} days ago. ${drift < -0.5 ? `The last days were already ${(-drift).toFixed(1)} SD under their usual${leadText ? `, mostly ${leadText}` : ''}. ` : 'Their days were inside their usual when they stopped. '}AirPods left out is a signal too, not a measurement.`
   } else if (status === 'dipping') {
     priority = clamp(0.36 + (-drift - 0.75) * 0.3, 0, 0.6)
     reason = `Drifting down for ${Math.max(below, 2)} days${leadText ? `; ${leadText} first` : ''}.`

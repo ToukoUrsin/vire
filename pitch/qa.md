@@ -75,7 +75,7 @@ It would be if we scored on the data we picked with. Each model is chosen withou
 Once so far. Four hours after I taught it, I did a check-in with the camera off, through the Mac instead of the phone. Replayed over that minute, my model heard 3 of 3 asked nods and 3 of 3 asked head shakes, and nothing when it wasn't asked. One minute, one person: a start, not a study. You can watch that minute at vire.fly.dev/#/heard. (row 134)
 
 **19. Why not one shared model?**
-In one earbud study, a model trained on the person read face movements 89.9% right, one model for everyone 42.1%. We tried it: a shared model pretrained on a public earbud dataset (EarSet, 30 people) on a Modal GPU, fine-tuned per person. It didn't clearly beat the per-person search: better at smiles (0.78 against 0.66), even at nods, a little worse at head shakes. Without the teaching minute head shakes fell to 0.81. So we kept the search and the teaching minute. One person, four minutes. (rows 69, 131)
+In one earbud study, a model trained on the person read face movements 89.9% right, one model for everyone 42.1%. We tried it: a shared model pretrained on a public earbud dataset (EarSet, 30 people) on a Modal GPU, fine-tuned per person. It didn't clearly beat the per-person search: better at smiles on four minutes (0.78 against our search's 0.66 on the same windows), even at nods, a little worse at head shakes. Without the teaching minute head shakes fell to 0.81. So we kept the search and the teaching minute. One person, four minutes. (rows 69, 131)
 
 **20. Do AirPods read smiles?**
 Not well enough yet. My smile scored 0.64, where 0.50 is luck, so the camera keeps smiles. Nods and head shakes are read from the AirPods alone. (row 119)

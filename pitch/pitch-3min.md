@@ -31,7 +31,7 @@ Mics are cut at 3:00 sharp, then 3 minutes of questions. About 382 spoken words 
 **Screen:** the day card, then this morning's run on the big screen (`?practice=1`).
 
 > This is my day while the AirPods were in: how long my head was down, how much it moved, my walks, compared with my usual. When that drifts, Vire offers a practice.
-> This morning I did mine. First a minute of smiles, nods and head shakes, then twenty seconds still while the AirPods read my head movement and heart rate.
+> This morning I did mine. First a minute of smiles, nods and head shakes, then twenty-two seconds still while the AirPods read my head movement and heart rate.
 > Then breathing. A sea in my ears rises as I breathe in and falls as I breathe out. It slows toward six breaths a minute, but only when I keep up. The AirPods feel my head move with each breath, and when they can't, it says so.
 > Then the same check again. Heart rate **[REAL: heart]**. Head movement **[REAL: still]**.
 

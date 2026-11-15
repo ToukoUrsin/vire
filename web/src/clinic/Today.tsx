@@ -41,7 +41,7 @@ const GROUPS: { key: Group; title: string; empty?: string; note?: string }[] = [
     note: 'Five days or more below their own usual, with three or more practices done. A booster is your decision; open the person to book one.',
   },
   { key: 'call', title: 'Worth a call today', empty: 'Nobody needs a call today. Everyone is inside their usual or still being watched below.' },
-  { key: 'watch', title: 'Keep an eye on', note: 'Not opening Vire is a signal too. Quiet people are listed here.' },
+  { key: 'watch', title: 'Keep an eye on', note: 'AirPods left out is a signal too. Quiet people are listed here.' },
   { key: 'after', title: 'After a booster', note: 'The line after the booster, against their usual.' },
   { key: 'new', title: 'Still calibrating, no usual to compare against yet' },
   { key: 'calm', title: 'Inside their usual' },

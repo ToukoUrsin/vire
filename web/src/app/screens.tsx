@@ -620,7 +620,7 @@ function ReminderCard({ hour, onChange }: { hour: number | null; onChange(hour: 
   const notify = async () => {
     if (typeof Notification === 'undefined') return
     const p = await Notification.requestPermission()
-    if (p === 'granted') new Notification('Vire reminders are on', { body: `We’ll remind you at ${String(h).padStart(2, '0')}:00 while this app is open.` })
+    if (p === 'granted') new Notification('Vire reminders are on', { body: `We’ll remind you at ${String(h).padStart(2, '0')}:00.` })
   }
   return (
     <section className="va-reminder">

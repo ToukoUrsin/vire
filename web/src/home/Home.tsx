@@ -102,7 +102,7 @@ export default function Home() {
         {/* same tab: the iPhone app has no address bar and drops links that open a new window */}
         <a href="app/" className="hm-way" data-app-link>
           <b>Open the phone app</b>
-          <span>Teach your AirPods. The rest of it is sample data</span>
+          <span>The app’s screens on a sample day. Teaching AirPods needs our iPhone app</span>
           <Arrow />
         </a>
         <a href="#/today" className="hm-way">

@@ -8,6 +8,10 @@ primary_region = "arn"
   source = "vire_data"
   destination = "/data"
 
+# the whole-clinic re-train: each run is about $0.20 of Modal sandbox time; room for the judging and the peer review
+[env]
+  VIRE_COHORT_MAX_RUNS = "80"
+
 [http_service]
   internal_port = 8080
   force_https = true
