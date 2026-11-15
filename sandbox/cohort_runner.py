@@ -37,6 +37,13 @@ try:
     DEADLINE = max(1.0, float(os.environ.get("VIRE_COHORT_DEADLINE", "60")))
 except ValueError:
     DEADLINE = 60.0
+# A sandbox that has not tried one model this long after it was asked for landed on a slow machine (most patients are
+# finished by then): it is dropped and the patient gets one fresh sandbox. So does a patient whose first sandbox ended
+# without a model. One second try only; the worker logs it.
+try:
+    SLOW = max(1.0, float(os.environ.get("VIRE_COHORT_SLOW", "24")))
+except ValueError:
+    SLOW = 24.0
 TAUGHT = ("smile", "nod", "shake")
 OUT = threading.Lock()
 
@@ -61,6 +68,7 @@ class Board:
         self.p = [{"n": i + 1, "state": "waiting", "tried": 0, "seconds": 0.0, "auc": None, "error": None, "works": None, "t0": None, "t1": None} for i in range(n)]
         self.peak = 0
         self.refused = 0
+        self.again = 0
         self.errors: list[str] = []
 
     def running(self) -> int:
@@ -93,6 +101,14 @@ class Board:
                 p["tried"] = max(p["tried"], tried)
             if error:
                 self.errors.append(f"patient {i + 1}: {error}"[:300])
+
+    def retry(self, i: int, why: str) -> None:
+        """The patient's first sandbox is dropped: what it counted is forgotten, the clock keeps running."""
+        with self.lock:
+            self.again += 1
+            self.p[i]["tried"] = 0
+            self.p[i]["works"] = None
+        emit({"note": {"again": f"patient {i + 1}: {why}"[:300]}})
 
     def refuse(self, why: str) -> None:
         with self.lock:
@@ -225,7 +241,8 @@ def run_modal(board: Board, folder: Path, repo: Path) -> None:
     # build the image once, before the patients race for it
     image.build(app)
 
-    def one(i: int) -> None:
+    def attempt(i: int, last: bool) -> str | None:
+        """One sandbox for one patient. None when the patient is settled (done, or failed for good); else why to try once more."""
         sandbox = None
         tries = 0
         while sandbox is None:
@@ -237,7 +254,7 @@ def run_modal(board: Board, folder: Path, repo: Path) -> None:
                 board.refuse(f"{type(exc).__name__}: {str(exc)[:240]}")
                 if tries >= 8:
                     board.end(i, None, None, f"Modal refused the sandbox {tries} times")
-                    return
+                    return None
                 time.sleep(min(8.0, 0.5 * 2 ** tries))
         try:
             sandbox.stdin.write((folder / f"p{i + 1}.json").read_bytes())
@@ -257,11 +274,20 @@ def run_modal(board: Board, folder: Path, repo: Path) -> None:
             threading.Thread(target=read_stdout, daemon=True).start()
             board.begin(i)
             finished = False
+            slow = False
+            one_tried = False
             while time.monotonic() - asked < DEADLINE:
+                waited = time.monotonic() - asked
+                left = DEADLINE - waited
+                if not last and not one_tried:
+                    if waited >= SLOW:
+                        slow = True
+                        break
+                    left = min(left, SLOW - waited)
                 try:
-                    chunk = chunks.get(timeout=max(0.01, DEADLINE - (time.monotonic() - asked)))
+                    chunk = chunks.get(timeout=max(0.01, left))
                 except queue.Empty:
-                    break
+                    continue
                 if chunk is None:
                     finished = True
                     break
@@ -272,21 +298,37 @@ def run_modal(board: Board, folder: Path, repo: Path) -> None:
                 pending += str(chunk)
                 *lines, pending = pending.split("\n")
                 for line in lines:
+                    one_tried = one_tried or '"tried"' in line
                     end = take(board, i, line) or end
+            if slow:
+                return f"no model tried {int(SLOW)} seconds after the sandbox was asked for"
             if pending.strip():
                 end = take(board, i, pending) or end
             if not finished or time.monotonic() - asked >= DEADLINE:
                 board.end(i, None, None, deadline_error())
-            else:
-                sandbox.wait()
+                return None
+            sandbox.wait()
+            if (end and "result" in end) or last:
                 finish(board, i, end, f"the sandbox ended without a model (exit {sandbox.returncode})")
+                return None
+            return (end or {}).get("error") or f"the sandbox ended without a model (exit {sandbox.returncode})"
         except Exception as exc:
-            board.end(i, None, None, f"{type(exc).__name__}: {str(exc)[:200]}")
+            why = f"{type(exc).__name__}: {str(exc)[:200]}"
+            if last:
+                board.end(i, None, None, why)
+                return None
+            return why
         finally:
             try:
                 sandbox.terminate()
             except Exception:
                 pass
+
+    def one(i: int) -> None:
+        why = attempt(i, False)
+        if why is not None:
+            board.retry(i, why)
+            attempt(i, True)
 
     # every patient's sandbox is asked for at the same moment
     with ThreadPoolExecutor(max_workers=len(board.p)) as pool:
