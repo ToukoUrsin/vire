@@ -335,7 +335,7 @@ export default function Try() {
           <>
             <h1>Try the breathing with your phone</h1>
             <p className="ty-lede">A little over a minute. Turn the sound on, with any headphones or the speaker. Tap the button, then hold your phone flat against your chest.</p>
-            <p className="ty-lede ty-quiet">A sea rises and falls. It slows only when your phone reads your breath going with it, and it says what it read: a phone lying on a table does not slow it. Here the phone&rsquo;s motion sensor stands in for the AirPods.</p>
+            <p className="ty-lede ty-quiet">A sea rises and falls. It slows only when your phone reads your breath keeping its pace, and it says what it read: a phone lying on a table does not slow it. Here the phone&rsquo;s motion sensor stands in for the AirPods.</p>
             <div className="ty-btns">
               <button type="button" className="lab-btn primary ty-go" data-start onClick={() => void begin()}>
                 Start the sea
