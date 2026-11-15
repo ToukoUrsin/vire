@@ -88,7 +88,7 @@ The AirPods sense you and answer you: a sea made as you breathe, that stays put 
 
 ## (stop pasting here)
 
-Current count of the paste region: **4,990** characters, markdown included (counted with `python3`: `len()` of the stripped text between the "Description (paste from here)" heading and "(stop pasting here)"). Room left: 10. The Junction draft is project 2079, "Vire", Beyond the Clinic, Draft, "Best use of Modal" ticked; it is saved with `python3 /home/ubuntu/junction/tools/junction_draft.py /bulk3/runs/depression/junction-draft/fields.json --save` (Save Draft only). The text has no open slots. Not in the draft yet: the video link.
+Current count of the paste region: **4,997** characters, markdown included (counted with `python3`: `len()` of the stripped text between the "Description (paste from here)" heading and "(stop pasting here)"). Room left: 3. The Junction draft is project 2079, "Vire", Beyond the Clinic, Draft, "Best use of Modal" ticked; it is saved with `python3 /home/ubuntu/junction/tools/junction_draft.py /bulk3/runs/depression/junction-draft/fields.json --save` (Save Draft only). The text has no open slots. The video field holds the film's unlisted YouTube link.
 
 ## Slots to fill on Sunday morning
 
