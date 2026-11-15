@@ -18,7 +18,7 @@ Your AirPods sense every step. After TMS for depression, when you move less than
 
 - **Start here:** https://vire.fly.dev and tap "Watch a run": the daily five minutes in 40 seconds, scripted for now.
 - **No AirPods?** On a phone: https://vire.fly.dev/#/try (phone on your chest: the sea slows only if your breath follows).
-- **The phone app:** https://vire.fly.dev/app/ Teach your AirPods, then watch them read your nods. Everything else in it is sample data.
+- **The phone app:** https://vire.fly.dev/app/ "Live" reads your nods by camera; AirPods need our iPhone app. The rest is sample data.
 - **With AirPods:** the daily five minutes, on our iPhone (at our table) or https://vire.fly.dev/#/today on a Mac with our helper app. Camera off.
 - **The clinic (simulated patients):** https://vire.fly.dev/#/clinic and the big screen https://vire.fly.dev/#/clinic/live?practice=1
 
