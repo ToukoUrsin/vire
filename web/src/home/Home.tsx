@@ -51,8 +51,8 @@ export default function Home() {
       <section className="hm-intro">
         <h1>Your AirPods sense every step.</h1>
         <p className="hm-lede">
-          After TMS for depression, Vire spots drift from your usual, plays a practice in your ears, learns what helps you
-          and tells your clinic.
+          After TMS for depression, when you move less than usual, Vire guides a walk or slow breathing in your ears and
+          learns which helps. If neither does, your clinic knows.
         </p>
 
         <a className="hm-watch" href="#/watch" data-real={real === true ? '1' : '0'}>

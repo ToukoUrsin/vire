@@ -6,6 +6,6 @@ If they want the rest: all the time your AirPods are in, Vire sets your day agai
 
 ## Junction form punchline (200 characters max)
 
-Your AirPods sense every step. After TMS for depression, Vire spots drift from your usual, plays a practice in your ears, learns what helps you and tells your clinic.
+Your AirPods sense every step. After TMS for depression, when you move less than usual, Vire guides a walk or slow breathing in your ears and learns which helps. If neither does, your clinic knows.
 
-(166 characters.)
+(197 characters.)
