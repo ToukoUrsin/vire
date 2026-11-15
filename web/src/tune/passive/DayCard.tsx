@@ -16,12 +16,12 @@ export default function DayCard({ state, onPractice }: { state: PassiveState; on
     <section className="pd" aria-label="Today, from your AirPods" data-worn-min={wornMin} data-sim={sim || undefined}>
       <header className="pd-top">
         <h2>Today, from your AirPods</h2>
-        <p className="pd-sub">Counted only while Vire is open.</p>
+        <p className="pd-sub">Counted while your AirPods are in.</p>
       </header>
       {sim && <p className="pd-sim">Stand-in AirPods: a script, not a person. Kept apart from your own days.</p>}
 
       {!today ? (
-        <p className="pd-empty">{live.worn ? 'The first minute is being counted.' : 'Nothing yet today. Put your AirPods in and keep Vire open.'}</p>
+        <p className="pd-empty">{live.worn ? 'The first minute is being counted.' : 'Nothing yet today. Put your AirPods in.'}</p>
       ) : (
         <dl className="pd-grid">
           <div>

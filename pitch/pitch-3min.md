@@ -1,6 +1,6 @@
 # Grand jury pitch, 3:00
 
-Mics are cut at 3:00 sharp, then 3 minutes of questions. About 399 spoken words plus the moves. Planned end 2:55, so if you speak slowly the Meru sentence is the first cut. Have a teammate show you the clock at "There's also a body scan": it should say about 1:45. Later than 1:55, use the cuts below.
+Mics are cut at 3:00 sharp, then 3 minutes of questions. About 382 spoken words plus the moves. Planned end about 2:50; if you speak slowly, use the cuts below. Have a teammate show you the clock at "There's also a body scan": it should say about 1:45. Later than 1:55, use the cuts below.
 
 **Before walking on**
 - Do a full Today run this morning, AirPods in (`/#/today` in the Vire app). Fill `[REAL: ...]` from its result screen. If it didn't run, say "this is the run with stand-in AirPods from our tests" and show that.
@@ -24,7 +24,7 @@ Mics are cut at 3:00 sharp, then 3 minutes of questions. About 399 spoken words 
 
 ## 0:35 The idea (20 s)
 
-> Vire is for those months at home. Your AirPods notice when your days change, play a breathing practice in your ears and measure you before and after. If your days keep looking different, your clinic sees it. If you know Meru Health: it's that kind of practice at home, measured by your own AirPods.
+> Vire is for those months at home. Your AirPods notice when your days change, play a breathing practice in your ears and measure you before and after. If your days keep looking different, your clinic sees it.
 
 ## 0:55 The inner loop (50 s)
 
@@ -60,7 +60,6 @@ Mics are cut at 3:00 sharp, then 3 minutes of questions. About 399 spoken words 
 ## If you're running long
 
 - Skip the Modal press; say the line over the clinic list (5 s).
-- Skip "If you know Meru Health ... already own" (7 s).
 - Skip "There's also a body scan and a short walk" (3 s).
 - Never cut "no control group", "these patients are simulated", "no patient has used Vire yet" or "it doesn't diagnose anything".
 - If this morning's run didn't happen, say "this is the run with stand-in AirPods from our tests" where the script says "This morning I did mine".
@@ -78,7 +77,7 @@ Mics are cut at 3:00 sharp, then 3 minutes of questions. About 399 spoken words 
 - That a practice is a treatment, or that Vire lowers depression.
 - That drift comes before relapse, or that an earlier booster works better.
 - That the AirPods read smiles. The camera keeps smiles for now.
-- That it runs in the background. It runs while the AirPods are in and Vire is open.
+- That it senses only while Vire is open. Say: your AirPods sense every step, all the time they're in. Asked about a locked phone: that's the next iPhone build.
 - Any number that isn't on your screen this morning or in `claims.md`.
 
 ## The 2-minute video
@@ -87,4 +86,4 @@ See `mobile/FILM.md` (the film Touko shoots; `FILM_PLAN.md` is the earlier shot 
 
 ## Sources
 
-`claims.md`: Perera 2016 (row 1), Senova 2019 (row 2), Janicak 2010 (row 3), Meru Health (row 126), Wilson 2022 (row 130), the loop in the code (rows 104 to 118, 123), Modal (rows 113, 119 to 121).
+`claims.md`: Perera 2016 (row 1), Senova 2019 (row 2), Janicak 2010 (row 3), Wilson 2022 (row 130), the loop in the code (rows 104 to 118, 123), Modal (rows 113, 119 to 121).

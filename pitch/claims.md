@@ -218,7 +218,7 @@ Used updates for older rows (round 5, superseded on 15 Nov: the Used columns abo
 
 ### Not ours, not claimed
 
-- "Like Meru Health, but your AirPods sense every step" is the founder's positioning line, not a factual claim. Every time it is used, row 126 says what Meru Health is and what its trial showed.
+- "Your AirPods sense every step" is the founder's positioning line: Vire senses all the time the AirPods are in. On the iPhone that has run with Vire on screen; with the phone locked is next. Meru Health is not named in anything a judge sees (the founder, 15.11.2026); row 126 stays as the answer if a judge brings it up.
 - `[REAL: ran]`, `[REAL: heart]`, `[REAL: still]`, `[REAL: pace]`, `[REAL: swing]`, `[EEG: done]`: open slots. A row gets a figure only from the founder's own run or the finished experiment.
 
 ## Checked and true, but not used anywhere

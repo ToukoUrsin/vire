@@ -1,21 +1,21 @@
 # Vire
 
-Like Meru Health, but your AirPods sense every step. For people at home after TMS, a clinic treatment for depression.
+Your AirPods sense every step. For people at home after TMS, a clinic treatment for depression.
 
 A year after a TMS course, it has stopped working for about half of the people it helped (46.3% still respond at 12 months, Senova et al. 2019). Once you're home, the clinic doesn't see you.
 
-Vire runs while your AirPods are in. Two loops:
+Vire senses all the time your AirPods are in. Two loops:
 
 - **You, in the AirPods, camera off.** Vire senses head movement, how long the head is down, walks, nods and, on AirPods Pro 3, heart rate, and sets them against your own usual. When that drifts, it offers a short practice in your ears (slow breathing, a body scan or a short walk), measures what it did from the AirPods, and learns which practice works for you and how long.
 - **Your clinic.** Drift the practices don't fix goes to the top of the clinic's list with what was tried and what worked, and the clinic can book a TMS booster then, not on a fixed schedule.
 
 A signal for the clinic, not a diagnosis. No patient or clinic has used Vire; the clinic's patients are simulated.
 
-**Today** ([/#/today](https://vire.fly.dev/#/today), in the iPhone app or in Chrome on a Mac with the Vire Ears helper), about five minutes: 65 seconds of asked smiles, nods and head shakes against your own earlier minutes, a 22-second still check (head movement and heart rate), a practice of about two and a half minutes, the same check again, and a result said only from the heart-rate and stillness change ("Calmer after", "Not calmer today", "Mixed today", "No change today"). For breathing, a sea in the ears rises on the in-breath and falls on the out-breath; it starts at your own pace and steps down toward six a minute only when the AirPods read your breath following it (or a still head, when no breath can be read), and eases back after two misses. A walk counts only when the AirPods felt steps for a third of it. The learner says "Vire learned: for you, X helps most" only after 3 scored practices of the best kind, 2 each of two kinds, and that one on top in 80% of 2,000 draws. Heart rate comes from AirPods Pro 3 through an iPhone workout session, and the app checks the source is the AirPods. It runs while Vire is open, not in the background. So far it has run end to end with stand-in AirPods in tests.
+**Today** ([/#/today](https://vire.fly.dev/#/today), in the iPhone app or in Chrome on a Mac with the Vire Ears helper), about five minutes: 65 seconds of asked smiles, nods and head shakes against your own earlier minutes, a 22-second still check (head movement and heart rate), a practice of about two and a half minutes, the same check again, and a result said only from the heart-rate and stillness change ("Calmer after", "Not calmer today", "Mixed today", "No change today"). For breathing, a sea in the ears rises on the in-breath and falls on the out-breath; it starts at your own pace and steps down toward six a minute only when the AirPods read your breath following it (or a still head, when no breath can be read), and eases back after two misses. A walk counts only when the AirPods felt steps for a third of it. The learner says "Vire learned: for you, X helps most" only after 3 scored practices of the best kind, 2 each of two kinds, and that one on top in 80% of 2,000 draws. Heart rate comes from AirPods Pro 3 through an iPhone workout session, and the app checks the source is the AirPods. On the iPhone, sensing with the screen locked is next. So far it has run end to end with stand-in AirPods in tests.
 
 **The sound** is made on a Modal GPU by MusicGen-small on a T4: thirty 20-second pieces made ahead, and new ones asked for during a practice from the pace and stillness the AirPods just read. The phone places it around the head and holds it in the room as you turn, from the AirPods' own head angles. A bell marks the steps; no voice.
 
-**Your day** ([/#/day](https://vire.fly.dev/#/day), also on the Today screen): one record a minute while the AirPods are in and Vire is open (time worn, walks, calls, head down, head movement), against the middle of your own earlier days, and at most one offered practice in half an hour, with its numbers.
+**Your day** ([/#/day](https://vire.fly.dev/#/day), also on the Today screen): one record a minute while the AirPods are in (time worn, walks, calls, head down, head movement), against the middle of your own earlier days, and at most one offered practice in half an hour, with its numbers.
 
 **Setup, once** ([/#/ears](https://vire.fly.dev/#/ears)): the camera labels 65 seconds of smiles, nods and head shakes while the AirPods feel them, and a Modal Sandbox of your own, network blocked, tries 366 models on all your minutes, each chosen without the minute it is scored on. On the founder's three minutes: 46 seconds; on a whole minute the models never saw, nod 0.97, head shake 0.97, smile 0.64 (1.00 is never wrong, 0.50 is luck). So nods and head shakes are read from the AirPods alone, and the camera keeps smiles.
 

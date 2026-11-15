@@ -13,8 +13,8 @@ Your day against your own usual. When it drifts, a practice in your ears: slow b
 **3. Does a two-minute practice lower depression?**
 Nothing shows that, and we don't say it. Slow breathing around six a minute makes the heart rate swing more with each breath while you do it. As a programme of weeks, breathing with heart-rate feedback lowered depressive symptoms by a small to medium amount, mostly in people whose main problem was something else. (rows 124, 125)
 
-**4. So you copied Meru Health?**
-We took their breathing. Meru Health put it into a programme of weeks with a therapist, and the whole programme beat a waiting list in a randomised trial. Nothing shows what the breathing did on its own. What we add is the AirPods measuring each step, and a clinic that sees when it isn't working. (row 126)
+**4. How is this different from Meru Health?**
+The breathing is the same kind. Meru Health put it into a programme of weeks with a therapist, and the whole programme beat a waiting list in a randomised trial. Nothing shows what the breathing did on its own. What we add is the AirPods measuring each step, and a clinic that sees when it isn't working. (row 126)
 
 ## The sound
 

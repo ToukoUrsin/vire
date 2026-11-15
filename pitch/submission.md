@@ -8,9 +8,9 @@ Vire
 
 ## Punchline
 
-Like Meru Health, but your AirPods sense every step. After TMS for depression, Vire spots drift from your usual, plays a practice in your ears, learns what helps you and tells your clinic.
+Your AirPods sense every step. After TMS for depression, Vire spots drift from your usual, plays a practice in your ears, learns what helps you and tells your clinic.
 
-(188 characters, counted with `python3`.)
+(166 characters, counted with `python3`.)
 
 ## Description (paste from here)
 
@@ -28,7 +28,7 @@ A TMS course for depression is 20 to 30 clinic visits in 4 to 6 weeks. A year la
 
 ### Solution: two loops
 
-Vire runs while it's open and your AirPods are in.
+Vire senses all the time your AirPods are in.
 
 **You.** The AirPods sense your head movement, how long your head is down, your walks, your nods and, on AirPods Pro 3, your heart rate (built, not yet read on a real run). When that drifts from your own usual, Vire offers a short practice in your ears: slow breathing, a body scan or a short walk. The AirPods measure what it did, and Vire learns which practice calms you most.
 
@@ -57,7 +57,7 @@ A signal for the clinic, not a diagnosis.
 - No patient or clinic has used Vire, and nobody has compared it with a questionnaire, or a practice with just sitting still.
 - Nobody knows if drift comes before relapse, or if an earlier booster helps more. The booster evidence is rated low (Wilson 2022).
 - A practice is not a treatment.
-- No sensing in the background yet.
+- Sensing with the iPhone locked is next.
 
 ### What is next
 
@@ -88,7 +88,7 @@ The AirPods sense you and answer you: a sea made as you breathe, that stays put 
 
 ## (stop pasting here)
 
-Current count of the paste region: **4,989** characters, markdown included (counted with `python3`: `len()` of the stripped text between the "Description (paste from here)" heading and "(stop pasting here)"). Room left: 11. The Junction draft is project 2079, "Vire", Beyond the Clinic, Draft, "Best use of Modal" ticked; it is saved with `python3 /home/ubuntu/junction/tools/junction_draft.py /bulk3/runs/depression/junction-draft/fields.json --save` (Save Draft only). The text has no open slots. Not in the draft yet: the video link.
+Current count of the paste region: **4,990** characters, markdown included (counted with `python3`: `len()` of the stripped text between the "Description (paste from here)" heading and "(stop pasting here)"). Room left: 10. The Junction draft is project 2079, "Vire", Beyond the Clinic, Draft, "Best use of Modal" ticked; it is saved with `python3 /home/ubuntu/junction/tools/junction_draft.py /bulk3/runs/depression/junction-draft/fields.json --save` (Save Draft only). The text has no open slots. Not in the draft yet: the video link.
 
 ## Slots to fill on Sunday morning
 

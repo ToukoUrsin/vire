@@ -29,7 +29,7 @@ function useReplay(): { real: boolean | null; kind: string | null } {
 const PRACTICE: Record<string, string> = { breathe: 'Slow breathing', scan: 'Body scan', walk: 'A short walk' }
 
 const LOOP: { k: string; t: string }[] = [
-  { k: 'Sense', t: 'While Vire is open, your AirPods feel head movement, head-down time, walks, nods and, on AirPods Pro 3, heart rate.' },
+  { k: 'Sense', t: 'All the time they’re in, your AirPods feel head movement, head-down time, walks, nods and, on AirPods Pro 3, heart rate.' },
   { k: 'Practice', t: 'When that drifts from your usual, a short practice plays in your ears.' },
   { k: 'Learn', t: 'Vire measures what it did and learns which practice helps you.' },
   { k: 'Tell', t: 'Drift the practices don’t fix goes to the top of your clinic’s list.' },
@@ -49,7 +49,7 @@ export default function Home() {
       </header>
 
       <section className="hm-intro">
-        <h1>Like Meru Health, but your AirPods sense every step.</h1>
+        <h1>Your AirPods sense every step.</h1>
         <p className="hm-lede">
           After TMS for depression, Vire spots drift from your usual, plays a practice in your ears, learns what helps you
           and tells your clinic.

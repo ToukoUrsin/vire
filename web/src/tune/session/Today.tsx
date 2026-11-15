@@ -388,7 +388,7 @@ export default function Today() {
           // On the iPhone the AirPods stop when Vire is hidden. On a Mac the helper keeps sending behind another
           // window, so the run goes on there.
           if (document.visibilityState === 'hidden' && inApp()) {
-            stopped = 'The screen went off or Vire was hidden, and the AirPods stop then. Keep Vire open and start again.'
+            stopped = 'The screen went off or Vire was hidden, so this run stopped. Keep the screen on and start again.'
             return false
           }
           // nothing from the AirPods for a quarter of a minute: they are out of the ears or on another device, and

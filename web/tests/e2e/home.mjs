@@ -32,7 +32,7 @@ for (const [w, h] of [[390, 844], [1440, 900]]) {
     await page.waitForSelector('.hm-watch', { timeout: 15000 })
     await page.waitForFunction(() => /scripted|real run/.test(document.querySelector('.hm-watch')?.textContent ?? ''), null, { timeout: 8000 }).catch(() => {})
     const text = await page.locator('main').innerText()
-    check(text.includes('Like Meru Health, but your AirPods sense every step.'), `${tag}: punchline`)
+    check(text.includes('Your AirPods sense every step.') && !/Meru|While Vire is open/.test(text), `${tag}: punchline`)
     check(text.includes('plays a practice in your ears'), `${tag}: second sentence`)
     const watch = await page.locator('.hm-watch').innerText()
     if (replay === 'real') check(/Watch a real run/.test(watch) && /founder’s own AirPods, 40 seconds/.test(watch), `${tag}: says real when the server does`)
