@@ -71,7 +71,7 @@ export default function BreathTrace({ b, t }: { b: ReplayBundle; t: number }) {
       <figcaption>
         <span className="bt-k-sea">the sea: up is breathe in</span>
         <span className="bt-k-head">
-          the head&apos;s slow movement, {size < 1 ? size.toFixed(1) : Math.round(size)}° top to bottom{b.scripted ? ' (a stand-in)' : ''}
+          the head&rsquo;s slow movement, {size < 1 ? size.toFixed(1) : Math.round(size)}° top to bottom{b.scripted ? ' (a stand-in)' : ''}
         </span>
       </figcaption>
     </figure>

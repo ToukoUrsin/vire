@@ -69,9 +69,9 @@ export default function Patient() {
         ) : (
           <section className="cl-none">
             <h1>Nobody here with that id</h1>
-            <p>This link does not match anyone in the clinic. Open the person from today’s list.</p>
+            <p>This link does not match anyone in the clinic. Open the person from the call list.</p>
             <Link to={href('/clinic')} className="cl-btn cl-btn--primary">
-              Back to today’s list
+              Back to the call list
             </Link>
           </section>
         )}

@@ -139,7 +139,7 @@ export default function Heard() {
       </header>
       {b && (
         <p className="wt-tag" data-label>
-          A real check: the founder&apos;s own AirPods, camera off. Recorded {helsinki(b.recordedAt, { day: 'numeric', month: 'long', year: 'numeric' })} at{' '}
+          A real check: the founder&rsquo;s own AirPods, camera off. Recorded {helsinki(b.recordedAt, { day: 'numeric', month: 'long', year: 'numeric' })} at{' '}
           {helsinki(b.recordedAt, { hour: '2-digit', minute: '2-digit' })} Helsinki time.
         </p>
       )}
@@ -177,8 +177,14 @@ export default function Heard() {
           ) : (
             <div className="hd-now-say" data-verdict>
               <p className="td-day">What the AirPods heard, with no camera</p>
+              {/* each count stays whole (heard.css): the line breaks after the comma, never inside "3 of 3" */}
               <h1 className="wt-say">
-                {s.nod.heard} of {s.nod.asked} nods, {s.shake.heard} of {s.shake.asked} head shakes.
+                <span className="hd-n">
+                  {s.nod.heard} of {s.nod.asked} nods,
+                </span>{' '}
+                <span className="hd-n">
+                  {s.shake.heard} of {s.shake.asked} head shakes.
+                </span>
               </h1>
               <p className="hd-hears">
                 {s.nod.unasked + s.shake.unasked === 0 ? 'Nothing heard that was not asked.' : `Heard ${s.nod.unasked + s.shake.unasked} that were not asked.`} One check, on one person.

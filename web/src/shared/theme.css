@@ -282,7 +282,8 @@ button {
 
 /* ---- the dark stage (the replay, the breathing on a phone): a quiet button is an outline, so the one ember
    button is the only filled thing on the screen ---- */
-:is(.wt, .ty) .lab-btn:not(.primary) {
+:is(.wt, .ty) .lab-btn:not(.primary),
+.lab-btn.td-watch {
   border: 1px solid var(--stage-line);
   background: transparent;
   color: var(--stage-ink);
@@ -291,7 +292,8 @@ button {
   opacity: 0.45;
 }
 @media (hover: hover) {
-  :is(.wt, .ty) .lab-btn:not(.primary):hover:not(:disabled) {
+  :is(.wt, .ty) .lab-btn:not(.primary):hover:not(:disabled),
+  .lab-btn.td-watch:hover {
     border-color: var(--stage-ink-2);
     background: color-mix(in srgb, var(--stage-ink) 8%, transparent);
   }

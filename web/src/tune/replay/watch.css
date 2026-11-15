@@ -229,6 +229,16 @@
     gap: 8px;
   }
 }
+/* a phone with Safari's bars showing (about 660 px tall): the breath trace stays whole above the controls.
+   The sentence under the word goes, and the way back is the Vire mark at the top, so the buttons keep to one row */
+@media (max-height: 700px) and (max-width: 480px) {
+  .wt .wt-what {
+    display: none;
+  }
+  .wt-controls a.lab-btn[href='#/'] {
+    display: none;
+  }
+}
 .wt :focus-visible {
   outline: 2px solid var(--stage-ink);
   outline-offset: 3px;

@@ -54,7 +54,7 @@ export function breathRow(r: SessionRead, standIn = false): { main: string; own:
     main: `the sound led from ${r.paceFirst} to ${r.paceLast} breaths a minute. ${
       r.followed > 0
         ? standIn
-          ? `The script's breath was read going with it in ${r.followed} of ${plural(r.checks, 'check')}, down to ${r.paceFollowed} a minute.`
+          ? `The script’s breath was read going with it in ${r.followed} of ${plural(r.checks, 'check')}, down to ${r.paceFollowed} a minute.`
           : `Your AirPods felt your breath go with it in ${r.followed} of ${plural(r.checks, 'check')}, down to ${r.paceFollowed} a minute.`
         : r.checks > 0
           ? `${standIn ? 'The breath' : 'Your breath'} could not be read from the AirPods in this run${r.byStillness ? `; the sound went by how still ${standIn ? 'the head' : 'you'} sat (${r.byStillness} of ${plural(r.checks, 'check')})` : ''}.`

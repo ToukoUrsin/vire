@@ -97,6 +97,7 @@
   font-size: var(--text-label);
   font-weight: 500;
   line-height: 1.3;
+  text-wrap: balance;
 }
 
 /* the real check: the same row, outlined, so the run stays the one filled button */
@@ -150,6 +151,7 @@
   grid-column: 1;
   font-size: var(--text-body-s);
   color: var(--ink-2);
+  text-wrap: balance;
 }
 .hm-arrow {
   grid-column: 2;

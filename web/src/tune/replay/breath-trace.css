@@ -32,6 +32,11 @@
   color: var(--stage-ink-2);
   font-size: var(--text-caption);
 }
+/* a key that wraps hangs under its words, not under its swatch */
+.bt figcaption span {
+  padding-left: 20px;
+  text-indent: -20px;
+}
 .bt-k-sea::before,
 .bt-k-head::before {
   content: '';

@@ -2,9 +2,22 @@
 .hd .hd-now-say {
   min-height: 10.5rem;
 }
+/* the score at the end is the tallest thing said here: at the large size it gets its room from the start,
+   so the chart under it does not drop when the check ends */
+@media (min-width: 760px) {
+  .hd .hd-now-say {
+    min-height: 12rem;
+  }
+}
 .hd .wt-say {
   margin-top: 4px;
   text-wrap: balance;
+}
+/* each count stays whole where it fits: the line breaks after the comma, never inside "3 of 3" */
+@media (min-width: 360px) {
+  .hd-n {
+    white-space: nowrap;
+  }
 }
 .hd-hears {
   margin: 8px 0 0;
@@ -39,10 +52,26 @@
   color: var(--stage-ink-2);
   font-variant-numeric: tabular-nums;
 }
+/* on a phone the count has its own line from the start: "Head shakes heard: 1 of 1 asked" does not fit beside its
+   label, and when it wrapped mid-play everything under it dropped a line */
+@media (max-width: 480px) {
+  .hd-row figcaption span {
+    flex-basis: 100%;
+  }
+}
 .hd-row svg {
   display: block;
   width: 100%;
   height: 86px;
+}
+/* a phone with Safari's bars showing (about 660 px tall): both rows of the chart stay above the controls */
+@media (max-height: 700px) {
+  .hd-row svg {
+    height: 64px;
+  }
+  .hd-chart {
+    gap: 12px;
+  }
 }
 .hd-asked {
   fill: var(--stage-line);

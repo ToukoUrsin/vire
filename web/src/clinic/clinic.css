@@ -758,6 +758,7 @@
 }
 .cl-status span {
   color: var(--ink-2);
+  text-wrap: balance;
 }
 .cl-status.is-low {
   background: color-mix(in srgb, var(--bad) 12%, var(--paper));
@@ -1149,7 +1150,14 @@
 .cl-multi-val {
   color: var(--ink-2);
   font-size: var(--text-small);
-  white-space: nowrap;
+  text-wrap: balance;
+}
+/* said in words, with no number before it: the line starts under the name, past the dot, and wraps there */
+.cl-multi-val:has(> span:first-child) {
+  padding-left: calc(10px + 8px); /* the dot and the gap after it */
+}
+.cl-multi-val > span:first-child {
+  margin-left: 0;
 }
 .cl-multi-val b {
   font-size: var(--text-title);
@@ -1339,6 +1347,7 @@
   .cl-c-status span {
     flex-basis: 100%;
     text-align: right;
+    text-wrap: balance;
   }
   .cl-c-reason {
     grid-area: reason;
