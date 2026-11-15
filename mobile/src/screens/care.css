@@ -244,7 +244,7 @@
   right: 0;
   bottom: calc(var(--tabbar) + var(--safe-b));
   padding: 10px var(--gutter);
-  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  background: color-mix(in srgb, var(--bg) 96%, transparent);
   -webkit-backdrop-filter: blur(20px) saturate(1.3);
   backdrop-filter: blur(20px) saturate(1.3);
   box-shadow: 0 -1px 0 var(--line);

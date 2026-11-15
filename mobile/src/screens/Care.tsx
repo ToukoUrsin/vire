@@ -175,6 +175,9 @@ export function Care() {
       </header>
 
       <Screen className="care">
+        <div className="pad rise" style={rise(0)}>
+          <Chip>Sample conversation</Chip>
+        </div>
         <div ref={top} className="pad rise care-head" style={rise(0)}>
           <span className="care-avatar">{NURSE.name[0]}</span>
           <div className="care-who">

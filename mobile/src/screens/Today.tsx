@@ -8,11 +8,10 @@ import { Badge, Btn, Chip, Row, SampleNote, Screen, Section, Seg } from '../ui/k
 import './today.css'
 
 const hello = () => {
-  // the day on this screen is a sample day that stands at half past five, so the greeting follows it
-  const h = NOW_H
+  // the greeting follows the real clock; the day drawn under it is a sample and says so right above it
+  const h = new Date().getHours()
   return h < 5 ? 'Still up' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening'
 }
-const date = () => new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })
 
 const SAY: Record<RingKey, { head: string; sub: string }> = {
   move: { head: 'Back in your usual', sub: 'since the breathing at 15:40' },
@@ -47,7 +46,7 @@ export function Today() {
     <Screen>
       <div className="pad rise" style={{ '--i': 0 } as React.CSSProperties}>
         <div className="today-top">
-          <span className="today-date">{date()}</span>
+          <Chip>Sample day</Chip>
           <PodsChip />
         </div>
         <h1 className="title-xl">{hello()}</h1>

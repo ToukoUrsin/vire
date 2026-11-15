@@ -38,7 +38,7 @@ export function Practices(_: { id?: string; topic?: string }) {
   const best = WORKS[0]
   return (
     <Screen>
-      <Head title="Practices" sub="A few minutes, in your ears. Vire checks what each one did." />
+      <Head chip={<Chip>Sample week</Chip>} title="Practices" sub="A few minutes, in your ears. Vire checks what each one did." />
 
       <Section title={`Week ${PROGRAMME.week} of ${PROGRAMME.of}`} more="Programme" to="/programme" i={1}>
         <button className="card" onClick={() => go('/programme')}>
