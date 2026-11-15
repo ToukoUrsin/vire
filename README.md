@@ -21,7 +21,7 @@ A signal for the clinic, not a diagnosis. No patient or clinic has used Vire; th
 
 **The whole clinic** re-learns at once on Modal: the 50 simulated patients on the clinic list, one network-blocked Sandbox each, a shorter search each (12 s against 40 s for a real person), around 9,000 models in all in about half a minute, and each Sandbox re-learns which practice helps that patient ("Re-train the whole clinic" on the big screen).
 
-Without AirPods: breathe with the sea for a minute with a phone on your chest ([/#/try](https://vire.fly.dev/#/try)), or the camera visit, one minute on any phone ([/#/visit](https://vire.fly.dev/#/visit)). The evidence behind the loop, and what it does not show: [pitch/evidence-loop.md](pitch/evidence-loop.md), [pitch/evidence-tms.md](pitch/evidence-tms.md), [pitch/evidence-airpods.md](pitch/evidence-airpods.md).
+Without AirPods: breathe with the sea for a minute with a phone on your chest ([/#/try](https://vire.fly.dev/#/try)). The evidence behind the loop, and what it does not show: [pitch/evidence-loop.md](pitch/evidence-loop.md), [pitch/evidence-tms.md](pitch/evidence-tms.md), [pitch/evidence-airpods.md](pitch/evidence-airpods.md).
 
 Built at Junction 2026 (13 to 15 November, Espoo) for Aalto University's challenge "Beyond the Clinic".
 
@@ -40,10 +40,9 @@ Built at Junction 2026 (13 to 15 November, Espoo) for Aalto University's challen
 | [/#/clinic/live](https://vire.fly.dev/#/clinic/live) | the big screen. `?practice=1` keeps the newest practice from a phone up, `?cohort=1` the whole-clinic re-training, `?board=1` the newest model search |
 | [/#/eeg](https://vire.fly.dev/#/eeg) | a two-minute recording page for the EEG booth: AirPods motion and heart rate logged next to the booth's EEG (AirPods have no EEG) |
 | [/#/try](https://vire.fly.dev/#/try) | the breathing on a phone held on the chest, about a minute: the phone's motion sensor stands in for the AirPods |
-| [/#/visit](https://vire.fly.dev/#/visit) | the 60-second camera visit, no sign-up, no AirPods needed |
-| [/#/clinic/hall](https://vire.fly.dev/#/clinic/hall) | the real people who tried the camera visit at Junction |
-| [/#/wall](https://vire.fly.dev/#/wall) | the hall wall |
 | [/#/science](https://vire.fly.dev/#/science) | the evidence, the checks and what is not claimed |
+
+The weekend's first version, a 60-second camera check with no AirPods, is not part of the product any more and is not linked from it. It still opens by its address: [/#/visit](https://vire.fly.dev/#/visit), the people who tried it at Junction at [/#/clinic/hall](https://vire.fly.dev/#/clinic/hall), and its wall at [/#/wall](https://vire.fly.dev/#/wall).
 
 ## What is real, what is simulated
 
@@ -53,7 +52,7 @@ Built at Junction 2026 (13 to 15 November, Espoo) for Aalto University's challen
 - Heart rate in beats a minute from AirPods Pro 3 through an iPhone workout session, with the source checked. A swing with each breath is said only with at least three samples a breath; otherwise only that it settled. No HRV, no beat-to-beat timing.
 - The founder's own setup minutes and the whole-clinic run on Modal (numbers above, sources in [pitch/claims.md](pitch/claims.md) rows 119 and 120).
 
-**Real, the camera visit, running on the phone**
+**Real, the earlier camera check (not part of the product now), running on the phone**
 
 - The face: 478 landmarks from MediaPipe, turned into a smile reading by a small model taught on your own resting face and smile (Tune, about 15 seconds).
 - The heart: pulse from the camera (rPPG), and how far it swings with two paced breaths, fitted on the beat times, with its own error bar. A number is shown only when the signal passes its gates. Otherwise the app says "not read".
