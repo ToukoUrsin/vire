@@ -1,0 +1,262 @@
+/* One practice: the card before, the circle during, the reading after */
+
+.prac-intro {
+  padding-top: 6px;
+  padding-bottom: 40px;
+}
+.prac-art {
+  position: relative;
+  width: 148px;
+  height: 148px;
+  margin: 6px 0 30px;
+}
+.prac-art i {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--ember) 9%, transparent);
+}
+.prac-art i:nth-child(2) {
+  inset: 22px;
+  background: color-mix(in oklab, var(--ember) 20%, transparent);
+}
+.prac-art i:nth-child(3) {
+  inset: 44px;
+  display: grid;
+  place-items: center;
+  background: var(--ember);
+  color: var(--on-ember);
+}
+.prac-steps {
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: s;
+  display: grid;
+  gap: 14px;
+}
+.prac-steps li {
+  counter-increment: s;
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 12px;
+  font-size: 15.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.prac-steps li::before {
+  content: counter(s);
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--line-2);
+  font: 500 12.5px/1 var(--font-ui);
+  color: var(--ink-2);
+}
+.prac-reads {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 26px;
+}
+.prac-go {
+  display: grid;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+/* ---------- during ---------- */
+.prac-run {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(var(--safe-b) + 18px);
+  animation: prac-in 700ms var(--ease) both;
+}
+@keyframes prac-in {
+  from {
+    opacity: 0;
+  }
+}
+.prac-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 28px;
+  padding: 0 var(--gutter);
+}
+.prac-beat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: 500 15px/1 var(--font-ui);
+  color: var(--ink-2);
+}
+.prac-beat svg {
+  color: var(--heart);
+}
+.pacer {
+  position: relative;
+  flex: none;
+  width: min(76%, 304px);
+  aspect-ratio: 1;
+  margin: auto auto 0;
+}
+.pacer-rim,
+.pacer-c {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+.pacer-rim {
+  border: 1px solid var(--line);
+}
+.pacer-c {
+  will-change: transform;
+  background: color-mix(in oklab, var(--ember) 10%, transparent);
+  transform: scale(0.78);
+}
+.pacer-c:nth-child(3) {
+  background: color-mix(in oklab, var(--ember) 22%, transparent);
+  transform: scale(0.56);
+}
+.pacer-c:nth-child(4) {
+  background: var(--ember);
+  transform: scale(0.34);
+}
+.pacer-word {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font: 500 27px/1 var(--font-display);
+  letter-spacing: -0.01em;
+  color: var(--on-ember);
+  animation: prac-word 600ms var(--ease) both;
+}
+.pacer.is-count .pacer-word {
+  font-size: 34px;
+  animation: none;
+}
+@keyframes prac-word {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+}
+.prac-head {
+  margin: auto 0 0;
+}
+.prac-ticks {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+.prac-ticks i {
+  width: 22px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bg-3);
+  transition: background 300ms var(--ease);
+}
+.prac-ticks i.is-now {
+  background: var(--ink-3);
+}
+.prac-ticks i.is-done {
+  background: var(--ok);
+}
+.prac-say {
+  margin: 30px 0 auto;
+  padding: 0 var(--gutter);
+  text-align: center;
+}
+.prac-word {
+  font: 500 40px/1.1 var(--font-display);
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+  animation: prac-word 600ms var(--ease) both;
+}
+.prac-word.is-rest {
+  color: var(--ink-2);
+  font-size: 30px;
+}
+.prac-unit {
+  margin: -14px 0 14px;
+  font-size: 15px;
+  color: var(--ink-2);
+}
+.prac-left {
+  font: 400 19px/1 var(--font-ui);
+  color: var(--ink-2);
+}
+.prac-line {
+  min-height: 22px;
+  margin-top: 16px;
+  font-size: 15.5px;
+  line-height: 1.4;
+  color: var(--ink-2);
+  animation: prac-word 600ms var(--ease) both;
+}
+.prac-end {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+}
+
+/* ---------- after ---------- */
+.prac-done {
+  padding-top: calc(var(--safe-t) + 44px);
+  padding-bottom: 44px;
+}
+.prac-check {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 22px;
+  border-radius: 50%;
+  background: var(--ember);
+  color: var(--on-ember);
+}
+.prac-sentence {
+  margin-top: 12px;
+  font: 500 23px/1.25 var(--font-display);
+  letter-spacing: -0.015em;
+}
+.prac-hr {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 12px;
+}
+.prac-felt {
+  margin-top: 34px;
+}
+.prac-felt-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+.prac-pick {
+  height: 48px;
+  border-radius: var(--r);
+  border: 1px solid var(--line-2);
+  background: var(--bg-1);
+  font: 500 15px/1 var(--font-ui);
+  color: var(--ink);
+  transition:
+    background 160ms var(--ease),
+    border-color 160ms var(--ease);
+}
+.prac-pick.is-on {
+  background: var(--ember-wash);
+  border-color: var(--ember);
+}
+.prac-done .sample-note {
+  margin: 12px 0 0;
+}

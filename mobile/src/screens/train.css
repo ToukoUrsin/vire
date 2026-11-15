@@ -1,0 +1,325 @@
+/* The teaching minute and the live reading */
+
+.train-bar {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  height: 3px;
+  margin: 0 var(--gutter) 14px;
+  border-radius: 2px;
+  background: var(--bg-3);
+  overflow: hidden;
+  transition: opacity 300ms var(--ease);
+}
+.train-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--ember);
+  transition: width 120ms linear;
+}
+
+/* the camera: there from the start so the stream has somewhere to go, shown only during the minute */
+.train-cam {
+  position: relative;
+  margin: 0 var(--gutter);
+  height: 0;
+  border-radius: var(--r-l);
+  overflow: hidden;
+  background: var(--bg-2);
+  opacity: 0;
+  transition:
+    height 520ms var(--ease),
+    opacity 400ms var(--ease);
+}
+.train-cam.is-on {
+  height: min(42vh, 372px);
+  opacity: 1;
+}
+@media (min-width: 760px) and (min-height: 600px) {
+  .train-cam.is-on {
+    height: 340px;
+  }
+}
+.train-cam video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+  display: block;
+}
+.train-round {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+}
+.train-round .chip {
+  background: rgba(20, 17, 13, 0.72);
+  border-color: transparent;
+  color: var(--ink);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.train-live {
+  overflow: hidden;
+}
+
+.train-ask {
+  margin-top: 26px;
+  text-align: center;
+  animation: ask 420ms var(--ease) both;
+}
+@keyframes ask {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0) scale(0.98);
+  }
+}
+.train-word {
+  font: 500 46px/1.05 var(--font-display);
+  letter-spacing: -0.025em;
+  margin-bottom: 10px;
+}
+.train-left {
+  display: inline-block;
+  min-width: 1.2em;
+  margin-left: 6px;
+  color: var(--ink-3);
+}
+.train-strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--safe-b) + 22px);
+}
+.train-strip-head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.train-go {
+  display: grid;
+  gap: 10px;
+  margin-top: 28px;
+}
+.train-error {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(217, 164, 65, 0.12);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.train-work {
+  margin-top: 8vh;
+}
+.work-dot {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  margin: 0 4px;
+  border-radius: 50%;
+  border: 2px solid var(--line-2);
+  color: var(--on-ember);
+}
+.work-dot.is-busy {
+  border-color: var(--ember);
+  border-top-color: transparent;
+  animation: spin 900ms linear infinite;
+}
+.work-dot.is-ok {
+  border-color: var(--ok);
+  background: var(--ok);
+}
+.work-dot.is-fail {
+  border-color: var(--warn);
+  color: var(--warn);
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.score {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 14px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+.score:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.score-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.score-n {
+  font: 500 22px/1 var(--font-display);
+}
+.score-bar {
+  height: 6px;
+  margin: 9px 0 7px;
+  border-radius: 3px;
+  background: var(--bg-3);
+  overflow: hidden;
+}
+.score-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--ink-3);
+  transition: width 900ms var(--ease);
+}
+.score-bar i.is-ok {
+  background: var(--ok);
+}
+.train-again {
+  display: flex;
+  gap: 28px;
+  margin-top: 14px;
+}
+.train-again > div {
+  display: grid;
+  gap: 2px;
+}
+.sandbox-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.board {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 8px;
+}
+.board > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.board > div:first-child {
+  color: var(--ink);
+}
+
+/* ---------- live ---------- */
+.live-stage {
+  position: relative;
+  margin-top: 4px;
+}
+.live-word {
+  height: 44px;
+  margin-top: 2px;
+  text-align: center;
+  font: 500 34px/44px var(--font-display);
+  letter-spacing: -0.02em;
+}
+.live-word span {
+  display: inline-block;
+  animation: word 1300ms var(--ease) both;
+}
+@keyframes word {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0) scale(0.94);
+  }
+  14% {
+    opacity: 1;
+    transform: none;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.live-idle {
+  font: 400 15px/44px var(--font-ui);
+  color: var(--ink-3);
+  letter-spacing: 0;
+}
+.live-cam {
+  position: absolute;
+  right: var(--gutter);
+  top: 0;
+  width: 84px;
+  height: 112px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--bg-2);
+  opacity: 0;
+  transform: scale(0.9);
+  transition:
+    opacity 300ms var(--ease),
+    transform 300ms var(--ease);
+  pointer-events: none;
+}
+.live-cam.is-on {
+  opacity: 1;
+  transform: none;
+}
+.live-cam video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.tile {
+  position: relative;
+  padding: 14px 12px 12px;
+  border-radius: var(--r);
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  transition:
+    background 160ms var(--ease),
+    border-color 160ms var(--ease),
+    transform 160ms var(--ease);
+}
+.tile.is-on {
+  background: var(--bg-3);
+  border-color: var(--line-2);
+  transform: translateY(-2px);
+}
+.tile-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tile-n {
+  font: 500 30px/1 var(--font-display);
+}
+.tile-name {
+  margin: 12px 0 9px;
+  font: 500 14px/1.2 var(--font-ui);
+}
+.tile-by {
+  margin-top: 9px;
+  font-size: 11.5px;
+  line-height: 1.3;
+  color: var(--ink-3);
+  min-height: 30px;
+}
+.live-heart {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.live-heart .title-l {
+  line-height: 1;
+}

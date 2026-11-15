@@ -1,0 +1,635 @@
+/* Care: the conversation, the check-in stepper, what the clinic sees */
+
+/* ---------- who you are talking to ---------- */
+.care-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 8px;
+}
+.care-avatar {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--voice-wash);
+  color: var(--voice);
+  font: 500 25px/1 var(--font-display);
+  flex: none;
+}
+.care-avatar.is-s {
+  width: 26px;
+  height: 26px;
+  font: 600 12px/1 var(--font-ui);
+}
+.care-who {
+  flex: 1;
+  min-width: 0;
+}
+.care-who h1,
+.care-role {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.care-who h1 {
+  padding-bottom: 3px;
+}
+.care-role {
+  font-size: 14.5px;
+  line-height: 1.3;
+  color: var(--ink-3);
+}
+.care-call {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: var(--pill);
+  background: var(--bg-2);
+  border: 1px solid var(--line-2);
+  font: 600 14px/1 var(--font-ui);
+  white-space: nowrap;
+  flex: none;
+  transition:
+    transform 140ms var(--ease),
+    background 140ms var(--ease);
+}
+.care-call::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+}
+.care-call:active {
+  transform: scale(0.96);
+  background: var(--bg-3);
+}
+.care-call svg {
+  color: var(--ink-2);
+}
+.care-call.is-booked svg {
+  color: var(--ok);
+}
+.care-rows .row {
+  animation: fade-in 320ms var(--ease) both;
+}
+.care-ok {
+  color: var(--ok);
+}
+.care-rows {
+  margin-top: 22px;
+}
+
+/* her name stays on top while you read down the chat */
+.care-bar:not(.is-solid) {
+  background: none;
+  pointer-events: none;
+}
+.care-bar-who {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.care-bar-call {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  color: var(--ink-2);
+  opacity: 0;
+  transition: opacity 200ms var(--ease);
+}
+.care-bar.is-solid .care-bar-call {
+  opacity: 1;
+}
+.care-bar-call:active {
+  color: var(--ink);
+  background: var(--bg-2);
+}
+
+/* ---------- the chat ---------- */
+.screen.care {
+  padding-bottom: calc(var(--safe-b) + var(--tabbar) + 68px + 20px);
+}
+.chat {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+  padding-inline: var(--gutter);
+}
+.chat-day {
+  align-self: center;
+  margin: 26px 0 4px;
+  font: 500 13px/1 var(--font-ui);
+  color: var(--ink-3);
+}
+.chat-new {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 2px;
+  font: 600 12.5px/1 var(--font-ui);
+  letter-spacing: 0.01em;
+  color: var(--ember-hi);
+}
+.chat-new::before {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--ember);
+  opacity: 0.65;
+}
+.chat-note {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 18px;
+  font: 500 13px/1 var(--font-ui);
+  color: var(--ink-3);
+}
+.chat-note svg {
+  color: var(--ok);
+}
+.bubble {
+  max-width: 84%;
+  margin-top: 4px;
+  padding: 12px 15px 13px;
+  border-radius: 16px;
+  font-size: 16.5px;
+  line-height: 1.45;
+  text-wrap: pretty;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.bubble.is-first {
+  margin-top: 14px;
+}
+.bubble.is-nurse {
+  align-self: flex-start;
+  background: var(--bg-2);
+  border-bottom-left-radius: 4px;
+}
+.bubble.is-you {
+  align-self: flex-end;
+  background: var(--bg-3);
+  border-bottom-right-radius: 4px;
+}
+.bubble.is-live {
+  animation: bubble-in 420ms var(--ease) both;
+}
+.bubble.is-live.is-you {
+  transform-origin: 100% 100%;
+}
+.bubble.is-live.is-nurse {
+  transform-origin: 0 100%;
+}
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0) scale(0.96);
+  }
+}
+.bubble.is-typing {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 47px;
+  padding: 0 17px;
+}
+.bubble.is-typing i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ink-3);
+  animation: typing 1.1s var(--ease-loop) infinite;
+}
+.bubble.is-typing i:nth-child(2) {
+  animation-delay: 150ms;
+}
+.bubble.is-typing i:nth-child(3) {
+  animation-delay: 300ms;
+}
+@keyframes typing {
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+.care-hours {
+  margin: 14px var(--gutter) 0;
+  text-align: center;
+  text-wrap: balance;
+}
+.screen.care .sample-note {
+  margin-top: 16px;
+}
+
+/* the message field: inside the phone, on top of the tab bar */
+.composer {
+  position: absolute;
+  z-index: 25;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--tabbar) + var(--safe-b));
+  padding: 10px var(--gutter);
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  backdrop-filter: blur(20px) saturate(1.3);
+  box-shadow: 0 -1px 0 var(--line);
+}
+.composer-field {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  min-height: 48px;
+  padding: 3px 3px 3px 17px;
+  border-radius: 24px;
+  background: var(--bg-2);
+  border: 1px solid var(--line-2);
+  transition: border-color 200ms var(--ease);
+}
+.composer-field:focus-within {
+  border-color: var(--ink-3);
+}
+.composer textarea {
+  flex: 1;
+  min-width: 0;
+  height: 40px;
+  max-height: 118px;
+  padding: 9px 0;
+  border: 0;
+  outline: 0;
+  resize: none;
+  background: none;
+  font-size: 16.5px;
+  line-height: 22px;
+  scrollbar-width: none;
+}
+.composer textarea::placeholder {
+  color: var(--ink-3);
+}
+.composer-send {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--ember);
+  color: var(--on-ember);
+  flex: none;
+  transition:
+    transform 160ms var(--ease),
+    background 200ms var(--ease),
+    color 200ms var(--ease);
+}
+.composer-send::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+}
+.composer-send svg {
+  transform: translate(-1px, 1px);
+}
+.composer-send:active {
+  transform: scale(0.9);
+}
+.composer-send[disabled] {
+  background: var(--bg-3);
+  color: var(--ink-3);
+}
+
+/* the sheet with sample times */
+.care-slots {
+  margin-top: 14px;
+  background: var(--bg-2);
+}
+.care-slots .row[aria-pressed='true'] .row-title {
+  color: var(--ink);
+}
+.care-slots-note {
+  margin-top: 12px;
+}
+
+/* ---------- the check-in ---------- */
+.layer:has(.screen.ci) .navbar-title {
+  opacity: 1;
+  transform: none;
+}
+.ci-count {
+  padding-right: 4px;
+  font: 500 14px/1 var(--font-ui);
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.ci-progress {
+  position: absolute;
+  z-index: 21;
+  top: calc(var(--safe-t) + var(--navbar) + 2px);
+  left: var(--gutter);
+  right: var(--gutter);
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bg-3);
+  overflow: hidden;
+  transition: opacity 400ms var(--ease);
+}
+.ci-progress i {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--ember);
+  transform-origin: 0 50%;
+  transition: transform 520ms var(--ease);
+}
+.ci-progress.is-done {
+  opacity: 0;
+}
+.screen.ci {
+  padding-top: calc(var(--safe-t) + var(--navbar) + 40px);
+}
+.ci-step {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  animation: ci-in 380ms var(--ease) both;
+}
+.ci-step.is-back {
+  animation-name: ci-in-back;
+}
+.ci-step.is-out {
+  animation: ci-out 170ms ease-in both;
+}
+.ci-step.is-out.is-back {
+  animation-name: ci-out-back;
+}
+@keyframes ci-in {
+  from {
+    opacity: 0;
+    transform: translate3d(26px, 0, 0);
+  }
+}
+@keyframes ci-in-back {
+  from {
+    opacity: 0;
+    transform: translate3d(-26px, 0, 0);
+  }
+}
+@keyframes ci-out {
+  to {
+    opacity: 0;
+    transform: translate3d(-20px, 0, 0);
+  }
+}
+@keyframes ci-out-back {
+  to {
+    opacity: 0;
+    transform: translate3d(20px, 0, 0);
+  }
+}
+.ci-lead {
+  font-size: 15.5px;
+  line-height: 1.45;
+  color: var(--ink-3);
+  text-wrap: pretty;
+}
+.ci-q {
+  margin-top: 14px;
+}
+.ci-sub {
+  margin-top: 10px;
+}
+.ci-bottom {
+  margin-top: auto;
+  padding-top: 32px;
+}
+.ci-options {
+  display: grid;
+  gap: 10px;
+}
+.ci-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+  min-height: 62px;
+  padding: 10px 16px 10px 18px;
+  border-radius: var(--r);
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  text-align: left;
+  font: 500 17px/1.3 var(--font-ui);
+  transition:
+    transform 160ms var(--ease),
+    background 200ms var(--ease),
+    border-color 200ms var(--ease);
+}
+.ci-option:active {
+  transform: scale(0.985);
+  background: var(--bg-2);
+}
+.ci-radio {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line-2);
+  color: transparent;
+  flex: none;
+  transition:
+    background 200ms var(--ease),
+    border-color 200ms var(--ease),
+    color 200ms var(--ease);
+}
+.ci-option[aria-checked='true'] {
+  background: var(--ember-wash);
+  border-color: var(--ember);
+}
+.ci-option[aria-checked='true'] .ci-radio {
+  background: var(--ember);
+  border-color: var(--ember);
+  color: var(--on-ember);
+}
+.ci-foot {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 12px;
+}
+.ci-foot.is-mid {
+  justify-content: center;
+}
+.ci-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 44px;
+  padding: 0 12px 0 6px;
+  margin-left: -6px;
+  border-radius: 12px;
+  color: var(--ink-2);
+  font: 500 15.5px/1 var(--font-ui);
+}
+.ci-foot.is-mid .ci-back {
+  margin-left: 0;
+  padding: 0 14px;
+}
+.ci-back:active {
+  color: var(--ink);
+  background: var(--bg-2);
+}
+
+/* a short phone: the question and all four answers still fit without scrolling */
+@media (max-height: 700px) {
+  .screen.ci {
+    padding-top: calc(var(--safe-t) + var(--navbar) + 26px);
+    padding-bottom: calc(var(--safe-b) + 14px);
+  }
+  .ci-q {
+    margin-top: 10px;
+    font-size: 30px;
+  }
+  .ci-bottom {
+    padding-top: 22px;
+  }
+  .ci-options {
+    gap: 8px;
+  }
+  .ci-option {
+    min-height: 56px;
+  }
+  .ci-foot {
+    margin-top: 6px;
+  }
+}
+
+/* the summary: your words, nothing added */
+.ci-sum {
+  margin-top: 24px;
+}
+.ci-sum-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 14px 14px 16px;
+  text-align: left;
+  position: relative;
+  color: var(--ink-3);
+}
+.ci-sum-row + .ci-sum-row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 0;
+  height: 1px;
+  background: var(--line);
+}
+.ci-sum-row:active {
+  background: var(--bg-2);
+}
+.ci-sum-q {
+  display: block;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--ink-3);
+  text-wrap: pretty;
+}
+.ci-sum-a {
+  display: block;
+  margin-top: 3px;
+  font: 500 16.5px/1.3 var(--font-ui);
+  color: var(--ink);
+}
+
+/* sent */
+.ci-tick {
+  display: block;
+  margin-bottom: 22px;
+}
+.ci-tick circle {
+  fill: var(--bg-2);
+  stroke: var(--line-2);
+  stroke-width: 1;
+}
+.ci-tick path {
+  stroke: var(--ok);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: ci-tick 620ms var(--ease) 320ms forwards;
+}
+@keyframes ci-tick {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.ci-next {
+  margin-top: 22px;
+}
+.ci-done .sample-note {
+  margin-top: 16px;
+}
+
+/* ---------- your clinic ---------- */
+.clinic-under {
+  margin-top: 12px;
+}
+.clinic-list {
+  margin-top: 14px;
+}
+.clinic-rank {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--bg-3);
+  color: var(--ink-2);
+  font: 600 15px/1 var(--font-ui);
+}
+.clinic-rank.is-top {
+  background: var(--ember);
+  color: var(--on-ember);
+}
+.booster-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.booster-say {
+  margin-top: 0;
+  margin-bottom: 2px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.booster-why {
+  margin: 16px 0 18px;
+}
+.booster .badge {
+  transition:
+    background 300ms var(--ease),
+    color 300ms var(--ease);
+}
+.clinic-link {
+  text-decoration: none;
+  color: inherit;
+}

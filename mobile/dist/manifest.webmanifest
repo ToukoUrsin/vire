@@ -1,0 +1,16 @@
+{
+  "name": "Vire",
+  "short_name": "Vire",
+  "description": "Your AirPods sense your day. A practice in your ears when you drift. Your clinic in the loop.",
+  "id": "/app/",
+  "start_url": "/app/",
+  "scope": "/app/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#14110d",
+  "theme_color": "#14110d",
+  "icons": [
+    { "src": "/app/icon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/app/icon-1024.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" }
+  ]
+}

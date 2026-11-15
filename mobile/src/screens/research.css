@@ -1,0 +1,28 @@
+/* The evidence: a card a topic, then the studies of one topic */
+
+.ev-none {
+  font-weight: 500;
+  color: var(--ink);
+}
+.ev-topics {
+  margin-top: 28px;
+}
+.ev-topic {
+  display: grid;
+  gap: 8px;
+}
+.ev-topic-name,
+.ev-topic-say {
+  display: block;
+}
+.ev-topic-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  font: 500 13.5px/1 var(--font-ui);
+  color: var(--ink-3);
+}
+.ev-foot {
+  margin-top: 12px;
+}

@@ -1,0 +1,219 @@
+/* Signals: the tab root and the four screens behind it (calls, music, sleep, movement) */
+
+/* the sentence that carries a screen, set like the one under the ring on Today */
+.sg-say {
+  margin-top: 22px;
+  font: 400 19px/1.42 var(--font-display);
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.sg-say b {
+  font-weight: 500;
+  color: var(--ember-hi);
+}
+
+/* the line under a chart that says what it shows */
+.sg-cap {
+  margin-top: 12px;
+}
+.sg-lead {
+  margin: -4px 0 14px;
+}
+.sg-split {
+  margin: 18px 0 16px;
+  height: 1px;
+  background: var(--line);
+}
+.sg-strip-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+/* the clock under the strip, on the strip's own left edge (30 of 320) */
+.sg-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  padding: 0 1.9% 0 9.4%;
+  font-size: 11.5px;
+  line-height: 1;
+  color: var(--ink-3);
+}
+
+/* a section title with a chip beside it */
+.sg-head {
+  align-items: center;
+}
+
+/* slim bars: one reading a line, every line of a kind on the same scale */
+.sg-reads {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+.sg-read {
+  display: grid;
+  grid-template-columns: var(--label, 64px) 1fr 40px;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.2;
+  color: var(--ink-3);
+}
+.sg-read .num {
+  text-align: right;
+  color: var(--ink-2);
+}
+.sg-bar {
+  position: relative;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--bg-3);
+}
+.sg-bar i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 3px;
+  transform-origin: left center;
+  animation: sg-grow 800ms var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 60ms + 240ms);
+}
+/* a hairline at the middle: half the call, or no change */
+.sg-bar.has-mid::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -3px;
+  bottom: -3px;
+  width: 1px;
+  background: var(--ink);
+  opacity: 0.35;
+}
+.sg-bar i.is-down {
+  transform-origin: right center;
+}
+@keyframes sg-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/* a person you talk with */
+.sg-who {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+.sg-avatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--voice-wash);
+  color: var(--voice);
+  font: 600 14px/1 var(--font-ui);
+}
+.sg-who-meta {
+  text-align: right;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+.sg-who-meta b {
+  display: block;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.sg-person-note {
+  margin-top: 14px;
+  font: 400 15.5px/1.4 var(--font-display);
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+/* a song, inside one group */
+.sg-song {
+  position: relative;
+  padding: 16px;
+}
+.sg-song + .sg-song::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 0;
+  height: 1px;
+  background: var(--line);
+}
+.sg-song-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.sg-song .sg-reads {
+  margin-top: 14px;
+}
+
+/* how to read a chart, drawn once */
+.sg-legend {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+.sg-legend-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: sg-draw 1400ms var(--ease) 500ms forwards;
+}
+@keyframes sg-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.sg-legend-dot {
+  animation: sg-pop 400ms var(--ease) 1700ms both;
+}
+@keyframes sg-pop {
+  from {
+    opacity: 0;
+  }
+}
+.sg-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  line-height: 1.2;
+  color: var(--ink-2);
+}
+.sg-key span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.sg-key i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* a second block of studies: our own heading in place of the kit's */
+.sg-also > .section-head {
+  margin-top: 36px;
+}
+.sg-also > .section {
+  margin-top: 0;
+}
+.sg-also > .section > .section-head {
+  display: none;
+}

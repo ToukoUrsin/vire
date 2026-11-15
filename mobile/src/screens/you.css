@@ -1,0 +1,189 @@
+/* You: the person's own AirPods model, privacy, the way to the rest. And the paper. */
+
+/* ---------- the model card ---------- */
+.yu-model-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.yu-model-head > div {
+  flex: 1;
+  min-width: 0;
+}
+.yu-model-scores {
+  margin-top: 18px;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+}
+.yu-score {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  column-gap: 14px;
+  align-items: start;
+  padding: 14px 0 2px;
+}
+.yu-score-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.yu-score-name {
+  font: 500 16px/1.3 var(--font-ui);
+}
+.yu-score-num {
+  font: 500 22px/1 var(--font-display);
+  letter-spacing: -0.01em;
+}
+.yu-score.is-off .yu-score-num {
+  color: var(--ink-2);
+}
+.yu-score-word {
+  margin-top: 8px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+
+/* the slim bar: its left end is 0.50 (luck), its right end 1.00 (never wrong) */
+.yu-score-bar {
+  position: relative;
+  height: 6px;
+  margin-top: 9px;
+  border-radius: 3px;
+  background: var(--bg-3);
+  overflow: hidden;
+}
+.yu-score-bar i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--w);
+  border-radius: 3px;
+  background: var(--tone);
+  transform-origin: left center;
+  animation: yu-score-grow 1100ms var(--ease) both;
+  animation-delay: calc(var(--k, 0) * 140ms + 420ms);
+}
+.yu-score.is-off .yu-score-bar i {
+  background: var(--ink-3);
+  opacity: 0.7;
+}
+@keyframes yu-score-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+.yu-score-axis {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 12px 0 0 52px;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--ink-3);
+}
+.yu-model-made {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.yu-model-made p + p {
+  margin-top: 6px;
+}
+.yu-model-acts {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+/* no model yet */
+.yu-teach {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+/* ---------- add to Home Screen ---------- */
+.yu-hs-steps {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.yu-hs-steps li {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 14px;
+  align-items: center;
+  min-height: 54px;
+  font-size: 16px;
+  line-height: 1.35;
+}
+.yu-hs-steps li + li {
+  border-top: 1px solid var(--line);
+}
+.yu-hs-steps .badge {
+  font: 600 15px/1 var(--font-ui);
+  color: var(--ink);
+}
+.yu-hs-steps svg {
+  vertical-align: -4px;
+  margin: 0 2px;
+  color: var(--ink-2);
+}
+
+.yu-foot {
+  margin: 36px var(--gutter) 0;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-3);
+}
+.yu-foot b {
+  display: block;
+  margin-bottom: 4px;
+  font: 500 20px/1.2 var(--font-display);
+  letter-spacing: -0.01em;
+  color: var(--ink-2);
+}
+
+/* ---------- the paper ---------- */
+.yu-paper-by {
+  margin-top: 14px;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.yu-paper-by span {
+  display: block;
+  color: var(--ink-3);
+}
+.yu-paper-abs p {
+  font: 400 16.5px/1.55 var(--font-display);
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.yu-paper-abs p + p {
+  margin-top: 12px;
+}
+.yu-paper-abs .yu-paper-limit {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font: 400 14.5px/1.5 var(--font-ui);
+  color: var(--ink-2);
+}
+a.yu-open {
+  text-decoration: none;
+}
+.yu-paper-page {
+  display: block;
+  width: 100%;
+  margin-top: 14px;
+  aspect-ratio: 210 / 297;
+  object-fit: cover;
+  object-position: top;
+  border-radius: var(--r-s);
+  border: 1px solid var(--line);
+  background: var(--ink);
+}
