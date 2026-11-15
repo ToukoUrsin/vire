@@ -2,9 +2,10 @@
 
 ## What was submitted
 
-Submitted on Sunday 15.11.2026 at 08:37 EET: project 2079, "Vire", Beyond the Clinic, "Best use of Modal" ticked.
+Submitted on Sunday 15.11.2026 at 09:16 EET: project 2079, "Vire", Beyond the Clinic, "Best use of Modal" ticked.
+(First submitted 08:37 EET with an earlier cut of the film; taken back and submitted again with this one.)
 
-- Film (1:57): https://youtu.be/tkMpyThcp5M
+- Film (1:57): https://drive.google.com/file/d/1y0CCueTnvgbULoPH3zbJsPFt7VRhw7ig/view
 - Demo: https://vire.fly.dev
 - Source: https://github.com/ToukoUrsin/vire
 - Other link, the paper: https://vire.fly.dev/app/vire-paper.pdf
