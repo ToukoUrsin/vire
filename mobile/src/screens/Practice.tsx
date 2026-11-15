@@ -632,7 +632,7 @@ export function Practice({ id }: { id?: string; topic?: string }) {
             ))}
           </div>
           <p className="small" style={{ marginTop: 12 }}>
-            Vire keeps what calms you and offers it first next time.
+            Vire keeps your answer next to what it measured.
           </p>
         </div>
 

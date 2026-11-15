@@ -89,7 +89,7 @@ function Aside() {
     <>
       <div className="aside aside-left">
         <p className="aside-mark">Vire</p>
-        <p className="aside-line">Your AirPods sense your day. A practice in your ears when you drift. Your clinic in the loop.</p>
+        <p className="aside-line">Your AirPods sense every step. A practice in your ears when you drift. Your clinic in the loop.</p>
         <p className="small" style={{ marginTop: 18 }}>
           For people at home after TMS, a clinic treatment for depression. Built at Junction 2026.
         </p>

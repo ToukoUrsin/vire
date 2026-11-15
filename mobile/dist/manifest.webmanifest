@@ -1,7 +1,7 @@
 {
   "name": "Vire",
   "short_name": "Vire",
-  "description": "Your AirPods sense your day. A practice in your ears when you drift. Your clinic in the loop.",
+  "description": "Your AirPods sense every step. A practice in your ears when you drift. Your clinic in the loop.",
   "id": "/app/",
   "start_url": "/app/",
   "scope": "/app/",

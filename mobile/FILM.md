@@ -1,78 +1,41 @@
-# Vire film, 1:58
+# Vire film, 1:57
 
-The iPhone records its own screen. A second phone films you, always sideways, like the opening.
-Film everything in full without talking. I trim it and add the opening, the end card and the captions.
-Two lines you say live: 0:42 and 1:47. The rest you record afterwards in one Voice Memo, in order.
+The film is built, not shot. Nothing more needs filming.
 
-## First, the 0:11 shot
+It lives outside git because it is large: `/bulk2/runs/depression/film/launch/`
 
-Film it while the AirPods are still out of your ears. The opening ends on this picture, so start the same way: both AirPods on their sides on something black and shiny, second phone on 2x about 20 cm away, room dark, one soft light from the upper left. Hold half a second, then your hand comes in from the right and takes the front one.
+- `vire-film/` is the HyperFrames project. `index.html` is the cut, `compositions/` has one file per scene.
+- `clips/` holds the phone app's screens, recorded from this build by `mobile/scripts/capture.mjs`.
+- `vire-film/out/vire-launch.mp4` is the film.
 
-![The opening's last frame](/bulk3/runs/opens/final/vire/last.jpg)
+## The cut
 
-Then film five seconds of your face as you put them in.
+| At | Scene | What is on screen |
+| --- | --- | --- |
+| 0:00 | Opening | The 11 s opening clip. |
+| 0:11 | Team | Take 2 (`IMG_0743.MOV`): Anni, Manu, Touko, "something almost everyone has", AirPods. |
+| 0:22 | Teach | "This is Vire." One minute with the camera: nod, shake your head, smile. 366 models tried in 46 seconds. Runs on Modal: one locked Sandbox per person. |
+| 0:41 | Proof | Touko's own check with the camera off: 3 of 3 nods, 3 of 3 head shakes, nothing heard outside an ask. Smiles stay with the camera. Then 50 simulated patients, one Sandbox each. |
+| 0:59 | The app | The day, calls, music, sleep, a practice and its result, the clinic. "Sample data" stays on screen the whole time. |
+| 1:36 | Close | "A loop that closes. Your AirPods sense every step." 60 studies, the paper, `vire.fly.dev/app`. |
+| 1:53 | End | The team waves, then the end card. |
 
-## Then set up
+## What is real and what is sample
 
-1. Plug the iPhone into the Mac, unlocked. The newest Vire app installs by itself.
-2. Open Vire, tap "Open the phone app", then the You tab and "Open here every time".
-3. Teach off camera until the result passes once: You tab, "Teach another minute", "Start the minute". It can take two or three minutes.
-4. Do Not Disturb on. Long-press the screen recording button, turn the microphone on, start recording.
-5. Prop the second phone at arm's length so it sees your face and the iPhone. The screen doesn't need to be readable, the screen recording has it. Clap once so I can sync the two.
+Real: the teaching minute, the model search on Modal (366 models in 46 s), the camera-off check drawn from its recording, the 50-patient simulated clinic, the 60 studies and the paper.
 
-## Shots
+Sample: every screen between 0:59 and 1:36. No patient or clinic has used Vire.
 
-**0:00 The opening clip, 11 s.** Ready, don't film it. You still say this line.
-"After TMS for depression, about half of people lose the benefit within a year. And once you're home, the clinic can't see you."
+## Rules the film keeps
 
-**0:11 AirPods on black glass, then your face, 8 s.** The two clips you filmed first.
-"I'm Touko, we're [team name]. We built Vire. It runs on the AirPods you already wear."
+- No caption says detect, cure, treat or remediate. The team says "track and remediate" aloud in the take; it is not written on screen.
+- Modal is named wherever a model is trained or Sandboxes are shown.
+- Vire senses all the time the AirPods are in, not only when the app is on screen.
+- A signal for the clinic, not a diagnosis. A practice is not a treatment.
 
-**0:19 Teach, 11 s.** You tab, "Teach another minute", "Start the minute". Do the whole minute.
-"First I teach it. For one minute the camera shows my AirPods what my nod, my head shake and my smile look like."
+## To change it
 
-**0:30 The model, 12 s.** Stay on "Making your model" until "Searching" is gone. Under a minute.
-"That minute goes to my own sandbox on Modal. It tries hundreds of models and sends me the best. Everyone gets their own model."
-
-**0:42 Live, 17 s.** Say it live, never over a tap.
-1. Tap "See it live". "Camera's off. This is just the AirPods."
-2. Nod. "Nod."
-3. Shake your head. "Shake."
-4. "Smiles still need the camera." Tap "Keep smiles with the camera" and smile.
-
-**0:59 Today, 7 s.** Screen only from here. Today tab. Drag a finger round the ring once.
-"If I wore it all day, it would learn what's normal for me and see when I drift."
-
-**1:06 Signals, 12 s.** Signals tab. Tap Calls, stay four seconds, back. Same for Music and Sleep.
-"Who I call and how I am on the call. What I listen to and how I move to it. My heart rate through the night."
-
-**1:18 Practice, 10 s.** Practices tab, two seconds on the list. Then Slow breathing, "1 min", Begin. Sit still the whole minute, then hold three seconds on the result.
-"When I drift, it plays a practice in my ears, breathing or yoga, and measures if it worked."
-
-**1:28 Care, 9 s.** Care tab. Two seconds on the nurse's message, then tap "What your clinic sees".
-"If it keeps dipping, my TMS nurse would see it and book a booster. That's the loop."
-
-**1:37 Research and paper, 10 s.** You tab, tap "The evidence", scroll, back. Tap "The paper", scroll.
-"The app cites the research behind it. And we wrote a paper on what we measured, including what failed."
-
-**1:47 The link, 9 s.** Stop the screen recording and go to the home screen. Second phone, say it live. Your face, then bring the iPhone up to the lens until the Vire icon is easy to see.
-"It's live at vire.fly.dev/app. Add it to your home screen and it's an app."
-
-**1:56 The end card, 2 s.** Ready, don't film it.
-
-## Captions I add
-
-- 0:19 to 0:59: "Filmed live on my own AirPods. Runs on Modal: one locked Sandbox per person."
-- 0:59 to 1:18 and 1:28 to 1:37: "Sample data"
-- 1:47 to the end: "vire.fly.dev/app"
-
-## After filming
-
-AirDrop everything from both phones and the Voice Memo to the Mac, and say so in the thread.
-
-## If something fails
-
-- No AirPods samples in the app: swipe Vire away and open it again.
-- The result says "Not there yet": teach one more minute.
-- A nod or a head shake isn't counted: make it bigger, for two seconds.
-- No iPhone app: Chrome on the Mac at vire.fly.dev/app with the Vire Ears helper running does the same in a phone frame.
+1. Build the app and serve the build: `bun run build`, then `node_modules/.bin/vite preview --port 5883 --host 127.0.0.1`.
+2. Record a scene: `node scripts/capture.mjs <scene>` (scenes are in `scripts/scenes.mjs`). Timing shifts a little between runs, so check each tap against its scene file afterwards.
+3. In `vire-film/`: `npx hyperframes check`, then `npx hyperframes render -o out/vire-launch.mp4 -f 30 --video-frame-format png`.
+4. The film's own notes are in `vire-film/REVIEW.md`.
